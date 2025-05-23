@@ -142,13 +142,15 @@ export default function App() {
             />
           </div>
           <div className="w-80 mt-4">
-            <Typography gutterBottom>Zoom</Typography>
-            <Slider
+            <p className="text-white font-semibold mb-2">Zoom</p>
+            <input
+              type="range"
               value={zoom}
-              min={1}
-              max={3}
-              step={0.1}
-              onChange={(e, newZoom) => setZoom(newZoom)}
+              min="1"
+              max="3"
+              step="0.1"
+              onChange={(e) => setZoom(Number(e.target.value))}
+              className="w-full h-2 bg-blue-600 rounded-lg appearance-none cursor-pointer"
             />
           </div>
 
@@ -161,7 +163,7 @@ export default function App() {
 
       {croppedImage && (
         <div className="mt-6 flex flex-col items-center space-y-2">
-          <Typography variant="h6" className="mb-2">Cropped Emoji Preview:</Typography>
+          <h2 className="text-lg font-semibold text-white mb-2">Cropped Emoji Preview:</h2>
           <img
             src={croppedImage}
             alt=""
