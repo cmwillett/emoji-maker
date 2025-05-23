@@ -113,7 +113,7 @@ export default function App() {
         backgroundPosition: 'center',
       }}>
       <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div>
-      <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">Emoji Maker</h1>
+      <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">The Craig's Emoji Maker</h1>
       {showInstall && (
         <Tooltip title="Install this app to your home screen/desktop/taskbar for quick access!" placement="right">
           <button
