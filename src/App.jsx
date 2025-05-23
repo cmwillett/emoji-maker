@@ -15,7 +15,7 @@ function UploadButtons({ onImageSelect }) {
 
   return (
     <Stack direction="row" spacing={2} className="mt-4">
-      <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded">
+      <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded shadow-md">
         Take Photo
         <input
           type="file"
@@ -26,7 +26,7 @@ function UploadButtons({ onImageSelect }) {
         />
       </label>
 
-      <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded">
+      <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded shadow-md">
         Choose from Gallery
         <input
           type="file"
