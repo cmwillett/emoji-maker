@@ -15,8 +15,8 @@ function UploadButtons({ onImageSelect }) {
 
   return (
     <Stack direction="row" spacing={2} className="mt-4">
-      <Button className="btn-primary">
-        <label>
+      <button className="btn-primary">
+        <label className="cursor-pointer">
           Take Photo
           <input
             type="file"
@@ -26,9 +26,9 @@ function UploadButtons({ onImageSelect }) {
             onChange={handleFileInput}
           />
         </label>
-      </Button>
-      <Button className="btn-primary">
-        <label>
+      </button>
+      <button className="btn-primary">
+        <label className="cursor-pointer">
           Choose from Gallery
           <input
             type="file"
@@ -37,7 +37,7 @@ function UploadButtons({ onImageSelect }) {
             onChange={handleFileInput}
           />
         </label>
-      </Button>
+      </button>
     </Stack>
   )
 }
