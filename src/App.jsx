@@ -112,14 +112,14 @@ export default function App() {
       {showInstall && (
         <button
           onClick={handleInstallClick}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="btn-primary mt-4"
         >
           Install App
         </button>
       )}
       <Button
         variant="contained"
-        className="mt-4"
+        className="btn-primary mt-4"
         onClick={handleReset}
       >
         Start Over
@@ -153,7 +153,7 @@ export default function App() {
 
           <Button
             variant="contained"
-            className="mt-4"
+            className="btn-primary mt-4"
             onClick={showCroppedImage}
           >
             Crop Image
@@ -172,7 +172,7 @@ export default function App() {
           <div className="flex gap-2">
             <Button
               variant="outlined"
-              className="mt-4"
+              className="btn-primary mt-4"
               onClick={() => {
                 const link = document.createElement('a')
                 link.href = croppedImage
