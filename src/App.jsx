@@ -2,6 +2,42 @@ import { useState, useCallback, useEffect } from 'react'
 import Cropper from 'react-easy-crop'
 import { Button, Slider, Typography } from '@mui/material'
 import getCroppedImg from './utils/cropImage'
+import { Button, Stack } from '@mui/material'
+
+function UploadButtons({ onImageSelect }) {
+  const handleFileInput = (e) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = () => onImageSelect(reader.result)
+      reader.readAsDataURL(file)
+    }
+  }
+
+  return (
+    <Stack direction="row" spacing={2} className="mt-4">
+      <Button variant="contained" component="label">
+        Take Photo
+        <input
+          type="file"
+          accept="image/*"
+          hidden
+          capture="environment"
+          onChange={handleFileInput}
+        />
+      </Button>
+      <Button variant="contained" component="label">
+        Choose from Gallery
+        <input
+          type="file"
+          accept="image/*"
+          hidden
+          onChange={handleFileInput}
+        />
+      </Button>
+    </Stack>
+  )
+}
 
 export default function App() {
   const [imageSrc, setImageSrc] = useState(null)
@@ -85,21 +121,7 @@ export default function App() {
         Start Over
       </Button>
 
-      {!imageSrc && (
-        <Button
-          variant="contained"
-          component="label"
-          className="mt-4"
-        >
-          Upload Image
-          <input
-            type="file"
-            accept="image/*"
-            hidden
-            onChange={handleImageChange}
-          />
-        </Button>
-      )}
+      {!imageSrc && <UploadButtons onImageSelect={setImageSrc} />}
 
       {imageSrc && (
         <>
