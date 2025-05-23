@@ -15,30 +15,28 @@ function UploadButtons({ onImageSelect }) {
 
   return (
     <Stack direction="row" spacing={2} className="mt-4">
-      <button className="btn-primary">
-        <label className="cursor-pointer">
-          Take Photo
-          <input
-            type="file"
-            accept="image/*"
-            hidden
-            capture="environment"
-            onChange={handleFileInput}
-          />
-        </label>
-      </button>
-      <button className="btn-primary">
-        <label className="cursor-pointer">
-          Choose from Gallery
-          <input
-            type="file"
-            accept="image/*"
-            hidden
-            onChange={handleFileInput}
-          />
-        </label>
-      </button>
+      <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded">
+        Take Photo
+        <input
+          type="file"
+          accept="image/*"
+          hidden
+          capture="environment"
+          onChange={handleFileInput}
+        />
+      </label>
+
+      <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded">
+        Choose from Gallery
+        <input
+          type="file"
+          accept="image/*"
+          hidden
+          onChange={handleFileInput}
+        />
+      </label>
     </Stack>
+
   )
 }
 
