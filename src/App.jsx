@@ -102,7 +102,12 @@ export default function App() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen space-y-4 p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen space-y-4 p-4"
+      style={{
+        backgroundImage: "url('/background.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}>
       <h1 className="text-3xl font-bold">Emoji Maker</h1>
       {showInstall && (
         <button
