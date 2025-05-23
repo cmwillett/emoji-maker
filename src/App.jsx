@@ -160,7 +160,7 @@ export default function App() {
           </div>
 
           <button className="btn-primary mt-4" onClick={showCroppedImage}>
-            Crop Image
+            Crop Image and Preview Emoji
           </button>
 
         </>
