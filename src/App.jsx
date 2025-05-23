@@ -118,8 +118,8 @@ export default function App() {
         </button>
       )}
       <Button
-        variant="text"
-        color="error"
+        variant="contained"
+        className="mt-4"
         onClick={handleReset}
       >
         Start Over
