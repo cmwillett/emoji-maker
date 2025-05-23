@@ -112,7 +112,7 @@ export default function App() {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}>
-      <h1 className="text-3xl font-bold">Emoji Maker</h1>
+      <h1 className="text-3xl font-bold text-green-700">Emoji Maker</h1>
       {showInstall && (
         <button
           onClick={handleInstallClick}
@@ -142,7 +142,7 @@ export default function App() {
             />
           </div>
           <div className="w-80 mt-4">
-            <p className="text-white font-semibold mb-2">Zoom</p>
+            <p className="text-green-700 font-semibold mb-2">Zoom</p>
             <input
               type="range"
               value={zoom}
@@ -163,7 +163,7 @@ export default function App() {
 
       {croppedImage && (
         <div className="mt-6 flex flex-col items-center space-y-2">
-          <h2 className="text-lg font-semibold text-white mb-2">Cropped Emoji Preview:</h2>
+          <h2 className="text-lg font-semibold text-green-700 mb-2">Cropped Emoji Preview:</h2>
           <img
             src={croppedImage}
             alt=""
