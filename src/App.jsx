@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import Cropper from 'react-easy-crop'
 import { Button, Slider, Typography } from '@mui/material'
 import getCroppedImg from './utils/cropImage'
@@ -9,6 +9,32 @@ export default function App() {
   const [zoom, setZoom] = useState(1)
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
   const [croppedImage, setCroppedImage] = useState(null)
+  const [deferredPrompt, setDeferredPrompt] = useState(null)
+  const [showInstall, setShowInstall] = useState(false)
+
+  useEffect(() => {
+    const handler = (e) => {
+      e.preventDefault()
+      setDeferredPrompt(e)
+      setShowInstall(true)
+    }
+
+    window.addEventListener('beforeinstallprompt', handler)
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler)
+    }
+  }, [])
+
+  const handleInstallClick = () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt()
+      deferredPrompt.userChoice.then(() => {
+        setDeferredPrompt(null)
+        setShowInstall(false)
+      })
+    }
+  }
 
   const onCropComplete = useCallback((_, areaPixels) => {
     setCroppedAreaPixels(areaPixels)
@@ -43,6 +69,14 @@ export default function App() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen space-y-4 p-4">
       <h1 className="text-3xl font-bold">Emoji Maker</h1>
+      {showInstall && (
+        <button
+          onClick={handleInstallClick}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Install App
+        </button>
+      )}
       <Button
         variant="text"
         color="error"
