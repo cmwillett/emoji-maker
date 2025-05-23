@@ -1,8 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import Cropper from 'react-easy-crop'
-import { Button, Slider, Typography } from '@mui/material'
+import { Button, Slider, Typography, Stack } from '@mui/material'
 import getCroppedImg from './utils/cropImage'
-import { Button, Stack } from '@mui/material'
 
 function UploadButtons({ onImageSelect }) {
   const handleFileInput = (e) => {
