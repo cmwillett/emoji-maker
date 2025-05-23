@@ -104,7 +104,7 @@ export default function App() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen space-y-4 p-4"
       style={{
-        backgroundImage: "url('/background.jpg')",
+        backgroundImage: "url('/background.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}>
