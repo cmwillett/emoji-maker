@@ -15,24 +15,28 @@ function UploadButtons({ onImageSelect }) {
 
   return (
     <Stack direction="row" spacing={2} className="mt-4">
-      <Button variant="contained" component="label">
-        Take Photo
-        <input
-          type="file"
-          accept="image/*"
-          hidden
-          capture="environment"
-          onChange={handleFileInput}
-        />
+      <Button className="btn-primary">
+        <label>
+          Take Photo
+          <input
+            type="file"
+            accept="image/*"
+            hidden
+            capture="environment"
+            onChange={handleFileInput}
+          />
+        </label>
       </Button>
-      <Button variant="contained" component="label">
-        Choose from Gallery
-        <input
-          type="file"
-          accept="image/*"
-          hidden
-          onChange={handleFileInput}
-        />
+      <Button className="btn-primary">
+        <label>
+          Choose from Gallery
+          <input
+            type="file"
+            accept="image/*"
+            hidden
+            onChange={handleFileInput}
+          />
+        </label>
       </Button>
     </Stack>
   )
@@ -117,13 +121,10 @@ export default function App() {
           Install App
         </button>
       )}
-      <Button
-        variant="contained"
-        className="btn-primary mt-4"
-        onClick={handleReset}
-      >
+      <button className="btn-primary mt-4" onClick={handleReset}>
         Start Over
-      </Button>
+      </button>
+
 
       {!imageSrc && <UploadButtons onImageSelect={setImageSrc} />}
 
@@ -151,13 +152,10 @@ export default function App() {
             />
           </div>
 
-          <Button
-            variant="contained"
-            className="btn-primary mt-4"
-            onClick={showCroppedImage}
-          >
+          <button className="btn-primary mt-4" onClick={showCroppedImage}>
             Crop Image
-          </Button>
+          </button>
+
         </>
       )}
 
@@ -170,8 +168,7 @@ export default function App() {
             className="w-32 h-32 object-cover rounded-full border"
           />
           <div className="flex gap-2">
-            <Button
-              variant="outlined"
+            <button
               className="btn-primary mt-4"
               onClick={() => {
                 const link = document.createElement('a')
@@ -181,7 +178,8 @@ export default function App() {
               }}
             >
               Download Emoji
-            </Button>
+            </button>
+
           </div>
         </div>
       )}
