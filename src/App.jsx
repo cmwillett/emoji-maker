@@ -115,7 +115,7 @@ export default function App() {
       <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div>
       <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">Emoji Maker</h1>
       {showInstall && (
-        <Tooltip title="Install this app to your home screen/desktop/taskbar for quick access!">
+        <Tooltip title="Install this app to your home screen/desktop/taskbar for quick access!" placement="right">
           <button
             onClick={handleInstallClick}
             className="btn-primary mt-4"
@@ -124,7 +124,7 @@ export default function App() {
           </button>
         </Tooltip>
       )}
-      <Tooltip title="Reset the app and choose a new image...">
+      <Tooltip title="Reset the app and choose a new image..." placement="right">
         <button className="btn-primary mt-4" onClick={handleReset}>
           Start Over
         </button>
