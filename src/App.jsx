@@ -106,13 +106,14 @@ export default function App() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen space-y-4 p-4"
+    <div className="relative z-10 flex flex-col items-center justify-center min-h-screen space-y-4 p-4"
       style={{
         backgroundImage: "url('/background.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}>
-      <h1 className="text-3xl font-bold text-green-700">Emoji Maker</h1>
+      <div className="absolute inset-0 bg-black bg-opacity-30 z-0"></div>
+      <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">Emoji Maker</h1>
       {showInstall && (
         <button
           onClick={handleInstallClick}
@@ -142,7 +143,7 @@ export default function App() {
             />
           </div>
           <div className="w-80 mt-4">
-            <p className="text-green-700 font-semibold mb-2">Zoom</p>
+            <p className="text-emerald-400 font-semibold drop-shadow-md mb-2">Zoom</p>
             <input
               type="range"
               value={zoom}
@@ -163,7 +164,7 @@ export default function App() {
 
       {croppedImage && (
         <div className="mt-6 flex flex-col items-center space-y-2">
-          <h2 className="text-lg font-semibold text-green-700 mb-2">Cropped Emoji Preview:</h2>
+          <h2 className="text-emerald-400 font-semibold drop-shadow-md mb-2">Cropped Emoji Preview:</h2>
           <img
             src={croppedImage}
             alt=""
