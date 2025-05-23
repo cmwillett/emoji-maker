@@ -95,6 +95,7 @@ export default function App() {
           <input
             type="file"
             accept="image/*"
+            capture="environment"
             hidden
             onChange={handleImageChange}
           />
