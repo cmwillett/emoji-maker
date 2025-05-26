@@ -15,7 +15,7 @@ function UploadButtons({ onImageSelect }) {
 
   return (
     <Stack direction="column" spacing={2} className="mt-4">
-      <Tooltip title="User your device's camera to start with a new photo..." placement="top">
+      <Tooltip title="User your device's camera to start with a new photo..." placement="right">
         <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded shadow-md">
           Take Photo
           <input
@@ -27,7 +27,7 @@ function UploadButtons({ onImageSelect }) {
           />
         </label>
       </Tooltip>
-      <Tooltip title="Choose an image from your gallery or file system to start...">
+      <Tooltip title="Choose an image from your gallery or file system to start..." placement="right">
         <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded shadow-md">
           Choose from Gallery
           <input
@@ -118,13 +118,13 @@ export default function App() {
       <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">Emoji Maker</h1>
       <Stack direction="row" spacing={2} className="mt-4">
         {showInstall && (
-          <Tooltip title="Install this app to your home screen/desktop/taskbar for quick access!" placement="top">
+          <Tooltip title="Install this app to your home screen/desktop/taskbar for quick access!" placement="left">
             <button onClick={handleInstallClick} className="btn-primary">
               Install App
             </button>
           </Tooltip>
         )}
-        <Tooltip title="Reset the app and choose a new image..." placement="top">
+        <Tooltip title="Reset the app and choose a new image..." placement="right">
           <button className="btn-primary" onClick={handleReset}>
             Start Over
           </button>
