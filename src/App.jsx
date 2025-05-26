@@ -113,21 +113,20 @@ export default function App() {
       <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div>
       <h1 className ="text-3xl font-bold text-emerald-400 drop-shadow-lg">The Craig's</h1> 
       <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">Emoji Maker</h1>
-      {showInstall && (
-        <Tooltip title="Install this app to your home screen/desktop/taskbar for quick access!" placement="right">
-          <button
-            onClick={handleInstallClick}
-            className="btn-primary mt-4"
-          >
-            Install App
+      <Stack direction="row" spacing={2} className="mt-4">
+        {showInstall && (
+          <Tooltip title="Install this app to your home screen/desktop/taskbar for quick access!" placement="top">
+            <button onClick={handleInstallClick} className="btn-primary">
+              Install App
+            </button>
+          </Tooltip>
+        )}
+        <Tooltip title="Reset the app and choose a new image..." placement="top">
+          <button className="btn-primary" onClick={handleReset}>
+            Start Over
           </button>
         </Tooltip>
-      )}
-      <Tooltip title="Reset the app and choose a new image..." placement="right">
-        <button className="btn-primary mt-4" onClick={handleReset}>
-          Start Over
-        </button>
-      </Tooltip>
+      </Stack>
 
 
       {!imageSrc && <UploadButtons onImageSelect={setImageSrc} />}
