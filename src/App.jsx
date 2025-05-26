@@ -15,26 +15,29 @@ function UploadButtons({ onImageSelect }) {
 
   return (
     <Stack direction="column" spacing={2} className="mt-4">
-      <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded shadow-md">
-        Take Photo
-        <input
-          type="file"
-          accept="image/*"
-          hidden
-          capture="environment"
-          onChange={handleFileInput}
-        />
-      </label>
-      
-      <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded shadow-md">
-        Choose from Gallery
-        <input
-          type="file"
-          accept="image/*"
-          hidden
-          onChange={handleFileInput}
-        />
-      </label>
+      <Tooltip title="User your device's camera to start with a new photo..." placement="top">
+        <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded shadow-md">
+          Take Photo
+          <input
+            type="file"
+            accept="image/*"
+            hidden
+            capture="environment"
+            onChange={handleFileInput}
+          />
+        </label>
+      </Tooltip>
+      <Tooltip title="Choose an image from your gallery or file system to start...">
+        <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded shadow-md">
+          Choose from Gallery
+          <input
+            type="file"
+            accept="image/*"
+            hidden
+            onChange={handleFileInput}
+          />
+        </label>
+      </Tooltip>
     </Stack>
 
   )
