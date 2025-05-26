@@ -25,7 +25,7 @@ function UploadButtons({ onImageSelect }) {
           onChange={handleFileInput}
         />
       </label>
-      <br>
+      <br></br>
       <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded shadow-md">
         Choose from Gallery
         <input
