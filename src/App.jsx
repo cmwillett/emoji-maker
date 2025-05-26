@@ -14,7 +14,7 @@ function UploadButtons({ onImageSelect }) {
   }
 
   return (
-    <Stack direction="row" spacing={2} className="mt-4">
+    <Stack direction="column" spacing={2} className="mt-4">
       <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded shadow-md">
         Take Photo
         <input
@@ -25,7 +25,7 @@ function UploadButtons({ onImageSelect }) {
           onChange={handleFileInput}
         />
       </label>
-      <br></br>
+      
       <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded shadow-md">
         Choose from Gallery
         <input
