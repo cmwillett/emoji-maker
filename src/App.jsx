@@ -220,12 +220,12 @@ export default function App() {
                   onClick={() => setBackgroundColor(color)}
                 ></button>
               ))}
-              <button
-                className="text-xs text-white border border-white rounded px-2"
-                onClick={() => setBackgroundColor('')}
-              >
-                No BG
-              </button>
+            <button
+              className="text-xs text-black bg-white border border-white rounded px-2 hover:bg-gray-200"
+              onClick={() => setBackgroundColor('')}
+            >
+              No BG
+            </button>
             </div>
             <input
               type="color"
