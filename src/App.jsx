@@ -107,6 +107,8 @@ export default function App() {
 
   const showCroppedImage = useCallback(async () => {
     try {
+      console.log('imageSrce:', imageSrc)
+      console.log('croppedAreaPixels:', croppedAreaPixels)
       const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 'image/png', true)
 
       const formData = new FormData()

@@ -24,6 +24,7 @@ export default function getCroppedImg(imageSrc, pixelCrop, mimeType = 'image/png
 
       canvas.toBlob(
         (blob) => {
+          console.log('Canvas width:', canvas.width, 'height:', canvas.height)
           if (!blob) {
             reject(new Error('Canvas is empty'))
             return
