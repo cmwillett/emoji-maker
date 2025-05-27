@@ -158,6 +158,14 @@ export default function App() {
     setCroppedImage(null)
   }
 
+  const cropContainerStyle = {
+    backgroundColor: '#fff',
+    border: borderStyle === 'solid' ? '4px solid white' : 'none',
+    borderRadius: isRound ? '9999px' : '0.5rem',
+    boxShadow: showShadow ? '0 10px 15px rgba(0, 0, 0, 0.3)' : 'none',
+    overflow: 'hidden',
+  }
+
   return (
     <div className="relative z-10 flex flex-col items-center justify-center min-h-screen space-y-4 p-4"
       style={{
@@ -187,7 +195,7 @@ export default function App() {
 
       {imageSrc && (
         <>
-          <div className="relative w-80 h-80 mt-6">
+          <div className="relative w-80 h-80 mt-6" style={cropContainerStyle}>
             <Cropper
               image={imageSrc}
               crop={crop}
