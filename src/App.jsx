@@ -297,11 +297,18 @@ export default function App() {
       {croppedImage && (
         <div className="mt-6 flex flex-col items-center space-y-2">
           <h2 className="text-emerald-400 font-semibold drop-shadow-md mb-2">Cropped Emoji Preview:</h2>
-          <img
-            src={croppedImage}
-            alt=""
-            className={`w-32 h-32 object-cover ${isRound ? 'rounded-full' : 'rounded-lg'} ${borderStyle === 'solid' ? 'border-4 border-white' : ''} ${showShadow ? 'shadow-lg' : ''}`}
-          />
+          <div
+            className={`w-32 h-32 flex items-center justify-center 
+              ${isRound ? 'rounded-full' : 'rounded-lg'} 
+              ${borderStyle === 'solid' ? 'border-4 border-white' : ''} 
+              ${showShadow ? 'shadow-lg' : ''}`}
+          >
+            <img
+              src={croppedImage}
+              alt=""
+              className={`w-full h-full object-cover ${isRound ? 'rounded-full' : 'rounded-lg'}`}
+            />
+          </div>
           <div className="flex gap-2">
             <button
               className="btn-primary mt-4"
