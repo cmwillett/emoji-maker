@@ -3,6 +3,22 @@ import Cropper from 'react-easy-crop'
 import { Button, Slider, Typography, Stack, Tooltip } from '@mui/material'
 import getCroppedImg from './utils/cropImage'
 
+const removeBackground = async (imageBlob) => {
+  const formData = new FormData()
+  formData.append('file', imageBlob, 'image.png')
+
+  const response = await fetch('https://emoji-api-tphz.onrender.com/remove-bg', {
+    method: 'POST',
+    body: formData,
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to remove background')
+  }
+
+  return await response.blob()
+}
+
 function UploadButtons({ onImageSelect }) {
   const handleFileInput = (e) => {
     const file = e.target.files?.[0]
@@ -91,10 +107,25 @@ export default function App() {
 
   const showCroppedImage = useCallback(async () => {
     try {
-      const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels)
-      setCroppedImage(croppedImage)
+      const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 'image/png', true)
+
+      const formData = new FormData()
+      formData.append('file', blob, 'emoji.png')
+
+      const response = await fetch('https://emoji-api-tphz.onrender.com/remove-bg', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) throw new Error('Failed to remove background.')
+
+      const processedBlob = await response.blob()
+      const processedUrl = URL.createObjectURL(processedBlob)
+
+      setCroppedImage(processedUrl)
     } catch (e) {
       console.error(e)
+      alert('Something went wrong while processing the image.')
     }
   }, [imageSrc, croppedAreaPixels])
 

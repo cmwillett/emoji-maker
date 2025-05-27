@@ -1,28 +1,41 @@
-import { createImage, getRadianAngle } from './utils'
-
-export default async function getCroppedImg(imageSrc, pixelCrop) {
+export default async function getCroppedImg(imageSrc, crop, mimeType = 'image/png', returnBlob = false) {
   const image = await createImage(imageSrc)
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
 
-  canvas.width = pixelCrop.width
-  canvas.height = pixelCrop.height
+  canvas.width = crop.width
+  canvas.height = crop.height
 
   ctx.drawImage(
     image,
-    pixelCrop.x,
-    pixelCrop.y,
-    pixelCrop.width,
-    pixelCrop.height,
+    crop.x,
+    crop.y,
+    crop.width,
+    crop.height,
     0,
     0,
-    pixelCrop.width,
-    pixelCrop.height
+    crop.width,
+    crop.height
   )
 
   return new Promise((resolve) => {
     canvas.toBlob((blob) => {
-      resolve(URL.createObjectURL(blob))
-    }, 'image/jpeg')
+      if (returnBlob) {
+        resolve(blob)
+      } else {
+        const reader = new FileReader()
+        reader.readAsDataURL(blob)
+        reader.onloadend = () => resolve(reader.result)
+      }
+    }, mimeType)
+  })
+}
+
+function createImage(url) {
+  return new Promise((resolve, reject) => {
+    const image = new Image()
+    image.onload = () => resolve(image)
+    image.onerror = reject
+    image.src = url
   })
 }
