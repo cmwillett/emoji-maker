@@ -5,19 +5,26 @@ import getCroppedImg from './utils/cropImage'
 
 const removeBackground = async (imageBlob) => {
   const formData = new FormData()
-  formData.append('file', imageBlob, 'image.png')
+  formData.append('image_file', imageBlob, 'image.png')
+  formData.append('size', 'auto')
 
-  const response = await fetch('https://emoji-api-tphz.onrender.com/remove-bg', {
+  const response = await fetch('https://api.remove.bg/v1.0/removebg', {
     method: 'POST',
+    headers: {
+      'X-Api-Key': import.meta.env.VITE_REMOVEBG_API_KEY, // 🧠 uses your .env file
+    },
     body: formData,
   })
 
   if (!response.ok) {
+    const errorText = await response.text()
+    console.error('remove.bg error:', errorText)
     throw new Error('Failed to remove background')
   }
 
   return await response.blob()
 }
+
 
 function UploadButtons({ onImageSelect }) {
   const handleFileInput = (e) => {
@@ -107,21 +114,9 @@ export default function App() {
 
   const showCroppedImage = useCallback(async () => {
     try {
-      console.log('imageSrce:', imageSrc)
-      console.log('croppedAreaPixels:', croppedAreaPixels)
       const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 'image/png', true)
 
-      const formData = new FormData()
-      formData.append('file', blob, 'emoji.png')
-
-      const response = await fetch('https://emoji-api-tphz.onrender.com/remove-bg', {
-        method: 'POST',
-        body: formData,
-      })
-
-      if (!response.ok) throw new Error('Failed to remove background.')
-
-      const processedBlob = await response.blob()
+      const processedBlob = await removeBackground(blob)
       const processedUrl = URL.createObjectURL(processedBlob)
 
       setCroppedImage(processedUrl)
@@ -130,6 +125,7 @@ export default function App() {
       alert('Something went wrong while processing the image.')
     }
   }, [imageSrc, croppedAreaPixels])
+
 
   const handleReset = () => {
     setImageSrc(null)
