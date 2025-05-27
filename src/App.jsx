@@ -2,6 +2,16 @@ import { useState, useCallback, useEffect } from 'react'
 import Cropper from 'react-easy-crop'
 import { Button, Slider, Typography, Stack, Tooltip } from '@mui/material'
 import getCroppedImg from './utils/cropImage'
+import BgRemover from './components/BgRemover'
+
+function App() {
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Emoji Background Remover</h1>
+      <BgRemover />
+    </div>
+  )
+}
 
 function UploadButtons({ onImageSelect }) {
   const handleFileInput = (e) => {
