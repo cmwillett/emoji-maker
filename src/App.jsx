@@ -95,18 +95,21 @@ export default function App() {
   const [backgroundColor, setBackgroundColor] = useState('')
 
   useEffect(() => {
-    const handler = (e) => {
-      e.preventDefault()
-      setDeferredPrompt(e)
-      setShowInstall(true)
-    }
+    if (typeof window !== 'undefined') {
+      const handler = (e) => {
+        e.preventDefault()
+        setDeferredPrompt(e)
+        setShowInstall(true)
+      }
 
-    window.addEventListener('beforeinstallprompt', handler)
+      window.addEventListener('beforeinstallprompt', handler)
 
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handler)
+      return () => {
+        window.removeEventListener('beforeinstallprompt', handler)
+      }
     }
   }, [])
+
 
   const handleInstallClick = () => {
     if (deferredPrompt) {
