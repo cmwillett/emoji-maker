@@ -2,29 +2,7 @@ import { useState, useCallback, useEffect } from 'react'
 import Cropper from 'react-easy-crop'
 import { Button, Slider, Typography, Stack, Tooltip } from '@mui/material'
 import getCroppedImg from './utils/cropImage'
-
-const removeBackground = async (imageBlob) => {
-  const formData = new FormData()
-  formData.append('image_file', imageBlob, 'image.png')
-  formData.append('size', 'auto')
-
-  const response = await fetch('https://api.remove.bg/v1.0/removebg', {
-    method: 'POST',
-    headers: {
-      'X-Api-Key': import.meta.env.VITE_REMOVEBG_API_KEY, // 🧠 uses your .env file
-    },
-    body: formData,
-  })
-
-  if (!response.ok) {
-    const errorText = await response.text()
-    console.error('remove.bg error:', errorText)
-    throw new Error('Failed to remove background')
-  }
-
-  return await response.blob()
-}
-
+import SparkMD5 from 'spark-md5'
 
 function UploadButtons({ onImageSelect }) {
   const handleFileInput = (e) => {
@@ -62,7 +40,6 @@ function UploadButtons({ onImageSelect }) {
         </label>
       </Tooltip>
     </Stack>
-
   )
 }
 
@@ -84,10 +61,7 @@ export default function App() {
     }
 
     window.addEventListener('beforeinstallprompt', handler)
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handler)
-    }
+    return () => window.removeEventListener('beforeinstallprompt', handler)
   }, [])
 
   const handleInstallClick = () => {
@@ -104,22 +78,25 @@ export default function App() {
     setCroppedAreaPixels(areaPixels)
   }, [])
 
-  const handleImageChange = (e) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = () => setImageSrc(reader.result)
-      reader.readAsDataURL(file)
-    }
-  }
-
   const showCroppedImage = useCallback(async () => {
     try {
       setLoading(true)
+
       const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 'image/png', true)
+      if (!blob || blob.size === 0) throw new Error('Failed to crop image.')
+
+      const arrayBuffer = await blob.arrayBuffer()
+      const hash = SparkMD5.ArrayBuffer.hash(arrayBuffer)
+      const cached = localStorage.getItem(`emoji_${hash}`)
+
+      if (cached) {
+        console.log('Using cached image 🎉')
+        setCroppedImage(cached)
+        return
+      }
 
       const formData = new FormData()
-      formData.append('file', blob, 'emoji.png')
+      formData.append('image_file', blob, 'emoji.png')
 
       const response = await fetch('https://api.remove.bg/v1.0/removebg', {
         method: 'POST',
@@ -140,7 +117,9 @@ export default function App() {
 
       const processedBlob = await response.blob()
       const processedUrl = URL.createObjectURL(processedBlob)
+      localStorage.setItem(`emoji_${hash}`, processedUrl)
       setCroppedImage(processedUrl)
+
     } catch (e) {
       console.error(e)
       alert(e.message || 'Something went wrong while processing the image.')
@@ -148,8 +127,6 @@ export default function App() {
       setLoading(false)
     }
   }, [imageSrc, croppedAreaPixels])
-
-
 
   const handleReset = () => {
     setImageSrc(null)
@@ -167,7 +144,7 @@ export default function App() {
         backgroundPosition: 'center',
       }}>
       <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div>
-      <h1 className ="text-3xl font-bold text-emerald-400 drop-shadow-lg">The Craig's</h1> 
+      <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">The Craig's</h1>
       <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">Emoji Maker</h1>
       <Stack direction="row" spacing={2} className="mt-4">
         {showInstall && (
@@ -183,7 +160,6 @@ export default function App() {
           </button>
         </Tooltip>
       </Stack>
-
 
       {!imageSrc && <UploadButtons onImageSelect={setImageSrc} />}
 
@@ -212,11 +188,9 @@ export default function App() {
               className="w-full h-2 bg-blue-600 rounded-lg appearance-none cursor-pointer"
             />
           </div>
-
           <button className="btn-primary mt-4" onClick={showCroppedImage}>
             Crop Image and Preview Emoji
           </button>
-
         </>
       )}
 
@@ -247,7 +221,6 @@ export default function App() {
             >
               Download Emoji
             </button>
-
           </div>
         </div>
       )}
