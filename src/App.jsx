@@ -118,17 +118,37 @@ export default function App() {
       setLoading(true)
       const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 'image/png', true)
 
-      const processedBlob = await removeBackground(blob)
-      const processedUrl = URL.createObjectURL(processedBlob)
+      const formData = new FormData()
+      formData.append('file', blob, 'emoji.png')
 
+      const response = await fetch('https://api.remove.bg/v1.0/removebg', {
+        method: 'POST',
+        headers: {
+          'X-Api-Key': import.meta.env.VITE_REMOVEBG_API_KEY,
+        },
+        body: formData,
+      })
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        if (response.status === 402 || errorText.includes('quota')) {
+          throw new Error('Background removal quota exceeded. Try again later or use a different API key.')
+        } else {
+          throw new Error(`Remove.bg error: ${errorText}`)
+        }
+      }
+
+      const processedBlob = await response.blob()
+      const processedUrl = URL.createObjectURL(processedBlob)
       setCroppedImage(processedUrl)
     } catch (e) {
       console.error(e)
-      alert('Something went wrong while processing the image.')
+      alert(e.message || 'Something went wrong while processing the image.')
     } finally {
       setLoading(false)
     }
   }, [imageSrc, croppedAreaPixels])
+
 
 
   const handleReset = () => {
