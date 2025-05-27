@@ -232,9 +232,7 @@ export default function App() {
               value={backgroundColor || '#ffffff'}
               onChange={(e) => setBackgroundColor(e.target.value)}
               className="cursor-pointer"
-            >
-              Custom
-            </input>
+            />
           </div>
 
           <button className="btn-primary mt-4" onClick={showCroppedImage}>
