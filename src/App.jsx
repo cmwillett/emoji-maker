@@ -4,10 +4,6 @@ import { Button, Slider, Typography, Stack, Tooltip } from '@mui/material'
 import getCroppedImg from './utils/cropImage'
 import SparkMD5 from 'spark-md5'
 
-const [borderStyle, setBorderStyle] = useState('solid')
-const [showShadow, setShowShadow] = useState(true)
-const [isRound, setIsRound] = useState(true)
-
 const removeBackground = async (imageBlob) => {
   const formData = new FormData()
   formData.append('image_file', imageBlob, 'image.png')
@@ -97,6 +93,9 @@ export default function App() {
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [showInstall, setShowInstall] = useState(false)
   const [backgroundColor, setBackgroundColor] = useState('')
+  const [borderStyle, setBorderStyle] = useState('solid')
+  const [showShadow, setShowShadow] = useState(true)
+  const [isRound, setIsRound] = useState(true)
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
