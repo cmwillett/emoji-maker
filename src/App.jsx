@@ -67,6 +67,7 @@ function UploadButtons({ onImageSelect }) {
 }
 
 export default function App() {
+  const [loading, setLoading] = useState(false)
   const [imageSrc, setImageSrc] = useState(null)
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
@@ -114,6 +115,7 @@ export default function App() {
 
   const showCroppedImage = useCallback(async () => {
     try {
+      setLoading(true)
       const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 'image/png', true)
 
       const processedBlob = await removeBackground(blob)
@@ -123,6 +125,8 @@ export default function App() {
     } catch (e) {
       console.error(e)
       alert('Something went wrong while processing the image.')
+    } finally {
+      setLoading(false)
     }
   }, [imageSrc, croppedAreaPixels])
 
@@ -194,6 +198,13 @@ export default function App() {
           </button>
 
         </>
+      )}
+
+      {loading && (
+        <div className="mt-6 flex flex-col items-center space-y-2">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-400"></div>
+          <p className="text-emerald-400 mt-2">Processing your emoji...</p>
+        </div>
       )}
 
       {croppedImage && (
