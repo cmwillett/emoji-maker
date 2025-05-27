@@ -1,35 +1,49 @@
-export default async function getCroppedImg(imageSrc, crop, mimeType = 'image/png', returnBlob = false) {
-  const image = await createImage(imageSrc)
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')
+export default function getCroppedImg(imageSrc, pixelCrop, mimeType = 'image/png', returnBlob = false) {
+  return new Promise((resolve, reject) => {
+    const image = new Image()
+    image.crossOrigin = 'anonymous'
+    image.src = imageSrc
 
-  canvas.width = crop.width
-  canvas.height = crop.height
+    image.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = pixelCrop.width
+      canvas.height = pixelCrop.height
+      const ctx = canvas.getContext('2d')
 
-  ctx.drawImage(
-    image,
-    crop.x,
-    crop.y,
-    crop.width,
-    crop.height,
-    0,
-    0,
-    crop.width,
-    crop.height
-  )
+      ctx.drawImage(
+        image,
+        pixelCrop.x,
+        pixelCrop.y,
+        pixelCrop.width,
+        pixelCrop.height,
+        0,
+        0,
+        pixelCrop.width,
+        pixelCrop.height
+      )
 
-  return new Promise((resolve) => {
-    canvas.toBlob((blob) => {
-      if (returnBlob) {
-        resolve(blob)
-      } else {
-        const reader = new FileReader()
-        reader.readAsDataURL(blob)
-        reader.onloadend = () => resolve(reader.result)
-      }
-    }, mimeType)
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            reject(new Error('Canvas is empty'))
+            return
+          }
+          if (returnBlob) {
+            resolve(blob)
+          } else {
+            const url = URL.createObjectURL(blob)
+            resolve(url)
+          }
+        },
+        mimeType,
+        1
+      )
+    }
+
+    image.onerror = (error) => reject(error)
   })
 }
+
 
 function createImage(url) {
   return new Promise((resolve, reject) => {
