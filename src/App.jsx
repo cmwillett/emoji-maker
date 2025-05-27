@@ -92,7 +92,7 @@ export default function App() {
   const [croppedImage, setCroppedImage] = useState(null)
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [showInstall, setShowInstall] = useState(false)
-  const [backgroundColor, setBackgroundColor] = useState('#ffffff')
+  const [backgroundColor, setBackgroundColor] = useState('')
 
   useEffect(() => {
     const handler = (e) => {
@@ -128,7 +128,12 @@ export default function App() {
       const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 'image/png', true)
 
       const bgRemoved = await removeBackground(blob)
-      const finalBlob = await applyBackgroundColor(bgRemoved, backgroundColor)
+      let finalBlob
+      if (backgroundColor) {
+        finalBlob = await applyBackgroundColor(bgRemoved, backgroundColor)
+      } else {
+        finalBlob = bgRemoved
+      }
       const finalUrl = URL.createObjectURL(finalBlob)
       setCroppedImage(finalUrl)
     } catch (e) {
@@ -212,10 +217,16 @@ export default function App() {
                   onClick={() => setBackgroundColor(color)}
                 ></button>
               ))}
+              <button
+                className="text-xs text-white border border-white rounded px-2"
+                onClick={() => setBackgroundColor('')}
+              >
+                No BG
+              </button>
             </div>
             <input
               type="color"
-              value={backgroundColor}
+              value={backgroundColor || '#ffffff'}
               onChange={(e) => setBackgroundColor(e.target.value)}
               className="cursor-pointer"
             />
