@@ -4,6 +4,10 @@ import { Button, Slider, Typography, Stack, Tooltip } from '@mui/material'
 import getCroppedImg from './utils/cropImage'
 import SparkMD5 from 'spark-md5'
 
+const [borderStyle, setBorderStyle] = useState('solid')
+const [showShadow, setShowShadow] = useState(true)
+const [isRound, setIsRound] = useState(true)
+
 const removeBackground = async (imageBlob) => {
   const formData = new FormData()
   formData.append('image_file', imageBlob, 'image.png')
@@ -237,6 +241,38 @@ export default function App() {
               className="cursor-pointer"
             />
           </div>
+          <div className="mt-4 text-center">
+            <p className="text-emerald-400 font-semibold drop-shadow-md mb-2">Emoji Style Options</p>
+
+            <div className="flex flex-wrap justify-center gap-3 text-sm text-white">
+              <label className="flex items-center gap-1">
+                <input
+                  type="checkbox"
+                  checked={borderStyle === 'solid'}
+                  onChange={(e) => setBorderStyle(e.target.checked ? 'solid' : 'none')}
+                />
+                Border
+              </label>
+
+              <label className="flex items-center gap-1">
+                <input
+                  type="checkbox"
+                  checked={showShadow}
+                  onChange={(e) => setShowShadow(e.target.checked)}
+                />
+                Shadow
+              </label>
+
+              <label className="flex items-center gap-1">
+                <input
+                  type="checkbox"
+                  checked={isRound}
+                  onChange={(e) => setIsRound(e.target.checked)}
+                />
+                Circular Emoji
+              </label>
+            </div>
+          </div>
 
           <button className="btn-primary mt-4" onClick={showCroppedImage}>
             Crop Image and Preview Emoji
@@ -257,7 +293,7 @@ export default function App() {
           <img
             src={croppedImage}
             alt=""
-            className="w-32 h-32 object-cover rounded-full border"
+            className={`w-32 h-32 object-cover ${isRound ? 'rounded-full' : 'rounded-lg'} ${borderStyle === 'solid' ? 'border-4 border-white' : ''} ${showShadow ? 'shadow-lg' : ''}`}
           />
           <div className="flex gap-2">
             <button
