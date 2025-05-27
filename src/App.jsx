@@ -4,6 +4,46 @@ import { Button, Slider, Typography, Stack, Tooltip } from '@mui/material'
 import getCroppedImg from './utils/cropImage'
 import SparkMD5 from 'spark-md5'
 
+const removeBackground = async (imageBlob) => {
+  const formData = new FormData()
+  formData.append('image_file', imageBlob, 'image.png')
+  formData.append('size', 'auto')
+
+  const response = await fetch('https://api.remove.bg/v1.0/removebg', {
+    method: 'POST',
+    headers: {
+      'X-Api-Key': import.meta.env.VITE_REMOVEBG_API_KEY,
+    },
+    body: formData,
+  })
+
+  if (!response.ok) {
+    const errorText = await response.text()
+    throw new Error(errorText)
+  }
+
+  return await response.blob()
+}
+
+const applyBackgroundColor = async (transparentBlob, backgroundColor) => {
+  return new Promise((resolve) => {
+    const img = new Image()
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      canvas.width = img.width
+      canvas.height = img.height
+      const ctx = canvas.getContext('2d')
+      ctx.fillStyle = backgroundColor
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.drawImage(img, 0, 0)
+      canvas.toBlob((finalBlob) => {
+        resolve(finalBlob)
+      }, 'image/png')
+    }
+    img.src = URL.createObjectURL(transparentBlob)
+  })
+}
+
 function UploadButtons({ onImageSelect }) {
   const handleFileInput = (e) => {
     const file = e.target.files?.[0]
@@ -52,6 +92,7 @@ export default function App() {
   const [croppedImage, setCroppedImage] = useState(null)
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [showInstall, setShowInstall] = useState(false)
+  const [backgroundColor, setBackgroundColor] = useState('#ffffff')
 
   useEffect(() => {
     const handler = (e) => {
@@ -61,7 +102,10 @@ export default function App() {
     }
 
     window.addEventListener('beforeinstallprompt', handler)
-    return () => window.removeEventListener('beforeinstallprompt', handler)
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler)
+    }
   }, [])
 
   const handleInstallClick = () => {
@@ -81,52 +125,19 @@ export default function App() {
   const showCroppedImage = useCallback(async () => {
     try {
       setLoading(true)
-
       const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 'image/png', true)
-      if (!blob || blob.size === 0) throw new Error('Failed to crop image.')
 
-      const arrayBuffer = await blob.arrayBuffer()
-      const hash = SparkMD5.ArrayBuffer.hash(arrayBuffer)
-      const cached = localStorage.getItem(`emoji_${hash}`)
-
-      if (cached) {
-        console.log('Using cached image 🎉')
-        setCroppedImage(cached)
-        return
-      }
-
-      const formData = new FormData()
-      formData.append('image_file', blob, 'emoji.png')
-
-      const response = await fetch('https://api.remove.bg/v1.0/removebg', {
-        method: 'POST',
-        headers: {
-          'X-Api-Key': import.meta.env.VITE_REMOVEBG_API_KEY,
-        },
-        body: formData,
-      })
-
-      if (!response.ok) {
-        const errorText = await response.text()
-        if (response.status === 402 || errorText.includes('quota')) {
-          throw new Error('Background removal quota exceeded. Try again later or use a different API key.')
-        } else {
-          throw new Error(`Remove.bg error: ${errorText}`)
-        }
-      }
-
-      const processedBlob = await response.blob()
-      const processedUrl = URL.createObjectURL(processedBlob)
-      localStorage.setItem(`emoji_${hash}`, processedUrl)
-      setCroppedImage(processedUrl)
-
+      const bgRemoved = await removeBackground(blob)
+      const finalBlob = await applyBackgroundColor(bgRemoved, backgroundColor)
+      const finalUrl = URL.createObjectURL(finalBlob)
+      setCroppedImage(finalUrl)
     } catch (e) {
       console.error(e)
       alert(e.message || 'Something went wrong while processing the image.')
     } finally {
       setLoading(false)
     }
-  }, [imageSrc, croppedAreaPixels])
+  }, [imageSrc, croppedAreaPixels, backgroundColor])
 
   const handleReset = () => {
     setImageSrc(null)
@@ -144,7 +155,7 @@ export default function App() {
         backgroundPosition: 'center',
       }}>
       <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div>
-      <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">The Craig's</h1>
+      <h1 className ="text-3xl font-bold text-emerald-400 drop-shadow-lg">The Craig's</h1> 
       <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">Emoji Maker</h1>
       <Stack direction="row" spacing={2} className="mt-4">
         {showInstall && (
@@ -188,6 +199,27 @@ export default function App() {
               className="w-full h-2 bg-blue-600 rounded-lg appearance-none cursor-pointer"
             />
           </div>
+
+          <div className="mt-4 text-center">
+            <p className="text-emerald-400 font-semibold drop-shadow-md mb-2">Choose Background Color</p>
+            <div className="flex justify-center gap-2 mb-2">
+              {["#ffffff", "#ffd700", "#87ceeb", "#ff69b4", "#000000"].map((color) => (
+                <button
+                  key={color}
+                  className="w-6 h-6 rounded-full border"
+                  style={{ backgroundColor: color, borderColor: color === backgroundColor ? 'lime' : 'white' }}
+                  onClick={() => setBackgroundColor(color)}
+                ></button>
+              ))}
+            </div>
+            <input
+              type="color"
+              value={backgroundColor}
+              onChange={(e) => setBackgroundColor(e.target.value)}
+              className="cursor-pointer"
+            />
+          </div>
+
           <button className="btn-primary mt-4" onClick={showCroppedImage}>
             Crop Image and Preview Emoji
           </button>
