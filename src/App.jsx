@@ -258,13 +258,13 @@ export default function App() {
               {["#ffffff", "#ffd700", "#87ceeb", "#ff69b4", "#000000"].map((color) => (
                 <button
                   key={color}
-                  className="w-6 h-6 rounded-full border"
+                  className="w-6 h-6 rounded-full border cursor-pointer"
                   style={{ backgroundColor: color, borderColor: color === backgroundColor ? 'lime' : 'white' }}
                   onClick={() => setBackgroundColor(color)}
                 ></button>
               ))}
             <button
-              className="text-xs text-black bg-white border border-white rounded px-2 hover:bg-gray-200"
+              className="text-xs text-black bg-white border border-white rounded px-2 hover:bg-gray-200 cursor-pointer"
               onClick={() => setBackgroundColor('')}
             >
               No BG
@@ -313,7 +313,7 @@ export default function App() {
             </div>
           </div>
 
-          <button className="btn-primary mt-4" onClick={showCroppedImage}>
+          <button className="btn-primary mt-4 cursor-pointer" onClick={showCroppedImage}>
             Crop Image and Preview Emoji
           </button>
         </>
@@ -343,7 +343,7 @@ export default function App() {
           </div>
           <div className="flex gap-2">
             <button
-              className="btn-primary mt-4"
+              className="btn-primary mt-4 cursor-pointer"
               onClick={() => {
                 const link = document.createElement('a')
                 link.href = croppedImage
