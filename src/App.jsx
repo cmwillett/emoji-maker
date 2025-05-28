@@ -79,6 +79,8 @@ export default function App() {
   const [isRound, setIsRound] = useState(true)
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [emojiCount, setEmojiCount] = useState(null);
+
 
 
   useEffect(() => {
