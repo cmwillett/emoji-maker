@@ -211,7 +211,7 @@ export default function App() {
 
           <div className="mt-4 text-center">
             <p className="text-emerald-400 font-semibold drop-shadow-md mb-2">Choose Background Color</p>
-            <div className="text-emerald-400 text-sm text-left mb-2"></div>
+            <div className="text-emerald-400 text-sm text-left mb-2">
               <ul className="list-disc list-inside space-y-1">
                 <li>Do nothing if you want to just remove the background...</li>
                 <li>Choose a color if you want to use that color as your background...</li>
