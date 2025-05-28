@@ -114,6 +114,8 @@ export default function App() {
 
   const showCroppedImage = useCallback(async () => {
     try {
+      await incrementEmojiCount()
+
       setLoading(true)
       const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 'image/png', true)
 
@@ -156,6 +158,17 @@ export default function App() {
     overflow: 'hidden',
   }
 
+  const incrementEmojiCount = async () => {
+    try {
+      const res = await fetch('/api/increment-emoji-count')
+      const data = await res.json()
+      console.log('Total Emojis Created:', data.count)
+    } catch (err) {
+      console.error('Failed to update emoji count', err)
+    }
+  }
+
+
   return (
     <div className="relative z-10 flex flex-col items-center justify-center min-h-screen space-y-4 p-4"
       style={{
@@ -166,6 +179,11 @@ export default function App() {
       <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div>
       <h1 className ="text-3xl font-bold text-emerald-400 drop-shadow-lg">The Craig's</h1> 
       <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">Emoji Maker</h1>
+      {emojiCount !== null && (
+        <p className="text-sm text-emerald-400 mt-2">
+          {emojiCount.toLocaleString()} emojis created so far!
+        </p>
+      )}
       <Stack direction="row" spacing={2} className="mt-4">
         {showInstall && (
           <Tooltip title="Install this app to your home screen/desktop/taskbar for quick access!" placement="left">
