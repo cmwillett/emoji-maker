@@ -4,27 +4,7 @@ import { Button, Slider, Typography, Stack, Tooltip } from '@mui/material'
 import getCroppedImg from './utils/cropImage'
 import SparkMD5 from 'spark-md5'
 import { removeBackground } from './lib/removeBackground'
-
-/*const removeBackground = async (imageBlob) => {
-  const formData = new FormData()
-  formData.append('image_file', imageBlob, 'image.png')
-  formData.append('size', 'auto')
-
-  const response = await fetch('https://api.remove.bg/v1.0/removebg', {
-    method: 'POST',
-    headers: {
-      'X-Api-Key': import.meta.env.VITE_REMOVEBG_API_KEY,
-    },
-    body: formData,
-  })
-
-  if (!response.ok) {
-    const errorText = await response.text()
-    throw new Error(errorText)
-  }
-
-  return await response.blob()
-}*/
+import { Modal } from '@mui/material'
 
 const applyBackgroundColor = async (transparentBlob, backgroundColor) => {
   return new Promise((resolve) => {
@@ -97,6 +77,9 @@ export default function App() {
   const [borderStyle, setBorderStyle] = useState('solid')
   const [showShadow, setShowShadow] = useState(true)
   const [isRound, setIsRound] = useState(true)
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -136,7 +119,8 @@ export default function App() {
 
       const bgRemoved = await removeBackground(blob)
       if ('error' in bgRemoved && bgRemoved.error === 'no_foreground') {
-        alert("We couldn't detect a clear subject in the image.  Try cropping closer or using a photo with more contrast.");
+        setErrorMessage("We couldn't detect a clear subject in the image. Try cropping closer or using a photo with more contrast.");
+        setShowErrorModal(true);
         return;
       }
       let finalBlob
@@ -149,7 +133,8 @@ export default function App() {
       setCroppedImage(finalUrl)
     } catch (e) {
       console.error(e)
-      alert(e.message || 'Something went wrong while processing the image.')
+      setErrorMessage(e.message || 'Something went wrong while processing the image.');
+      setShowErrorModal(true);
     } finally {
       setLoading(false)
     }
@@ -329,6 +314,23 @@ export default function App() {
           </div>
         </div>
       )}
+      <Modal
+        open={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        aria-labelledby="error-modal-title"
+        aria-describedby="error-modal-description"
+      >
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg max-w-xs w-full">
+          <h2 id="error-modal-title" className="text-lg font-bold text-red-600 mb-2">Error</h2>
+          <p id="error-modal-description" className="text-gray-700 mb-4">{errorMessage}</p>
+          <button
+            className="btn-primary w-full"
+            onClick={() => setShowErrorModal(false)}
+          >
+            Close
+          </button>
+        </div>
+      </Modal>
     </div>
   )
 }
