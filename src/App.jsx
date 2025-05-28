@@ -121,8 +121,7 @@ export default function App() {
 
   const showCroppedImage = useCallback(async () => {
     try {
-      await incrementEmojiCount()
-
+      
       setLoading(true)
       const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 'image/png', true)
       console.log("Cropped blob: ", blob)
@@ -147,6 +146,7 @@ export default function App() {
       const finalUrl = URL.createObjectURL(finalBlob)
       console.log("Final image url:", finalUrl)
       setCroppedImage(finalUrl)
+      await incrementEmojiCount()
     } catch (e) {
         console.error(e)
         setErrorMessage(
