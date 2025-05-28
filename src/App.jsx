@@ -164,11 +164,13 @@ export default function App() {
     try {
       const res = await fetch('/api/increment-emoji-count')
       const data = await res.json()
+      setEmojiCount(data.count)
       console.log('Total Emojis Created:', data.count)
     } catch (err) {
       console.error('Failed to update emoji count', err)
     }
   }
+
 
 
   return (
