@@ -204,13 +204,13 @@ export default function App() {
       <Stack direction="row" spacing={2} className="mt-4">
         {showInstall && (
           <Tooltip title="Install this app to your home screen/desktop/taskbar for quick access!" placement="left">
-            <button onClick={handleInstallClick} className="btn-primary">
+            <button onClick={handleInstallClick} className="btn-primary cursor-pointer">
               Install App
             </button>
           </Tooltip>
         )}
         <Tooltip title="Reset the app and choose a new image..." placement="right">
-          <button className="btn-primary" onClick={handleReset}>
+          <button className="btn-primary cursor-pointer" onClick={handleReset}>
             Start Over
           </button>
         </Tooltip>
@@ -434,7 +434,7 @@ export default function App() {
           © 2025 The Craig, Inc. ·{' '}
           <button
             onClick={() => setShowContactModal(true)}
-            className="underline hover:text-white transition"
+            className="underline hover:text-white transition cursor-pointer"
           >
             Contact
           </button>
