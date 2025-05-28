@@ -125,8 +125,13 @@ export default function App() {
 
       setLoading(true)
       const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 'image/png', true)
+      console.log("Cropped blob: ", blob)
 
       const bgRemoved = await removeBackground(blob)
+      console.log("Background removed: ", bgRemoved)
+      if (!bgRemoved || bgRemoved instanceof Error) {
+        throw new Error("Background removal failed")
+      }
       if ('error' in bgRemoved && bgRemoved.error === 'no_foreground') {
         setErrorMessage("We couldn't detect a clear subject in the image. Try cropping closer or using a photo with more contrast.");
         setShowErrorModal(true);
@@ -138,7 +143,9 @@ export default function App() {
       } else {
         finalBlob = bgRemoved
       }
+      console.log("Final blob:", finalBlob)
       const finalUrl = URL.createObjectURL(finalBlob)
+      console.log("Final image url:", finalUrl)
       setCroppedImage(finalUrl)
     } catch (e) {
         console.error(e)
