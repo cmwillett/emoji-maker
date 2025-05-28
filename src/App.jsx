@@ -211,12 +211,14 @@ export default function App() {
 
           <div className="mt-4 text-center">
             <p className="text-emerald-400 font-semibold drop-shadow-md mb-2">Choose Background Color</p>
-            <ul className="list-disc list-inside text-sm text-emerald-400 space-y-1 mb-2">
-              <li>Do nothing if you want to just remove the background...</li>
-              <li>Choose a color if you want to use that color as your background...</li>
-              <li>Click the "No BG" button if you want to go back to removing the background...</li>
-              <li>Click the bottom square to create a custom color for your background...</li>
-            </ul>
+            <div className="text-emerald-400 text-sm text-left mb-2"></div>
+              <ul className="list-disc list-inside space-y-1">
+                <li>Do nothing if you want to just remove the background...</li>
+                <li>Choose a color if you want to use that color as your background...</li>
+                <li>Click the "No BG" button if you want to go back to removing the background...</li>
+                <li>Click the bottom square to create a custom color for your background...</li>
+              </ul>
+            </div>
             <div className="flex justify-center gap-2 mb-2">
               {["#ffffff", "#ffd700", "#87ceeb", "#ff69b4", "#000000"].map((color) => (
                 <button
@@ -233,6 +235,9 @@ export default function App() {
               No BG
             </button>
             </div>
+            <label className="block text-sm text-emerald-400 font-medium mb-1">
+              Pick a Custom Background Color
+            </label>
             <input
               type="color"
               value={backgroundColor || '#ffffff'}
