@@ -99,6 +99,10 @@ export default function App() {
     }
   }, [])
 
+  useEffect(() => {
+    fetchEmojiCount()
+  }, [])
+
 
   const handleInstallClick = () => {
     if (deferredPrompt) {
@@ -171,7 +175,15 @@ export default function App() {
     }
   }
 
-
+  const fetchEmojiCount = async () => {
+    try {
+      const res = await fetch('/api/getEmojiCount')
+      const data = await res.json()
+      setEmojiCount(data.count)
+    } catch (err) {
+      console.error('Failed to fetch emoji count', err)
+    }
+  }
 
   return (
     <div className="relative z-10 flex flex-col items-center justify-center min-h-screen space-y-4 p-4"
