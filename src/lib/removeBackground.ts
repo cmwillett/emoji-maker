@@ -3,13 +3,13 @@ export async function removeBackground(file: File): Promise<Blob | { error: 'no_
   formData.append("image_file", file);
   formData.append("size", "auto");
 
-  const res = await fetch("https://api.remove.bg/v1.0/removebg", {
+  const res = await fetch("https://us-central1-genuine-grid-461215-p6.cloudfunctions.net/remove_background", {
     method: "POST",
-    headers: {
-      "X-Api-Key": import.meta.env.VITE_REMOVEBG_API_KEY!,
-    },
     body: formData,
   });
+
+  
+  //https://api.remove.bg/v1.0/removebg
 
   if (!res.ok) {
     const errText = await res.text();

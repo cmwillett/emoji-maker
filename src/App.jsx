@@ -141,10 +141,14 @@ export default function App() {
       const finalUrl = URL.createObjectURL(finalBlob)
       setCroppedImage(finalUrl)
     } catch (e) {
-      console.error(e)
-      setErrorMessage(e.message || 'Something went wrong while processing the image.');
-      setShowErrorModal(true);
-    } finally {
+        console.error(e)
+        setErrorMessage(
+          e.message?.includes("background removal failed")
+            ? "Something went wrong while removing the background. Please try again with a different image."
+            : e.message || 'Something went wrong while processing the image.'
+        );
+        setShowErrorModal(true);
+      } finally {
       setLoading(false)
     }
   }, [imageSrc, croppedAreaPixels, backgroundColor])
