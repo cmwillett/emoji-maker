@@ -3,8 +3,9 @@ import Cropper from 'react-easy-crop'
 import { Button, Slider, Typography, Stack, Tooltip } from '@mui/material'
 import getCroppedImg from './utils/cropImage'
 import SparkMD5 from 'spark-md5'
+import { removeBackground } from './lib/removeBackground'
 
-const removeBackground = async (imageBlob) => {
+/*const removeBackground = async (imageBlob) => {
   const formData = new FormData()
   formData.append('image_file', imageBlob, 'image.png')
   formData.append('size', 'auto')
@@ -23,7 +24,7 @@ const removeBackground = async (imageBlob) => {
   }
 
   return await response.blob()
-}
+}*/
 
 const applyBackgroundColor = async (transparentBlob, backgroundColor) => {
   return new Promise((resolve) => {
@@ -134,6 +135,10 @@ export default function App() {
       const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 'image/png', true)
 
       const bgRemoved = await removeBackground(blob)
+      if ('error' in bgRemoved && bgRemoved.error === 'no_foreground') {
+        alert("We couldn't detect a clear subject in the image.  Try cropping closer or using a photo with more contrast.");
+        return;
+      }
       let finalBlob
       if (backgroundColor) {
         finalBlob = await applyBackgroundColor(bgRemoved, backgroundColor)
