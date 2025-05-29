@@ -1,17 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
-import Cropper from 'react-easy-crop'
-import { Button, Slider, Typography, Stack, Tooltip } from '@mui/material'
 import getCroppedImg from './utils/cropImage'
-import SparkMD5 from 'spark-md5'
 import { removeBackground } from './lib/removeBackground'
-import { Modal } from '@mui/material'
-import InstallMobileIcon from '@mui/icons-material/InstallMobile';
-import ShareIcon from '@mui/icons-material/Share';
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
-import { EmojiButton } from './components/EmojiButton';
-import heic2any from 'heic2any';
-
 import Header from './components/Header';
 import InstallShareButtons from './components/InstallShareButtons';
 import CropperSection from './components/CropperSection';
@@ -20,110 +9,11 @@ import StyleOptions from './components/StyleOptions';
 import EmojiPreview from './components/EmojiPreview';
 import LoadingIndicator from './components/LoadingIndicator';
 import ErrorModal from './components/ErrorModal';
-
-const applyBackgroundColor = async (transparentBlob, backgroundColor) => {
-  return new Promise((resolve) => {
-    const img = new Image()
-    img.onload = () => {
-      const canvas = document.createElement('canvas')
-      canvas.width = img.width
-      canvas.height = img.height
-      const ctx = canvas.getContext('2d')
-      ctx.fillStyle = backgroundColor
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-      ctx.drawImage(img, 0, 0)
-      canvas.toBlob((finalBlob) => {
-        resolve(finalBlob)
-      }, 'image/png')
-    }
-    img.src = URL.createObjectURL(transparentBlob)
-  })
-}
-
-function UploadButtons({ onImageSelect }) {
-  const handleFileInput = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Check if it's a HEIC image
-    if (file.type === "image/heic" || file.name.toLowerCase().endsWith(".heic")) {
-      try {
-        const convertedBlob = await heic2any({
-          blob: file,
-          toType: "image/png",
-        });
-
-        // Convert Blob to Data URL
-        const reader = new FileReader();
-        reader.onload = () => {
-          if (reader.result) {
-            onImageSelect(reader.result);
-          }
-        };
-        reader.readAsDataURL(convertedBlob);
-      } catch (error) {
-        console.error("HEIC conversion failed:", error);
-        alert("Failed to process HEIC image. Please try another format.");
-      }
-    } else {
-      // Regular image handling
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.result) {
-          onImageSelect(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  return (
-    <Stack direction="column" spacing={2} className="mt-4 items-center">
-      <Tooltip title="Use your device's camera to take a new photo..." placement="right">
-        <div>
-          <EmojiButton
-            icon={<CameraAltIcon />}
-            label={
-              <>
-                Take Photo
-                <input
-                  type="file"
-                  accept="image/*"
-                  capture="environment"
-                  onChange={handleFileInput}
-                  className="hidden"
-                />
-              </>
-            }
-            component="label"
-          />
-        </div>
-      </Tooltip>
-
-      <Tooltip title="Choose an image from your gallery or file system..." placement="right">
-        <div>
-          <EmojiButton
-            icon={<PhotoLibraryIcon />}
-            label={
-              <>
-                Choose from Gallery
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileInput}
-                  className="hidden"
-                />
-              </>
-            }
-            component="label"
-          />
-        </div>
-      </Tooltip>
-    </Stack>
-  );
-}
-
-
+import UploadButtons from './components/UploadButtons';
+import ContactModal from './components/ContactModal';
+import AboutModal from './components/AboutModal';
+import Footer from './components/Footer';
+import { applyBackgroundColor, incrementEmojiCount, fetchEmojiCount } from './utils/utils';
 
 export default function App() {
   const [loading, setLoading] = useState(false)
@@ -140,11 +30,15 @@ export default function App() {
   const [isRound, setIsRound] = useState(true)
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [emojiCount, setEmojiCount] = useState(null);
   const [showContactModal, setShowContactModal] = useState(false);
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
+
+  const [emojiCount, setEmojiCount] = useState(null);
+  useEffect(() => {
+    fetchEmojiCount(setEmojiCount);
+  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -161,11 +55,6 @@ export default function App() {
       }
     }
   }, [])
-
-  useEffect(() => {
-    fetchEmojiCount()
-  }, [])
-
 
   const handleInstallClick = () => {
     if (deferredPrompt) {
@@ -248,27 +137,6 @@ export default function App() {
     borderRadius: isRound ? '9999px' : '0.5rem',
     boxShadow: showShadow ? '0 10px 15px rgba(0, 0, 0, 0.3)' : 'none',
     overflow: 'hidden',
-  }
-
-  const incrementEmojiCount = async () => {
-    try {
-      const res = await fetch('/api/increment-emoji-count')
-      const data = await res.json()
-      setEmojiCount(data.count)
-      console.log('Total Emojis Created:', data.count)
-    } catch (err) {
-      console.error('Failed to update emoji count', err)
-    }
-  }
-
-  const fetchEmojiCount = async () => {
-    try {
-      const res = await fetch('/api/getEmojiCount')
-      const data = await res.json()
-      setEmojiCount(data.count)
-    } catch (err) {
-      console.error('Failed to fetch emoji count', err)
-    }
   }
 
   return (
@@ -380,108 +248,22 @@ export default function App() {
         errorMessage={errorMessage}
         onClose={() => setShowErrorModal(false)}
       />
-      <Modal
+      <ContactModal
         open={showContactModal}
         onClose={() => setShowContactModal(false)}
-      >
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-          <h2 className="text-lg font-bold text-emerald-600 mb-4">Contact Us</h2>
-
-          {contactSubmitted ? (
-            <p className="text-green-600">Thanks! Your message has been sent.</p>
-          ) : (
-            <>
-              <input
-                type="text"
-                placeholder="Your Name"
-                className="w-full mb-2 px-3 py-2 border rounded"
-                value={contactForm.name}
-                onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-              />
-              <input
-                type="email"
-                placeholder="Your Email"
-                className="w-full mb-2 px-3 py-2 border rounded"
-                value={contactForm.email}
-                onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
-              />
-              <textarea
-                placeholder="Your Message"
-                rows="4"
-                className="w-full mb-4 px-3 py-2 border rounded"
-                value={contactForm.message}
-                onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-              />
-              <button
-                className="btn-primary w-full"
-                onClick={async () => {
-                  try {
-                    const res = await fetch('/api/contact', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify(contactForm),
-                    });
-                    if (res.ok) {
-                      setContactSubmitted(true);
-                    }
-                  } catch (err) {
-                    console.error(err);
-                    alert('Error sending message.');
-                  }
-                }}
-              >
-                Send Message
-              </button>
-            </>
-          )}
-        </div>
-      </Modal>
-      <Modal
+        contactForm={contactForm}
+        setContactForm={setContactForm}
+        contactSubmitted={contactSubmitted}
+        setContactSubmitted={setContactSubmitted}
+      />
+      <AboutModal
         open={showAboutModal}
         onClose={() => setShowAboutModal(false)}
-        aria-labelledby="about-modal-title"
-        aria-describedby="about-modal-description"
-      >
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-gray-800">
-          <h2 id="about-modal-title" className="text-lg font-bold mb-2">About this App</h2>
-          <p id="about-modal-description" className="mb-4 text-sm">
-            This emoji maker lets you turn any photo into a custom emoji. Not an emoji that you can use in messaging apps straight away 
-            (those are unicode and are part of the actual app, so this wouldn't be able to do so).
-            Here are a few things you can do with the app though:
-              - crop the photo
-              - remove the background
-              - choose a background color
-              - apply styles like borders or shadows
-            Once you have it set, you can then:
-              - share your emoji
-              - copy it to clipboard
-              - download it
-          </p>
-          <button
-            className="btn-primary w-full"
-            onClick={() => setShowAboutModal(false)}
-          >
-            Close
-          </button>
-        </div>
-      </Modal>
-      <footer className="mt-8 w-full text-center space-y-2">
-        <div className="flex justify-center gap-4">
-          <button
-            className="px-3 py-1 rounded bg-white bg-opacity-20 text-emerald-100 font-medium backdrop-blur hover:bg-opacity-30 hover:text-white transition"
-            onClick={() => setShowAboutModal(true)}
-          >
-            About this app
-          </button>
-          <button
-            className="px-3 py-1 rounded bg-white bg-opacity-20 text-emerald-100 font-medium backdrop-blur hover:bg-opacity-30 hover:text-white transition"
-            onClick={() => setShowContactModal(true)}
-          >
-            Contact
-          </button>
-        </div>
-        <p className="text-xs text-emerald-500 mt-1">© 2025 The Craig, Inc.</p>
-      </footer>
+      />
+      <Footer
+        onAbout={() => setShowAboutModal(true)}
+        onContact={() => setShowContactModal(true)}
+      />
     </div>
   )
 }
