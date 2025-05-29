@@ -334,6 +334,7 @@ export default function App() {
         <div className="mt-6 flex flex-col items-center space-y-2">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-400"></div>
           <p className="text-emerald-400 mt-2">Processing your emoji...</p>
+          <p className="text-emerald-400 mt-2">This can take up to a minute...</p>
         </div>
       )}
 
@@ -372,7 +373,7 @@ export default function App() {
               Download Emoji
             </button>
             <button
-              className="btn-secondary mt-4 cursor-pointer"
+              className="btn-primary mt-4 cursor-pointer"
               onClick={async () => {
                 try {
                   const blob = await (await fetch(croppedImage)).blob();
