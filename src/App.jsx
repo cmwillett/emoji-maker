@@ -356,10 +356,18 @@ export default function App() {
             <button
               className="btn-primary mt-4 cursor-pointer"
               onClick={() => {
-                const link = document.createElement('a')
-                link.href = croppedImage
-                link.download = 'emoji.png'
-                link.click()
+                const defaultName = "emoji";
+                const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+                const tempName = `${defaultName}-${timestamp}.png`;
+                const userInput = prompt("Enter filename (without extension):", tempName);
+                if (userInput === null) return; // user cancelled
+
+                const finalName = `${userInput || defaultName}.png`;
+
+                const link = document.createElement('a');
+                link.href = croppedImage;
+                link.download = finalName;
+                link.click();
               }}
             >
               Download Emoji
