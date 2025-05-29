@@ -38,7 +38,7 @@ function UploadButtons({ onImageSelect }) {
   return (
     <Stack direction="column" spacing={2} className="mt-4">
       <Tooltip title="Use your device's camera to take a new photo..." placement="right">
-        <label className="btn-primary cursor-pointer w-full text-center">
+        <label className="btn-primary">
           Take Photo
           <input
             type="file"
@@ -51,7 +51,7 @@ function UploadButtons({ onImageSelect }) {
       </Tooltip>
 
       <Tooltip title="Choose an image from your gallery or file system..." placement="right">
-        <label className="btn-primary cursor-pointer w-full text-center">
+        <label className="btn-primary">
           Choose from Gallery
           <input
             type="file"
