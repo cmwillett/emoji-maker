@@ -37,32 +37,36 @@ function UploadButtons({ onImageSelect }) {
 
   return (
     <Stack direction="column" spacing={2} className="mt-4">
-      <Tooltip title="User your device's camera to start with a new photo..." placement="right">
-        <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded shadow-md">
-          Take Photo
+      <Tooltip title="Use your device's camera to take a new photo..." placement="right">
+        <div className="relative">
+          <button className="btn-primary cursor-pointer w-full">Take Photo</button>
           <input
             type="file"
             accept="image/*"
             hidden
             capture="environment"
             onChange={handleFileInput}
+            className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
           />
-        </label>
+        </div>
       </Tooltip>
-      <Tooltip title="Choose an image from your gallery or file system to start..." placement="right">
-        <label className="btn-primary cursor-pointer inline-flex items-center justify-center px-4 py-2 rounded shadow-md">
-          Choose from Gallery
+
+      <Tooltip title="Choose an image from your gallery or file system..." placement="right">
+        <div className="relative">
+          <button className="btn-primary cursor-pointer w-full">Choose from Gallery</button>
           <input
             type="file"
             accept="image/*"
             hidden
             onChange={handleFileInput}
+            className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
           />
-        </label>
+        </div>
       </Tooltip>
     </Stack>
   )
 }
+
 
 export default function App() {
   const [loading, setLoading] = useState(false)
