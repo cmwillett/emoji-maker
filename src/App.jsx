@@ -10,6 +10,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import { EmojiButton } from './components/EmojiButton';
+import heic2any from 'heic2any';
 
 const applyBackgroundColor = async (transparentBlob, backgroundColor) => {
   return new Promise((resolve) => {
@@ -31,11 +32,38 @@ const applyBackgroundColor = async (transparentBlob, backgroundColor) => {
 }
 
 function UploadButtons({ onImageSelect }) {
-  const handleFileInput = (e) => {
+  const handleFileInput = async (e) => {
     const file = e.target.files?.[0];
-    if (file) {
+    if (!file) return;
+
+    // Check if it's a HEIC image
+    if (file.type === "image/heic" || file.name.toLowerCase().endsWith(".heic")) {
+      try {
+        const convertedBlob = await heic2any({
+          blob: file,
+          toType: "image/png",
+        });
+
+        // Convert Blob to Data URL
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (reader.result) {
+            onImageSelect(reader.result);
+          }
+        };
+        reader.readAsDataURL(convertedBlob);
+      } catch (error) {
+        console.error("HEIC conversion failed:", error);
+        alert("Failed to process HEIC image. Please try another format.");
+      }
+    } else {
+      // Regular image handling
       const reader = new FileReader();
-      reader.onload = () => onImageSelect(reader.result);
+      reader.onload = () => {
+        if (reader.result) {
+          onImageSelect(reader.result);
+        }
+      };
       reader.readAsDataURL(file);
     }
   };
