@@ -358,7 +358,7 @@ export default function App() {
               onClick={() => {
                 const defaultName = "emoji";
                 const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-                const tempName = `${defaultName}-${timestamp}.png`;
+                const tempName = `${defaultName}-${timestamp}`;
                 const userInput = prompt("Enter filename (without extension):", tempName);
                 if (userInput === null) return; // user cancelled
 
