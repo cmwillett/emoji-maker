@@ -46,15 +46,19 @@ function UploadButtons({ onImageSelect }) {
         <div>
           <EmojiButton
             icon={<CameraAltIcon />}
-            label="Take Photo"
+            label={
+              <>
+                Take Photo
+                <input
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  onChange={handleFileInput}
+                  className="hidden"
+                />
+              </>
+            }
             component="label"
-          />
-          <input
-            type="file"
-            accept="image/*"
-            capture="environment"
-            onChange={handleFileInput}
-            className="hidden"
           />
         </div>
       </Tooltip>
@@ -63,14 +67,18 @@ function UploadButtons({ onImageSelect }) {
         <div>
           <EmojiButton
             icon={<PhotoLibraryIcon />}
-            label="Choose from Gallery"
+            label={
+              <>
+                Choose from Gallery
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileInput}
+                  className="hidden"
+                />
+              </>
+            }
             component="label"
-          />
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileInput}
-            className="hidden"
           />
         </div>
       </Tooltip>

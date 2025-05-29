@@ -1,10 +1,11 @@
 // components/EmojiButton.tsx
 import { Button } from '@mui/material';
+import React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 interface EmojiButtonProps {
   icon: React.ReactNode;
-  label: string;
+  label: React.ReactNode;
   onClick?: () => void;
   className?: string;
   component?: any;
