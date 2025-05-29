@@ -426,30 +426,6 @@ export default function App() {
               >
                 📋 Share (non-mobile)
               </button>
-
-              {/* Copy as Data URL */}
-              <button
-                className="btn-primary cursor-pointer"
-                onClick={async () => {
-                  try {
-                    const response = await fetch(croppedImage);
-                    const blob = await response.blob();
-                    const reader = new FileReader();
-
-                    reader.onload = async () => {
-                      await navigator.clipboard.writeText(reader.result);
-                      alert("✅ Emoji copied as Data URL! Paste it in text fields or HTML.");
-                    };
-
-                    reader.readAsDataURL(blob);
-                  } catch (err) {
-                    console.error(err);
-                    alert("❌ Failed to copy data URL.");
-                  }
-                }}
-              >
-                🔗 Copy as Data URL
-              </button>
             </div>
           </div>
         </div>
