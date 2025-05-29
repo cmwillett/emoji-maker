@@ -334,7 +334,7 @@ export default function App() {
         <div className="mt-6 flex flex-col items-center space-y-2">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-400"></div>
           <p className="text-emerald-400 mt-2">Processing your emoji...</p>
-          <p className="text-emerald-400 mt-2">This can take up to a minute...</p>
+          <p className="text-emerald-400 mt-2">This can take a minute...</p>
         </div>
       )}
 
@@ -376,20 +376,25 @@ export default function App() {
               className="btn-primary mt-4 cursor-pointer"
               onClick={async () => {
                 try {
-                  const blob = await (await fetch(croppedImage)).blob();
-                  const file = new File([blob], 'emoji.png', { type: blob.type });
+                  const response = await fetch(croppedImage);
+                  const blob = await response.blob();
 
-                  if (navigator.share && navigator.canShare?.({ files: [file] })) {
+                  // Share if supported
+                  if (navigator.share && navigator.canShare?.({ files: [new File([blob], 'emoji.png', { type: blob.type })] })) {
                     await navigator.share({
                       title: 'My Custom Emoji',
                       text: 'Check out this emoji I made!',
-                      files: [file],
+                      files: [new File([blob], 'emoji.png', { type: blob.type })],
                     });
-                  } else if (navigator.clipboard && window.ClipboardItem) {
+                  } 
+                  // Clipboard fallback: copy image blob directly
+                  else if (navigator.clipboard && window.ClipboardItem) {
                     const clipboardItem = new ClipboardItem({ [blob.type]: blob });
                     await navigator.clipboard.write([clipboardItem]);
-                    alert('Emoji copied to clipboard!');
-                  } else {
+                    alert('Emoji image copied to clipboard!');
+                  } 
+                  // Fallback message
+                  else {
                     alert('Sharing and clipboard not supported on this device.');
                   }
                 } catch (error) {
