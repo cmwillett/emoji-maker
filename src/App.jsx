@@ -353,9 +353,10 @@ export default function App() {
               className={`w-full h-full object-cover ${isRound ? 'rounded-full' : 'rounded-lg'}`}
             />
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-col items-start gap-2 mt-4">
+            {/* Download Button */}
             <button
-              className="btn-primary mt-4 cursor-pointer"
+              className="btn-primary cursor-pointer"
               onClick={() => {
                 const defaultName = "emoji";
                 const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
@@ -364,7 +365,7 @@ export default function App() {
                 if (userInput === null) return;
 
                 const finalName = `${userInput || defaultName}.png`;
-                const link = document.createElement('a');
+                const link = document.createElement("a");
                 link.href = croppedImage;
                 link.download = finalName;
                 link.click();
@@ -372,40 +373,59 @@ export default function App() {
             >
               Download Emoji
             </button>
-            <button
-              className="btn-primary mt-4 cursor-pointer"
-              onClick={async () => {
-                try {
-                  const response = await fetch(croppedImage);
-                  const blob = await response.blob();
 
-                  // Share if supported
-                  if (navigator.share && navigator.canShare?.({ files: [new File([blob], 'emoji.png', { type: blob.type })] })) {
-                    await navigator.share({
-                      title: 'My Custom Emoji',
-                      text: 'Check out this emoji I made!',
-                      files: [new File([blob], 'emoji.png', { type: blob.type })],
-                    });
-                  } 
-                  // Clipboard fallback: copy image blob directly
-                  else if (navigator.clipboard && window.ClipboardItem) {
-                    const clipboardItem = new ClipboardItem({ [blob.type]: blob });
-                    await navigator.clipboard.write([clipboardItem]);
-                    alert('Emoji image copied to clipboard!');
-                  } 
-                  // Fallback message
-                  else {
-                    alert('Sharing and clipboard not supported on this device.');
+            {/* Share Buttons */}
+            <div className="flex gap-2">
+              {/* Copy as Image */}
+              <button
+                className="btn-primary cursor-pointer"
+                onClick={async () => {
+                  try {
+                    const response = await fetch(croppedImage);
+                    const blob = await response.blob();
+
+                    if (navigator.clipboard && window.ClipboardItem) {
+                      const item = new ClipboardItem({ [blob.type]: blob });
+                      await navigator.clipboard.write([item]);
+                      alert("✅ Emoji image copied! You can now paste it into messaging apps.");
+                    } else {
+                      alert("❌ Image clipboard not supported on this browser.");
+                    }
+                  } catch (err) {
+                    console.error(err);
+                    alert("❌ Failed to copy image to clipboard.");
                   }
-                } catch (error) {
-                  console.error('Sharing or copying failed:', error);
-                  alert('Could not share or copy the emoji.');
-                }
-              }}
-            >
-              Share Emoji
-            </button>
+                }}
+              >
+                📋 Copy as Image
+              </button>
+
+              {/* Copy as Data URL */}
+              <button
+                className="btn-secondary cursor-pointer"
+                onClick={async () => {
+                  try {
+                    const response = await fetch(croppedImage);
+                    const blob = await response.blob();
+                    const reader = new FileReader();
+
+                    reader.onload = async () => {
+                      await navigator.clipboard.writeText(reader.result as string);
+                      alert("✅ Emoji copied as Data URL! Paste it in text fields or HTML.");
+                    };
+
+                    reader.readAsDataURL(blob);
+                  } catch (err) {
+                    console.error(err);
+                    alert("❌ Failed to copy data URL.");
+                  }
+                }}
+              >
+                🔗 Copy as Data
+              </button>
+            </div>
           </div>
+
         </div>
       )}
       <Modal
