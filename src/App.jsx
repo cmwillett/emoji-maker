@@ -12,6 +12,15 @@ import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import { EmojiButton } from './components/EmojiButton';
 import heic2any from 'heic2any';
 
+import Header from './components/Header';
+import InstallShareButtons from './components/InstallShareButtons';
+import CropperSection from './components/CropperSection';
+import BackgroundColorPicker from './components/BackgroundColorPicker';
+import StyleOptions from './components/StyleOptions';
+import EmojiPreview from './components/EmojiPreview';
+import LoadingIndicator from './components/LoadingIndicator';
+import ErrorModal from './components/ErrorModal';
+
 const applyBackgroundColor = async (transparentBlob, backgroundColor) => {
   return new Promise((resolve) => {
     const img = new Image()
@@ -270,148 +279,33 @@ export default function App() {
         backgroundPosition: 'center',
       }}>
       <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div> 
-      <div className="flex flex-col items-center space-y-2">
-        <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">The Craig's</h1>
-        <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">Emoji Maker</h1>
-      </div>
-      {emojiCount !== null && (
-        <p className="text-sm text-emerald-400 mt-2 font-bold underline">
-          {emojiCount.toLocaleString()} emojis created so far!
-        </p>
-      )}
-      <Stack direction="row" spacing={2} className="mt-4">
-        {showInstall && (
-          <Tooltip
-            title="Install this app to your home screen/desktop/taskbar for quick access!"
-            placement="left"
-          >
-            <span>
-              <EmojiButton
-                icon={<InstallMobileIcon />}
-                label="Install App"
-                onClick={handleInstallClick}
-              />
-            </span>
-          </Tooltip>
-        )}
-
-        {navigator.share && (
-          <Tooltip title="Share this app with others!" placement="right">
-            <span>
-              <EmojiButton
-                icon={<ShareIcon />}
-                label="Share App"
-                onClick={() => {
-                  navigator
-                    .share({
-                      title: "The Craig's Emoji Maker",
-                      text: "Check out this fun emoji maker!",
-                      url: window.location.href,
-                    })
-                    .catch(console.error);
-                }}
-              />
-            </span>
-          </Tooltip>
-        )}
-      </Stack>
-
+      <Header emojiCount={emojiCount} />
+      <InstallShareButtons showInstall={showInstall} handleInstallClick={handleInstallClick} />
       {!imageSrc && <UploadButtons onImageSelect={setImageSrc} />}
 
       {imageSrc && (
         <>
-          <div className="relative w-80 h-80 mt-6" style={cropContainerStyle}>
-            <Cropper
-              image={imageSrc}
-              crop={crop}
-              zoom={zoom}
-              aspect={1}
-              onCropChange={setCrop}
-              onZoomChange={setZoom}
-              onCropComplete={onCropComplete}
-            />
-          </div>
-          <div className="w-80 mt-4">
-            <p className="text-emerald-400 font-semibold drop-shadow-md mb-2">Zoom</p>
-            <input
-              type="range"
-              value={zoom}
-              min="1"
-              max="3"
-              step="0.1"
-              onChange={(e) => setZoom(Number(e.target.value))}
-              className="w-full h-2 bg-blue-600 rounded-lg appearance-none cursor-pointer"
-            />
-          </div>
-
-          <div className="mt-4 text-center">
-            <p className="text-emerald-400 font-semibold drop-shadow-md mb-2">Choose Background Color</p>
-            <div className="text-emerald-400 text-sm text-left mb-2">
-              <ul className="list-disc list-inside space-y-1">
-                <li>Do nothing if you want to just remove the background...</li>
-                <li>Choose a color if you want to use that color as your background...</li>
-                <li>Click the "No BG" button if you want to go back to removing the background...</li>
-                <li>Click the bottom square to create a custom color for your background...</li>
-              </ul>
-            </div>
-            <div className="flex justify-center gap-2 mb-2">
-              {["#ffffff", "#ffd700", "#87ceeb", "#ff69b4", "#000000"].map((color) => (
-                <button
-                  key={color}
-                  className="w-6 h-6 rounded-full border cursor-pointer"
-                  style={{ backgroundColor: color, borderColor: color === backgroundColor ? 'lime' : 'white' }}
-                  onClick={() => setBackgroundColor(color)}
-                ></button>
-              ))}
-            <button
-              className="text-xs text-black bg-white border border-white rounded px-2 hover:bg-gray-200 cursor-pointer"
-              onClick={() => setBackgroundColor('')}
-            >
-              No BG
-            </button>
-            </div>
-            <label className="block text-sm text-emerald-400 font-medium mb-1">
-              Pick a Custom Background Color
-            </label>
-            <input
-              type="color"
-              value={backgroundColor || '#ffffff'}
-              onChange={(e) => setBackgroundColor(e.target.value)}
-              className="cursor-pointer"
-            />
-          </div>
-          <div className="mt-4 text-center">
-            <p className="text-emerald-400 font-semibold drop-shadow-md mb-2">Emoji Style Options</p>
-
-            <div className="flex flex-wrap justify-center gap-3 text-sm text-white">
-              <label className="flex items-center gap-1">
-                <input
-                  type="checkbox"
-                  checked={borderStyle === 'solid'}
-                  onChange={(e) => setBorderStyle(e.target.checked ? 'solid' : 'none')}
-                />
-                Border
-              </label>
-
-              <label className="flex items-center gap-1">
-                <input
-                  type="checkbox"
-                  checked={showShadow}
-                  onChange={(e) => setShowShadow(e.target.checked)}
-                />
-                Shadow
-              </label>
-
-              <label className="flex items-center gap-1">
-                <input
-                  type="checkbox"
-                  checked={isRound}
-                  onChange={(e) => setIsRound(e.target.checked)}
-                />
-                Circular Emoji
-              </label>
-            </div>
-          </div>
+          <CropperSection
+            imageSrc={imageSrc}
+            crop={crop}
+            setCrop={setCrop}
+            zoom={zoom}
+            setZoom={setZoom}
+            onCropComplete={onCropComplete}
+            cropContainerStyle={cropContainerStyle}
+          />
+          <BackgroundColorPicker
+            backgroundColor={backgroundColor}
+            setBackgroundColor={setBackgroundColor}
+          />
+          <StyleOptions
+            borderStyle={borderStyle}
+            setBorderStyle={setBorderStyle}
+            showShadow={showShadow}
+            setShowShadow={setShowShadow}
+            isRound={isRound}
+            setIsRound={setIsRound}
+          />
 
           <button className="btn-primary mt-4 cursor-pointer" onClick={showCroppedImage}>
             Crop Image and Preview Emoji
@@ -423,120 +317,69 @@ export default function App() {
         </>
       )}
 
-      {loading && (
-        <div className="mt-6 flex flex-col items-center space-y-2">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-400"></div>
-          <p className="text-emerald-400 mt-2">Processing your emoji...</p>
-          <p className="text-emerald-400 mt-2">This can take a minute...</p>
-        </div>
-      )}
+      {loading && <LoadingIndicator />}
 
-      {croppedImage && (
-        <div className="mt-6 flex flex-col items-center space-y-2">
-          <h2 className="text-emerald-400 font-semibold drop-shadow-md mb-2">Cropped Emoji Preview:</h2>
-          <div
-            className={`w-32 h-32 flex items-center justify-center 
-              ${isRound ? 'rounded-full' : 'rounded-lg'} 
-              ${borderStyle === 'solid' ? 'border-4 border-white' : ''} 
-              ${showShadow ? 'shadow-lg' : ''}`}
-          >
-            <img
-              src={croppedImage}
-              alt=""
-              className={`w-full h-full object-cover ${isRound ? 'rounded-full' : 'rounded-lg'}`}
-            />
-          </div>
-          <div className="flex flex-col items-center gap-2 mt-4">
-            {/* Share (mobile) */}
-            <button
-              className="btn-primary cursor-pointer"
-              onClick={async () => {
-                try {
-                  const response = await fetch(croppedImage);
-                  const blob = await response.blob();
-                  const file = new File([blob], "emoji.png", { type: blob.type });
+      <EmojiPreview
+        croppedImage={croppedImage}
+        isRound={isRound}
+        borderStyle={borderStyle}
+        showShadow={showShadow}
+        onShareMobile={async () => {
+          try {
+            const response = await fetch(croppedImage);
+            const blob = await response.blob();
+            const file = new File([blob], "emoji.png", { type: blob.type });
 
-                  if (navigator.share && navigator.canShare?.({ files: [file] })) {
-                    await navigator.share({
-                      title: "My Custom Emoji",
-                      text: "Check out this emoji I made!",
-                      files: [file],
-                    });
-                  } else {
-                    alert("❌ Mobile sharing not supported on this device.");
-                  }
-                } catch (error) {
-                  console.error(error);
-                  alert("❌ Failed to share via mobile.");
-                }
-              }}
-            >
-              📤 Share (mobile)
-            </button>
+            if (navigator.share && navigator.canShare?.({ files: [file] })) {
+              await navigator.share({
+                title: "My Custom Emoji",
+                text: "Check out this emoji I made!",
+                files: [file],
+              });
+            } else {
+              alert("❌ Mobile sharing not supported on this device.");
+            }
+          } catch (error) {
+            console.error(error);
+            alert("❌ Failed to share via mobile.");
+          }
+        }}
+        onShareClipboard={async () => {
+          try {
+            const response = await fetch(croppedImage);
+            const blob = await response.blob();
 
-            {/* Share (non-mobile) */}
-            <button
-              className="btn-primary cursor-pointer"
-              onClick={async () => {
-                try {
-                  const response = await fetch(croppedImage);
-                  const blob = await response.blob();
+            if (navigator.clipboard && window.ClipboardItem) {
+              const item = new ClipboardItem({ [blob.type]: blob });
+              await navigator.clipboard.write([item]);
+              alert("✅ Emoji image copied! You can now paste it into messaging apps.");
+            } else {
+              alert("❌ Image clipboard not supported on this browser.");
+            }
+          } catch (err) {
+            console.error(err);
+            alert("❌ Failed to copy image to clipboard.");
+          }
+        }}
+        onDownload={() => {
+          const defaultName = "emoji";
+          const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+          const tempName = `${defaultName}-${timestamp}`;
+          const userInput = prompt("Enter filename (without extension):", tempName);
+          if (userInput === null) return;
 
-                  if (navigator.clipboard && window.ClipboardItem) {
-                    const item = new ClipboardItem({ [blob.type]: blob });
-                    await navigator.clipboard.write([item]);
-                    alert("✅ Emoji image copied! You can now paste it into messaging apps.");
-                  } else {
-                    alert("❌ Image clipboard not supported on this browser.");
-                  }
-                } catch (err) {
-                  console.error(err);
-                  alert("❌ Failed to copy image to clipboard.");
-                }
-              }}
-            >
-              📋 Share (non-mobile)
-            </button>
-
-            {/* Download */}
-            <button
-              className="btn-primary cursor-pointer"
-              onClick={() => {
-                const defaultName = "emoji";
-                const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-                const tempName = `${defaultName}-${timestamp}`;
-                const userInput = prompt("Enter filename (without extension):", tempName);
-                if (userInput === null) return;
-
-                const finalName = `${userInput || defaultName}.png`;
-                const link = document.createElement("a");
-                link.href = croppedImage;
-                link.download = finalName;
-                link.click();
-              }}
-            >
-              ⬇️ Download
-            </button>
-          </div>
-        </div>
-      )}
-      <Modal
+          const finalName = `${userInput || defaultName}.png`;
+          const link = document.createElement("a");
+          link.href = croppedImage;
+          link.download = finalName;
+          link.click();
+        }}
+      />
+      <ErrorModal
         open={showErrorModal}
+        errorMessage={errorMessage}
         onClose={() => setShowErrorModal(false)}
-        aria-labelledby="error-modal-title"
-        aria-describedby="error-modal-description"
-      >
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg max-w-xs w-full">
-          <h2 id="error-modal-title" className="text-lg font-bold text-red-600 mb-2">Error</h2>
-          <p id="error-modal-description" className="text-gray-700 mb-4">{errorMessage}</p>
-          <button
-            className="btn-primary w-full"
-            onClick={() => setShowErrorModal(false)}
-          >
-            Close
-          </button>
-        </div>
-      </Modal>
+      />
       <Modal
         open={showContactModal}
         onClose={() => setShowContactModal(false)}
