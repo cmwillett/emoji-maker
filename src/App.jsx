@@ -217,9 +217,9 @@ export default function App() {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}>
-      <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div>
-      <h1 className ="text-3xl font-bold text-emerald-400 drop-shadow-lg">The Craig's</h1> 
+      <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div> 
       <div className="flex flex-col items-center space-y-2">
+        <h1 className ="text-3xl font-bold text-emerald-400 drop-shadow-lg">The Craig's</h1>
         <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">Emoji Maker</h1>
         <button
           className="text-sm text-emerald-200 underline hover:text-white focus:outline-none"
