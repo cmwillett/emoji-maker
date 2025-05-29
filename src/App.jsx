@@ -83,6 +83,7 @@ export default function App() {
   const [showContactModal, setShowContactModal] = useState(false);
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
   const [contactSubmitted, setContactSubmitted] = useState(false);
+  const [showAboutModal, setShowAboutModal] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -218,7 +219,15 @@ export default function App() {
       }}>
       <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div>
       <h1 className ="text-3xl font-bold text-emerald-400 drop-shadow-lg">The Craig's</h1> 
-      <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">Emoji Maker</h1>
+      <div className="flex flex-col items-center space-y-2">
+        <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">Emoji Maker</h1>
+        <button
+          className="text-sm text-emerald-200 underline hover:text-white focus:outline-none"
+          onClick={() => setShowAboutModal(true)}
+        >
+          About this app
+        </button>
+      </div>
       {emojiCount !== null && (
         <p className="text-sm text-emerald-400 mt-2 font-bold underline">
           {emojiCount.toLocaleString()} emojis created so far!
@@ -528,6 +537,35 @@ export default function App() {
               </button>
             </>
           )}
+        </div>
+      </Modal>
+      <Modal
+        open={showAboutModal}
+        onClose={() => setShowAboutModal(false)}
+        aria-labelledby="about-modal-title"
+        aria-describedby="about-modal-description"
+      >
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-gray-800">
+          <h2 id="about-modal-title" className="text-lg font-bold mb-2">About this App</h2>
+          <p id="about-modal-description" className="mb-4 text-sm">
+            This emoji maker lets you turn any photo into a custom emoji. Not an emoji that you can use in messaging apps straight away 
+            (those are unicode and are part of the actual app, so this wouldn't be able to do so).
+            Here are a few things you can do with the app though:
+              - crop the photo
+              - remove the background
+              - choose a background color
+              - apply styles like borders or shadows
+            Once you have it set, you can then:
+              - share your emoji
+              - copy it to clipboard
+              - download it
+          </p>
+          <button
+            className="btn-primary w-full"
+            onClick={() => setShowAboutModal(false)}
+          >
+            Close
+          </button>
         </div>
       </Modal>
       <footer className="mt-8 text-center text-emerald-400 text-sm">
