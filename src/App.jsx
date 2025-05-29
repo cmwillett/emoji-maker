@@ -41,9 +41,9 @@ function UploadButtons({ onImageSelect }) {
   };
 
   return (
-    <Stack direction="column" spacing={2} className="mt-4">
+    <Stack direction="column" spacing={2} className="mt-4 items-center">
       <Tooltip title="Use your device's camera to take a new photo..." placement="right">
-        <span>
+        <div>
           <EmojiButton
             icon={<CameraAltIcon />}
             label="Take Photo"
@@ -56,11 +56,11 @@ function UploadButtons({ onImageSelect }) {
             onChange={handleFileInput}
             className="hidden"
           />
-        </span>
+        </div>
       </Tooltip>
 
       <Tooltip title="Choose an image from your gallery or file system..." placement="right">
-        <span>
+        <div>
           <EmojiButton
             icon={<PhotoLibraryIcon />}
             label="Choose from Gallery"
@@ -72,7 +72,7 @@ function UploadButtons({ onImageSelect }) {
             onChange={handleFileInput}
             className="hidden"
           />
-        </span>
+        </div>
       </Tooltip>
     </Stack>
   );
