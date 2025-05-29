@@ -214,17 +214,32 @@ export default function App() {
       )}
       <Stack direction="row" spacing={2} className="mt-4">
         {showInstall && (
-          <Tooltip title="Install this app to your home screen/desktop/taskbar for quick access!" placement="left">
-            <button onClick={handleInstallClick} className="btn-primary cursor-pointer">
-              Install App
-            </button>
-          </Tooltip>
+          <>
+            <Tooltip title="Install this app to your home screen/desktop/taskbar for quick access!" placement="left">
+              <button onClick={handleInstallClick} className="btn-primary cursor-pointer">
+                Install App
+              </button>
+            </Tooltip>
+            <Tooltip title="Share this app with others!" placement="right">
+              <button
+                className="btn-primary cursor-pointer"
+                onClick={() => {
+                  if (navigator.share) {
+                    navigator.share({
+                      title: "The Craig's Emoji Maker",
+                      text: "Check out this fun emoji maker!",
+                      url: window.location.href,
+                    }).catch(console.error);
+                  } else {
+                    alert("❌ Sharing is not supported on this device.");
+                  }
+                }}
+              >
+                Share App
+              </button>
+            </Tooltip>
+          </>
         )}
-        <Tooltip title="Reset the app and choose a new image..." placement="right">
-          <button className="btn-primary cursor-pointer" onClick={handleReset}>
-            Start Over
-          </button>
-        </Tooltip>
       </Stack>
 
       {!imageSrc && <UploadButtons onImageSelect={setImageSrc} />}
@@ -327,6 +342,10 @@ export default function App() {
           <button className="btn-primary mt-4 cursor-pointer" onClick={showCroppedImage}>
             Crop Image and Preview Emoji
           </button>
+          <button className="btn-primary mt-4 cursor-pointer" onClick={handleReset}>
+            Start Over
+          </button>
+
         </>
       )}
 
