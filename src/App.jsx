@@ -5,6 +5,10 @@ import getCroppedImg from './utils/cropImage'
 import SparkMD5 from 'spark-md5'
 import { removeBackground } from './lib/removeBackground'
 import { Modal } from '@mui/material'
+import InstallMobileIcon from '@mui/icons-material/InstallMobile';
+import ShareIcon from '@mui/icons-material/Share';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 
 const applyBackgroundColor = async (transparentBlob, backgroundColor) => {
   return new Promise((resolve) => {
@@ -38,8 +42,12 @@ function UploadButtons({ onImageSelect }) {
   return (
     <Stack direction="column" spacing={2} className="mt-4">
       <Tooltip title="Use your device's camera to take a new photo..." placement="right">
-        <label className="btn-primary">
-          Take Photo
+        <span>
+          <EmojiButton
+            icon={<CameraAltIcon />}
+            label="Take Photo"
+            component="label"
+          />
           <input
             type="file"
             accept="image/*"
@@ -47,19 +55,23 @@ function UploadButtons({ onImageSelect }) {
             onChange={handleFileInput}
             className="hidden"
           />
-        </label>
+        </span>
       </Tooltip>
 
       <Tooltip title="Choose an image from your gallery or file system..." placement="right">
-        <label className="btn-primary">
-          Choose from Gallery
+        <span>
+          <EmojiButton
+            icon={<PhotoLibraryIcon />}
+            label="Choose from Gallery"
+            component="label"
+          />
           <input
             type="file"
             accept="image/*"
             onChange={handleFileInput}
             className="hidden"
           />
-        </label>
+        </span>
       </Tooltip>
     </Stack>
   );
@@ -232,29 +244,37 @@ export default function App() {
       )}
       <Stack direction="row" spacing={2} className="mt-4">
         {showInstall && (
-          <Tooltip title="Install this app to your home screen/desktop/taskbar for quick access!" placement="left">
-            <button onClick={handleInstallClick} className="btn-primary cursor-pointer">
-              Install App
-            </button>
+          <Tooltip
+            title="Install this app to your home screen/desktop/taskbar for quick access!"
+            placement="left"
+          >
+            <span>
+              <EmojiButton
+                icon={<InstallMobileIcon />}
+                label="Install App"
+                onClick={handleInstallClick}
+              />
+            </span>
           </Tooltip>
         )}
 
         {navigator.share && (
           <Tooltip title="Share this app with others!" placement="right">
-            <button
-              className="btn-primary"
-              onClick={() => {
-                navigator
-                  .share({
-                    title: "The Craig's Emoji Maker",
-                    text: "Check out this fun emoji maker!",
-                    url: window.location.href,
-                  })
-                  .catch(console.error);
-              }}
-            >
-              Share App
-            </button>
+            <span>
+              <EmojiButton
+                icon={<ShareIcon />}
+                label="Share App"
+                onClick={() => {
+                  navigator
+                    .share({
+                      title: "The Craig's Emoji Maker",
+                      text: "Check out this fun emoji maker!",
+                      url: window.location.href,
+                    })
+                    .catch(console.error);
+                }}
+              />
+            </span>
           </Tooltip>
         )}
       </Stack>
