@@ -353,8 +353,59 @@ export default function App() {
               className={`w-full h-full object-cover ${isRound ? 'rounded-full' : 'rounded-lg'}`}
             />
           </div>
-          <div className="flex flex-col items-start gap-2 mt-4">
-            {/* Download Button */}
+          <div className="flex flex-col items-center gap-2 mt-4">
+            {/* Share (mobile) */}
+            <button
+              className="btn-primary cursor-pointer"
+              onClick={async () => {
+                try {
+                  const response = await fetch(croppedImage);
+                  const blob = await response.blob();
+                  const file = new File([blob], "emoji.png", { type: blob.type });
+
+                  if (navigator.share && navigator.canShare?.({ files: [file] })) {
+                    await navigator.share({
+                      title: "My Custom Emoji",
+                      text: "Check out this emoji I made!",
+                      files: [file],
+                    });
+                  } else {
+                    alert("❌ Mobile sharing not supported on this device.");
+                  }
+                } catch (error) {
+                  console.error(error);
+                  alert("❌ Failed to share via mobile.");
+                }
+              }}
+            >
+              📤 Share (mobile)
+            </button>
+
+            {/* Share (non-mobile) */}
+            <button
+              className="btn-primary cursor-pointer"
+              onClick={async () => {
+                try {
+                  const response = await fetch(croppedImage);
+                  const blob = await response.blob();
+
+                  if (navigator.clipboard && window.ClipboardItem) {
+                    const item = new ClipboardItem({ [blob.type]: blob });
+                    await navigator.clipboard.write([item]);
+                    alert("✅ Emoji image copied! You can now paste it into messaging apps.");
+                  } else {
+                    alert("❌ Image clipboard not supported on this browser.");
+                  }
+                } catch (err) {
+                  console.error(err);
+                  alert("❌ Failed to copy image to clipboard.");
+                }
+              }}
+            >
+              📋 Share (non-mobile)
+            </button>
+
+            {/* Download */}
             <button
               className="btn-primary cursor-pointer"
               onClick={() => {
@@ -371,62 +422,8 @@ export default function App() {
                 link.click();
               }}
             >
-              Download Emoji
+              ⬇️ Download
             </button>
-
-            {/* Share Buttons */}
-            <div className="flex gap-2 flex-wrap">
-              {/* Share (mobile) */}
-              <button
-                className="btn-primary cursor-pointer"
-                onClick={async () => {
-                  try {
-                    const response = await fetch(croppedImage);
-                    const blob = await response.blob();
-                    const file = new File([blob], "emoji.png", { type: blob.type });
-
-                    if (navigator.share && navigator.canShare?.({ files: [file] })) {
-                      await navigator.share({
-                        title: "My Custom Emoji",
-                        text: "Check out this emoji I made!",
-                        files: [file],
-                      });
-                    } else {
-                      alert("❌ Mobile sharing not supported on this device.");
-                    }
-                  } catch (error) {
-                    console.error(error);
-                    alert("❌ Failed to share via mobile.");
-                  }
-                }}
-              >
-                📤 Share (mobile)
-              </button>
-
-              {/* Share (non-mobile) */}
-              <button
-                className="btn-primary cursor-pointer"
-                onClick={async () => {
-                  try {
-                    const response = await fetch(croppedImage);
-                    const blob = await response.blob();
-
-                    if (navigator.clipboard && window.ClipboardItem) {
-                      const item = new ClipboardItem({ [blob.type]: blob });
-                      await navigator.clipboard.write([item]);
-                      alert("✅ Emoji image copied! You can now paste it into messaging apps.");
-                    } else {
-                      alert("❌ Image clipboard not supported on this browser.");
-                    }
-                  } catch (err) {
-                    console.error(err);
-                    alert("❌ Failed to copy image to clipboard.");
-                  }
-                }}
-              >
-                📋 Share (non-mobile)
-              </button>
-            </div>
           </div>
         </div>
       )}
