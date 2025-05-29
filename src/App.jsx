@@ -121,44 +121,56 @@ export default function App() {
 
   const showCroppedImage = useCallback(async () => {
     try {
-      
-      setLoading(true)
-      const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 'image/png', true)
-      console.log("Cropped blob: ", blob)
+      setLoading(true);
 
-      const bgRemoved = await removeBackground(blob)
-      console.log("Background removed: ", bgRemoved)
-      if (!bgRemoved || bgRemoved instanceof Error) {
-        throw new Error("Background removal failed")
-      }
-      if ('error' in bgRemoved && bgRemoved.error === 'no_foreground') {
-        setErrorMessage("We couldn't detect a clear subject in the image. Try cropping closer or using a photo with more contrast.");
+      // Step 1: Crop the image
+      const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 'image/png', true);
+      console.log("Cropped blob:", blob);
+
+      // Step 2: Remove the background
+      const bgRemoved = await removeBackground(blob);
+      console.log("Background removed:", bgRemoved);
+
+      // Handle specific error conditions
+      if (!bgRemoved || bgRemoved instanceof Error || (typeof bgRemoved === 'object' && bgRemoved.error)) {
+        if (bgRemoved?.error === 'no_foreground') {
+          setErrorMessage("We couldn't detect a clear subject in the image. Try cropping closer or using a photo with more contrast.");
+        } else {
+          setErrorMessage("Something went wrong while removing the background. Please try again with a different image.");
+        }
         setShowErrorModal(true);
         return;
       }
-      let finalBlob
+
+      // Step 3: Apply background color if selected
+      let finalBlob;
       if (backgroundColor) {
-        finalBlob = await applyBackgroundColor(bgRemoved, backgroundColor)
+        finalBlob = await applyBackgroundColor(bgRemoved, backgroundColor);
       } else {
-        finalBlob = bgRemoved
+        finalBlob = bgRemoved;
       }
-      console.log("Final blob:", finalBlob)
-      const finalUrl = URL.createObjectURL(finalBlob)
-      console.log("Final image url:", finalUrl)
-      setCroppedImage(finalUrl)
-      await incrementEmojiCount()
+
+      console.log("Final blob:", finalBlob);
+
+      // Step 4: Generate final image preview
+      const finalUrl = URL.createObjectURL(finalBlob);
+      console.log("Final image URL:", finalUrl);
+      setCroppedImage(finalUrl);
+
+      // Step 5: Increment the emoji counter
+      await incrementEmojiCount();
     } catch (e) {
-        console.error(e)
-        setErrorMessage(
-          e.message?.includes("background removal failed")
-            ? "Something went wrong while removing the background. Please try again with a different image."
-            : e.message || 'Something went wrong while processing the image.'
-        );
-        setShowErrorModal(true);
-      } finally {
-      setLoading(false)
+      console.error(e);
+      setErrorMessage(
+        e.message?.includes("background removal failed")
+          ? "Something went wrong while removing the background. Please try again with a different image."
+          : e.message || 'Something went wrong while processing the image.'
+      );
+      setShowErrorModal(true);
+    } finally {
+      setLoading(false);
     }
-  }, [imageSrc, croppedAreaPixels, backgroundColor])
+  }, [imageSrc, croppedAreaPixels, backgroundColor]);
 
   const handleReset = () => {
     setImageSrc(null)
