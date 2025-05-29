@@ -39,7 +39,7 @@ function UploadButtons({ onImageSelect }) {
     <Stack direction="column" spacing={2} className="mt-4">
       <Tooltip title="Use your device's camera to take a new photo..." placement="right">
         <div className="relative">
-          <button className="btn-primary cursor-pointer w-full">Take Photo</button>
+          <button className="btn-primary">Take Photo</button>
           <input
             type="file"
             accept="image/*"
@@ -53,7 +53,7 @@ function UploadButtons({ onImageSelect }) {
 
       <Tooltip title="Choose an image from your gallery or file system..." placement="right">
         <div className="relative">
-          <button className="btn-primary cursor-pointer w-full">Choose from Gallery</button>
+          <button className="btn-primary">Choose from Gallery</button>
           <input
             type="file"
             accept="image/*"
@@ -234,7 +234,7 @@ export default function App() {
       <Stack direction="row" spacing={2} className="mt-4">
         {showInstall && (
           <Tooltip title="Install this app to your home screen/desktop/taskbar for quick access!" placement="left">
-            <button onClick={handleInstallClick} className="btn-primary cursor-pointer">
+            <button onClick={handleInstallClick} className="btn-primary">
               Install App
             </button>
           </Tooltip>
@@ -243,7 +243,7 @@ export default function App() {
         {navigator.share && (
           <Tooltip title="Share this app with others!" placement="right">
             <button
-              className="btn-primary cursor-pointer"
+              className="btn-primary"
               onClick={() => {
                 navigator
                   .share({
