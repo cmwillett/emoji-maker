@@ -360,10 +360,9 @@ export default function App() {
                 const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
                 const tempName = `${defaultName}-${timestamp}`;
                 const userInput = prompt("Enter filename (without extension):", tempName);
-                if (userInput === null) return; // user cancelled
+                if (userInput === null) return;
 
                 const finalName = `${userInput || defaultName}.png`;
-
                 const link = document.createElement('a');
                 link.href = croppedImage;
                 link.download = finalName;
@@ -372,6 +371,36 @@ export default function App() {
             >
               Download Emoji
             </button>
+
+            <button
+              className="btn-secondary mt-4 cursor-pointer"
+              onClick={async () => {
+                try {
+                  const blob = await (await fetch(croppedImage)).blob();
+                  const file = new File([blob], 'emoji.png', { type: blob.type });
+
+                  if (navigator.share && navigator.canShare?.({ files: [file] })) {
+                    await navigator.share({
+                      title: 'My Custom Emoji',
+                      text: 'Check out this emoji I made!',
+                      files: [file],
+                    });
+                  } else if (navigator.clipboard && window.ClipboardItem) {
+                    const clipboardItem = new ClipboardItem({ [blob.type]: blob });
+                    await navigator.clipboard.write([clipboardItem]);
+                    alert('Emoji copied to clipboard!');
+                  } else {
+                    alert('Sharing and clipboard not supported on this device.');
+                  }
+                } catch (error) {
+                  console.error('Sharing or copying failed:', error);
+                  alert('Could not share or copy the emoji.');
+                }
+              }}
+            >
+              Share Emoji
+            </button>
+
           </div>
         </div>
       )}
