@@ -222,7 +222,7 @@ export default function App() {
         <h1 className ="text-3xl font-bold text-emerald-400 drop-shadow-lg">The Craig's</h1>
         <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">Emoji Maker</h1>
         <button
-          className="text-sm text-emerald-200 underline hover:text-white focus:outline-none"
+          className="px-3 py-1 rounded bg-white bg-opacity-20 text-emerald-100 font-medium backdrop-blur hover:bg-opacity-30 hover:text-white transition"
           onClick={() => setShowAboutModal(true)}
         >
           About this app
