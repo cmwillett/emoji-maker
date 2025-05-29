@@ -27,45 +27,44 @@ const applyBackgroundColor = async (transparentBlob, backgroundColor) => {
 
 function UploadButtons({ onImageSelect }) {
   const handleFileInput = (e) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader()
-      reader.onload = () => onImageSelect(reader.result)
-      reader.readAsDataURL(file)
+      const reader = new FileReader();
+      reader.onload = () => onImageSelect(reader.result);
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   return (
     <Stack direction="column" spacing={2} className="mt-4">
       <Tooltip title="Use your device's camera to take a new photo..." placement="right">
-        <div className="relative">
-          <button className="btn-primary cursor-pointer w-full">Take Photo</button>
+        <label className="btn-primary cursor-pointer w-full text-center">
+          Take Photo
           <input
             type="file"
             accept="image/*"
-            hidden
             capture="environment"
             onChange={handleFileInput}
-            className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+            className="hidden"
           />
-        </div>
+        </label>
       </Tooltip>
 
       <Tooltip title="Choose an image from your gallery or file system..." placement="right">
-        <div className="relative">
-          <button className="btn-primary cursor-pointer w-full">Choose from Gallery</button>
+        <label className="btn-primary cursor-pointer w-full text-center">
+          Choose from Gallery
           <input
             type="file"
             accept="image/*"
-            hidden
             onChange={handleFileInput}
-            className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+            className="hidden"
           />
-        </div>
+        </label>
       </Tooltip>
     </Stack>
-  )
+  );
 }
+
 
 
 export default function App() {
