@@ -371,7 +371,6 @@ export default function App() {
             >
               Download Emoji
             </button>
-
             <button
               className="btn-secondary mt-4 cursor-pointer"
               onClick={async () => {
@@ -400,7 +399,6 @@ export default function App() {
             >
               Share Emoji
             </button>
-
           </div>
         </div>
       )}
