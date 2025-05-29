@@ -9,7 +9,7 @@ import InstallMobileIcon from '@mui/icons-material/InstallMobile';
 import ShareIcon from '@mui/icons-material/Share';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
-import EmojiButton from './components/EmojiButton';
+import { EmojiButton } from './components/EmojiButton';
 
 const applyBackgroundColor = async (transparentBlob, backgroundColor) => {
   return new Promise((resolve) => {
