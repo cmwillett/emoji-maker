@@ -375,8 +375,35 @@ export default function App() {
             </button>
 
             {/* Share Buttons */}
-            <div className="flex gap-2">
-              {/* Copy as Image */}
+            <div className="flex gap-2 flex-wrap">
+              {/* Share (mobile) */}
+              <button
+                className="btn-primary cursor-pointer"
+                onClick={async () => {
+                  try {
+                    const response = await fetch(croppedImage);
+                    const blob = await response.blob();
+                    const file = new File([blob], "emoji.png", { type: blob.type });
+
+                    if (navigator.share && navigator.canShare?.({ files: [file] })) {
+                      await navigator.share({
+                        title: "My Custom Emoji",
+                        text: "Check out this emoji I made!",
+                        files: [file],
+                      });
+                    } else {
+                      alert("❌ Mobile sharing not supported on this device.");
+                    }
+                  } catch (error) {
+                    console.error(error);
+                    alert("❌ Failed to share via mobile.");
+                  }
+                }}
+              >
+                📤 Share (mobile)
+              </button>
+
+              {/* Share (non-mobile) */}
               <button
                 className="btn-primary cursor-pointer"
                 onClick={async () => {
@@ -397,11 +424,12 @@ export default function App() {
                   }
                 }}
               >
-                📋 Copy as Image
+                📋 Share (non-mobile)
               </button>
+
               {/* Copy as Data URL */}
               <button
-                className="btn-secondary cursor-pointer"
+                className="btn-primary cursor-pointer"
                 onClick={async () => {
                   try {
                     const response = await fetch(croppedImage);
@@ -424,7 +452,6 @@ export default function App() {
               </button>
             </div>
           </div>
-
         </div>
       )}
       <Modal
