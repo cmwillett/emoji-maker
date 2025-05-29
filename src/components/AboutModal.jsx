@@ -14,16 +14,22 @@ export default function AboutModal({ open, onClose }) {
         <p id="about-modal-description" className="mb-4 text-sm">
           This emoji maker lets you turn any photo into a custom emoji. Not an emoji that you can use in messaging apps straight away 
           (those are unicode and are part of the actual app, so this wouldn't be able to do so).
-          Here are a few things you can do with the app though:
-            - crop the photo
-            - remove the background
-            - choose a background color
-            - apply styles like borders or shadows
-          Once you have it set, you can then:
-            - share your emoji
-            - copy it to clipboard
-            - download it
         </p>
+        <div className="mb-4 text-sm">
+          <div className="font-semibold mb-1">Here are a few things you can do with the app:</div>
+          <ul className="list-disc list-inside ml-4">
+            <li>Crop the photo</li>
+            <li>Remove the background</li>
+            <li>Choose a background color</li>
+            <li>Apply styles like borders or shadows</li>
+          </ul>
+          <div className="font-semibold mt-3 mb-1">Once you have it set, you can then:</div>
+          <ul className="list-disc list-inside ml-4">
+            <li>Share your emoji</li>
+            <li>Copy it to clipboard</li>
+            <li>Download it</li>
+          </ul>
+        </div>
         <button
           className="btn-primary w-full"
           onClick={onClose}
