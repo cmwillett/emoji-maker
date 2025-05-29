@@ -109,7 +109,7 @@ export default function App() {
       setCroppedImage(finalUrl);
 
       // Step 5: Increment the emoji counter
-      await incrementEmojiCount();
+      await incrementEmojiCount(setEmojiCount);
     } catch (e) {
       console.error(e);
       setErrorMessage(
