@@ -219,14 +219,8 @@ export default function App() {
       }}>
       <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div> 
       <div className="flex flex-col items-center space-y-2">
-        <h1 className ="text-3xl font-bold text-emerald-400 drop-shadow-lg">The Craig's</h1>
+        <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">The Craig's</h1>
         <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg">Emoji Maker</h1>
-        <button
-          className="px-3 py-1 rounded bg-white bg-opacity-20 text-emerald-100 font-medium backdrop-blur hover:bg-opacity-30 hover:text-white transition"
-          onClick={() => setShowAboutModal(true)}
-        >
-          About this app
-        </button>
       </div>
       {emojiCount !== null && (
         <p className="text-sm text-emerald-400 mt-2 font-bold underline">
@@ -568,16 +562,22 @@ export default function App() {
           </button>
         </div>
       </Modal>
-      <footer className="mt-8 text-center text-emerald-400 text-sm">
-        <p>
-          © 2025 The Craig, Inc. ·{' '}
+      <footer className="mt-8 w-full text-center space-y-2">
+        <div className="flex justify-center gap-4">
           <button
+            className="text-sm text-emerald-300 underline hover:text-white transition"
+            onClick={() => setShowAboutModal(true)}
+          >
+            About this app
+          </button>
+          <button
+            className="text-sm text-emerald-300 underline hover:text-white transition"
             onClick={() => setShowContactModal(true)}
-            className="underline hover:text-white transition cursor-pointer"
           >
             Contact
           </button>
-        </p>
+        </div>
+        <p className="text-xs text-emerald-500 mt-1">© 2025 The Craig, Inc.</p>
       </footer>
     </div>
   )
