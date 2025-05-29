@@ -399,7 +399,6 @@ export default function App() {
               >
                 📋 Copy as Image
               </button>
-
               {/* Copy as Data URL */}
               <button
                 className="btn-secondary cursor-pointer"
@@ -410,7 +409,7 @@ export default function App() {
                     const reader = new FileReader();
 
                     reader.onload = async () => {
-                      await navigator.clipboard.writeText(reader.result as string);
+                      await navigator.clipboard.writeText(reader.result);
                       alert("✅ Emoji copied as Data URL! Paste it in text fields or HTML.");
                     };
 
@@ -421,7 +420,7 @@ export default function App() {
                   }
                 }}
               >
-                🔗 Copy as Data
+                🔗 Copy as Data URL
               </button>
             </div>
           </div>
