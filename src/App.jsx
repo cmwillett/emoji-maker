@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import getCroppedImg from './utils/cropImage'
+import getCroppedImg from './utils/utils'
 import { removeBackground } from './lib/removeBackground'
 import Header from './components/Header';
 import InstallShareButtons from './components/InstallShareButtons';

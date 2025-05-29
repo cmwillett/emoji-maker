@@ -44,13 +44,3 @@ export default function getCroppedImg(imageSrc, pixelCrop, mimeType = 'image/png
     image.onerror = (error) => reject(error)
   })
 }
-
-
-function createImage(url) {
-  return new Promise((resolve, reject) => {
-    const image = new Image()
-    image.onload = () => resolve(image)
-    image.onerror = reject
-    image.src = url
-  })
-}
