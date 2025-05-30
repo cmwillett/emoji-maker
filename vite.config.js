@@ -13,6 +13,12 @@ export default defineConfig({
     react(),
     UnoCSS(),
     VitePWA({
+      /*workbox: {
+        maximumFileSizeToCacheInBytes: 30 * 1024 * 1024 // 30 MB
+      },*/
+      workbox: {
+        globIgnores: ['**/*.wasm']
+      },
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'favicon.ico', 'apple-touch-icon.png'],
       manifest: {
