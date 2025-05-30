@@ -151,7 +151,7 @@ export default function App() {
 
         // Center the block vertically in the circle
         // Bottom-align the block in the circle
-        const startY = canvas.height - (lines.length * lineHeight) + lineHeight / 2;
+        const startY = canvas.height - (lines.length * lineHeight) + lineHeight / 5;
 
         // Draw each line upward from the bottom
         lines.forEach((line, i) => {
@@ -233,7 +233,7 @@ export default function App() {
               <div
                 className="absolute left-1/2 top-1/2 flex flex-col items-center justify-center"
                 style={{
-                  transform: 'translate(-50%, -33%)',
+                  transform: 'translate(-50%, -37%)',
                   width: '65%',
                   maxWidth: '65%',
                   height: '100%',
