@@ -150,8 +150,10 @@ export default function App() {
         const lines = getWrappedLines(ctx, emojiText, maxWidth);
 
         // Center the block vertically in the circle
-        const startY = canvas.height / 2 - ((lines.length - 1) / 2) * lineHeight;
+        // Bottom-align the block in the circle
+        const startY = canvas.height - (lines.length * lineHeight) + lineHeight / 2;
 
+        // Draw each line upward from the bottom
         lines.forEach((line, i) => {
           ctx.strokeText(line.trim(), canvas.width / 2, startY + i * lineHeight);
           ctx.fillText(line.trim(), canvas.width / 2, startY + i * lineHeight);
@@ -231,7 +233,7 @@ export default function App() {
               <div
                 className="absolute left-1/2 top-1/2 flex flex-col items-center justify-center"
                 style={{
-                  transform: 'translate(-50%, -50%)',
+                  transform: 'translate(-50%, -33%)',
                   width: '65%',
                   maxWidth: '65%',
                   height: '100%',
