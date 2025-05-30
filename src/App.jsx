@@ -14,6 +14,7 @@ import AboutModal from './components/AboutModal';
 import Footer from './components/Footer';
 import { applyBackgroundColor, incrementEmojiCount, fetchEmojiCount } from './utils/utils';
 import { removeBackgroundLocal } from './lib/removeBackground';
+import EmojiTextInput from './components/EmojiTextInput';
 
 export default function App() {
   const [loading, setLoading] = useState(false)
@@ -34,11 +35,16 @@ export default function App() {
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
+  const [emojiText, setEmojiText] = useState('');
 
   const [emojiCount, setEmojiCount] = useState(null);
   useEffect(() => {
     fetchEmojiCount(setEmojiCount);
   }, []);
+
+  useEffect(() => {
+    console.log('emojiText changed:', emojiText);
+  }, [emojiText]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -101,10 +107,40 @@ export default function App() {
         finalBlob = bgRemoved;
       }
 
+// Convert blob to image
+const img = await createImageBitmap(finalBlob);
+const canvas = document.createElement('canvas');
+canvas.width = img.width;
+canvas.height = img.height;
+const ctx = canvas.getContext('2d');
+ctx.drawImage(img, 0, 0);
+
+console.log('emojiText:', emojiText);
+
+const textToDraw = emojiText;
+
+// Draw text (customize font, color, position as needed)
+if (textToDraw) {
+  ctx.font = `bold ${Math.floor(canvas.height / 8)}px sans-serif`; // Larger, dynamic font
+  ctx.fillStyle = 'white';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.strokeStyle = 'black';
+  ctx.lineWidth = 4;
+  const y = canvas.height *0.75;
+  ctx.strokeText(textToDraw, canvas.width / 2, y);
+  ctx.fillText(textToDraw, canvas.width / 2, y);
+}
+
+// Convert canvas back to blob
+const withTextBlob = await new Promise((resolve) =>
+  canvas.toBlob(resolve, 'image/png')
+);
+
       console.log("Final blob:", finalBlob);
 
       // Step 4: Generate final image preview
-      const finalUrl = URL.createObjectURL(finalBlob);
+      const finalUrl = URL.createObjectURL(withTextBlob);
       console.log("Final image URL:", finalUrl);
       setCroppedImage(finalUrl);
 
@@ -125,6 +161,7 @@ export default function App() {
     setZoom(1)
     setCroppedAreaPixels(null)
     setCroppedImage(null)
+    setEmojiText('')
   }
 
   const cropContainerStyle = {
@@ -145,6 +182,7 @@ export default function App() {
       <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div> 
       <Header emojiCount={emojiCount} />
       <InstallShareButtons showInstall={showInstall} handleInstallClick={handleInstallClick} />
+      
       {!imageSrc && <UploadButtons onImageSelect={setImageSrc} />}
 
       {imageSrc && (
@@ -170,11 +208,11 @@ export default function App() {
             isRound={isRound}
             setIsRound={setIsRound}
           />
-
-          <button className="btn-primary mt-4 cursor-pointer" onClick={showCroppedImage}>
+          <EmojiTextInput emojiText={emojiText} setEmojiText={setEmojiText} />
+          <button type="button" className="btn-primary mt-4 cursor-pointer" onClick={showCroppedImage}>
             Crop Image and Preview Emoji
           </button>
-          <button className="btn-primary mt-4 cursor-pointer" onClick={handleReset}>
+          <button type="button" className="btn-primary mt-4 cursor-pointer" onClick={handleReset}>
             Start Over
           </button>
 
