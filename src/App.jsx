@@ -180,15 +180,48 @@ export default function App() {
 
       {imageSrc && (
         <>
-          <CropperSection
-            imageSrc={imageSrc}
-            crop={crop}
-            setCrop={setCrop}
-            zoom={zoom}
-            setZoom={setZoom}
-            onCropComplete={onCropComplete}
-            cropContainerStyle={cropContainerStyle}
-          />
+          <div className="relative w-fit mx-auto">
+            {/* Background color preview layer */}
+            {/*backgroundColor && (
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundColor: backgroundColor,
+                  borderRadius: isRound ? '9999px' : '0.5rem',
+                  zIndex: 0, // Behind the cropper
+                }}
+              />
+            )*/}
+            <CropperSection
+              imageSrc={imageSrc}
+              crop={crop}
+              setCrop={setCrop}
+              zoom={zoom}
+              setZoom={setZoom}
+              onCropComplete={onCropComplete}
+              cropContainerStyle={cropContainerStyle}
+            />
+            {emojiText && (
+              <div
+                className="absolute left-1/2"
+                style={{
+                  top: '75%', // Adjust to match your canvas drawing Y
+                  transform: 'translate(-50%, -50%)',
+                  color: fontColor,
+                  textShadow: '2px 2px 4px #000',
+                  fontWeight: 'bold',
+                  fontSize: '2rem',
+                  pointerEvents: 'none', // So user can still interact with cropper
+                  width: '100%',
+                  textAlign: 'center',
+                  fontFamily: 'sans-serif',
+                  zIndex: 10,
+                }}
+              >
+                {emojiText}
+              </div>
+            )}
+          </div>
           <BackgroundColorPicker
             backgroundColor={backgroundColor}
             setBackgroundColor={setBackgroundColor}
@@ -211,6 +244,7 @@ export default function App() {
               className="w-8 h-8 p-0 border border-gray-400 rounded"
             />
           </label>
+
           <button type="button" className="btn-primary mt-4 cursor-pointer" onClick={showCroppedImage}>
             Crop Image and Preview Emoji
           </button>
