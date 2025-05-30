@@ -43,10 +43,6 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    console.log('emojiText changed:', emojiText);
-  }, [emojiText]);
-
-  useEffect(() => {
     if (typeof window !== 'undefined') {
       const handler = (e) => {
         e.preventDefault()
@@ -115,10 +111,6 @@ canvas.height = img.height;
 const ctx = canvas.getContext('2d');
 ctx.drawImage(img, 0, 0);
 
-console.log('emojiText:', emojiText);
-
-const textToDraw = emojiText;
-
 // Draw text (customize font, color, position as needed)
 if (textToDraw) {
   ctx.font = `bold ${Math.floor(canvas.height / 8)}px sans-serif`; // Larger, dynamic font
@@ -128,8 +120,8 @@ if (textToDraw) {
   ctx.strokeStyle = 'black';
   ctx.lineWidth = 4;
   const y = canvas.height *0.75;
-  ctx.strokeText(textToDraw, canvas.width / 2, y);
-  ctx.fillText(textToDraw, canvas.width / 2, y);
+  ctx.strokeText(emojiText, canvas.width / 2, y);
+  ctx.fillText(emojiText, canvas.width / 2, y);
 }
 
 // Convert canvas back to blob
