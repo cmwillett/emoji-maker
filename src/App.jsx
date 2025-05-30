@@ -17,6 +17,7 @@ import { removeBackgroundLocal } from './lib/removeBackground';
 import EmojiTextInput from './components/EmojiTextInput';
 import { wrapText } from './utils/utils';
 import { getWrappedLines } from './utils/utils';
+import Draggable from 'react-draggable';
 
 export default function App() {
   const [loading, setLoading] = useState(false)
@@ -43,6 +44,7 @@ export default function App() {
   const previewCanvas = document.createElement('canvas');
   const previewCtx = previewCanvas.getContext('2d');
   previewCtx.font = `bold ${Math.floor(cropperDiameter / 8)}px sans-serif`;
+  const [textPosition, setTextPosition] = useState({ x: 50, y: 75 }); // percent of cropper
 
   const [emojiCount, setEmojiCount] = useState(null);
   useEffect(() => {
