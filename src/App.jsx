@@ -117,7 +117,7 @@ ctx.drawImage(img, 0, 0);
 
 console.log('emojiText:', emojiText);
 
-const textToDraw = "TEST";
+const textToDraw = emojiText;
 
 // Draw text (customize font, color, position as needed)
 if (textToDraw) {
@@ -153,7 +153,7 @@ const withTextBlob = await new Promise((resolve) =>
       } finally {
             setLoading(false);
     }
-  }, [imageSrc, croppedAreaPixels, backgroundColor]);
+  }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText]);
 
   const handleReset = () => {
     setImageSrc(null)
