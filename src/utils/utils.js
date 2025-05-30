@@ -85,4 +85,43 @@ export default function getCroppedImg(imageSrc, pixelCrop, mimeType = 'image/png
   })
 }
 
+export function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(' ');
+  let line = '';
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + ' ';
+    const metrics = ctx.measureText(testLine);
+    const testWidth = metrics.width;
+    if (testWidth > maxWidth && n > 0) {
+      ctx.strokeText(line, x, y);
+      ctx.fillText(line, x, y);
+      line = words[n] + ' ';
+      y += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  ctx.strokeText(line, x, y);
+  ctx.fillText(line, x, y);
+}
+
+// Helper to split text into lines
+export function getWrappedLines(ctx, text, maxWidth) {
+  const words = text.split(' ');
+  let lines = [];
+  let line = '';
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + ' ';
+    const metrics = ctx.measureText(testLine);
+    if (metrics.width > maxWidth && n > 0) {
+      lines.push(line);
+      line = words[n] + ' ';
+    } else {
+      line = testLine;
+    }
+  }
+  lines.push(line);
+  return lines;
+}
+
 

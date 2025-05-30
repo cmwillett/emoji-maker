@@ -15,6 +15,8 @@ import Footer from './components/Footer';
 import { applyBackgroundColor, incrementEmojiCount, fetchEmojiCount } from './utils/utils';
 import { removeBackgroundLocal } from './lib/removeBackground';
 import EmojiTextInput from './components/EmojiTextInput';
+import { wrapText } from './utils/utils';
+import { getWrappedLines } from './utils/utils';
 
 export default function App() {
   const [loading, setLoading] = useState(false)
@@ -37,6 +39,7 @@ export default function App() {
   const [showAboutModal, setShowAboutModal] = useState(false);
   const [emojiText, setEmojiText] = useState('');
   const [fontColor, setFontColor] = useState('#ffffff'); // Default to white
+  const cropperDiameter = 256; // or whatever your cropper's pixel size is
 
   const [emojiCount, setEmojiCount] = useState(null);
   useEffect(() => {
@@ -110,19 +113,49 @@ export default function App() {
       canvas.width = img.width;
       canvas.height = img.height;
       const ctx = canvas.getContext('2d');
+      if (isRound) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(
+          canvas.width / 2,
+          canvas.height / 2,
+          Math.min(canvas.width, canvas.height) / 2,
+          0,
+          Math.PI * 2
+        );
+        ctx.closePath();
+        ctx.clip();
+      }
       ctx.drawImage(img, 0, 0);
 
       // Draw text (customize font, color, position as needed)
       if (emojiText) {
-        ctx.font = `bold ${Math.floor(canvas.height / 8)}px sans-serif`; // Larger, dynamic font
+        ctx.font = `bold ${Math.floor(canvas.height / 8)}px sans-serif`;
         ctx.fillStyle = fontColor;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 4;
-        const y = canvas.height *0.75;
-        ctx.strokeText(emojiText, canvas.width / 2, y);
-        ctx.fillText(emojiText, canvas.width / 2, y);
+
+        // Use a diameter-based maxWidth for circular output
+        const circleDiameter = Math.min(canvas.width, canvas.height);
+        const maxWidth = circleDiameter * 0.65; // 65% for extra padding
+        const lineHeight = Math.floor(canvas.height / 8) * 1.2;
+
+        // Get wrapped lines using your imported getWrappedLines
+        const lines = getWrappedLines(ctx, emojiText, maxWidth);
+
+        // Center the block vertically in the circle
+        const startY = canvas.height / 2 - ((lines.length - 1) / 2) * lineHeight;
+
+        lines.forEach((line, i) => {
+          ctx.strokeText(line.trim(), canvas.width / 2, startY + i * lineHeight);
+          ctx.fillText(line.trim(), canvas.width / 2, startY + i * lineHeight);
+        });
+      }
+
+      if (isRound) {
+        ctx.restore();
       }
 
       // Convert canvas back to blob
@@ -192,22 +225,35 @@ export default function App() {
             />
             {emojiText && (
               <div
-                className="absolute left-1/2"
+                className="absolute left-1/2 top-1/2 flex flex-col items-center justify-center"
                 style={{
-                  top: '75%', // Adjust to match your canvas drawing Y
                   transform: 'translate(-50%, -50%)',
+                  width: '65%', // match maxWidth/circleDiameter ratio
+                  maxWidth: '65%',
+                  height: '100%', // fill the cropper area
                   color: fontColor,
                   textShadow: '2px 2px 4px #000',
                   fontWeight: 'bold',
-                  fontSize: '2rem',
-                  pointerEvents: 'none', // So user can still interact with cropper
-                  width: '100%',
+                  fontSize: `calc(${cropperDiameter}px / 8)`, // match canvas font size
+                  lineHeight: 1.2,
+                  pointerEvents: 'none',
                   textAlign: 'center',
                   fontFamily: 'sans-serif',
                   zIndex: 10,
+                  wordBreak: 'break-word',
+                  whiteSpace: 'pre-wrap',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
                 }}
               >
-                {emojiText}
+                {getWrappedLines(
+                  { measureText: (t) => ({ width: t.length * (cropperDiameter / 16) }) }, // crude estimate for preview
+                  emojiText,
+                  cropperDiameter * 0.65
+                ).map((line, i) => (
+                  <span key={i}>{line.trim()}</span>
+                ))}
               </div>
             )}
           </div>
