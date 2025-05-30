@@ -117,7 +117,7 @@ ctx.drawImage(img, 0, 0);
 
 console.log('emojiText:', emojiText);
 
-const textToDraw = emojiText;
+const textToDraw = "TEST";
 
 // Draw text (customize font, color, position as needed)
 if (textToDraw) {
