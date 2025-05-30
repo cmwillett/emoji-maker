@@ -158,7 +158,7 @@ export default function App() {
   }
 
   const cropContainerStyle = {
-    backgroundColor: '#fff',
+    backgroundColor: backgroundColor || '#fff',
     border: borderStyle === 'solid' ? '4px solid white' : 'none',
     borderRadius: isRound ? '9999px' : '0.5rem',
     boxShadow: showShadow ? '0 10px 15px rgba(0, 0, 0, 0.3)' : 'none',
@@ -181,17 +181,6 @@ export default function App() {
       {imageSrc && (
         <>
           <div className="relative w-fit mx-auto">
-            {/* Background color preview layer */}
-            {/*backgroundColor && (
-              <div
-                className="absolute inset-0"
-                style={{
-                  backgroundColor: backgroundColor,
-                  borderRadius: isRound ? '9999px' : '0.5rem',
-                  zIndex: 0, // Behind the cropper
-                }}
-              />
-            )*/}
             <CropperSection
               imageSrc={imageSrc}
               crop={crop}
