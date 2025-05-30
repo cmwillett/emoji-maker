@@ -18,6 +18,8 @@ import EmojiTextInput from './components/EmojiTextInput';
 import { wrapText } from './utils/utils';
 import { getWrappedLines } from './utils/utils';
 import Draggable from 'react-draggable';
+import EmojiTextOverlay from './components/EmojiTextOverlay';
+import EmojiActions from './components/EmojiActions';
 
 export default function App() {
   const [loading, setLoading] = useState(false)
@@ -230,69 +232,30 @@ export default function App() {
               cropContainerStyle={cropContainerStyle}
             />
             {emojiText && (
-              <div
-                className="absolute left-1/2 top-1/2 flex flex-col items-center justify-center"
-                style={{
-                  transform: 'translate(-50%, -37%)',
-                  width: '65%',
-                  maxWidth: '65%',
-                  height: '100%',
-                  color: fontColor,
-                  textShadow: '2px 2px 4px #000',
-                  fontWeight: 'bold',
-                  fontSize: `calc(${cropperDiameter}px / 8)`,
-                  lineHeight: 1.2,
-                  pointerEvents: 'none',
-                  textAlign: 'center',
-                  fontFamily: 'sans-serif',
-                  zIndex: 10,
-                  wordBreak: 'break-word',
-                  whiteSpace: 'pre-wrap',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
-                {getWrappedLines(
-                  previewCtx,
-                  emojiText,
-                  cropperDiameter * 0.65
-                ).map((line, i) => (
-                  <span key={i}>{line.trim()}</span>
-                ))}
-              </div>
+              <EmojiTextOverlay
+                emojiText={emojiText}
+                previewCtx={previewCtx}
+                cropperDiameter={cropperDiameter}
+                fontColor={fontColor}
+              />
             )}
           </div>
-          <BackgroundColorPicker
+          <EmojiActions
             backgroundColor={backgroundColor}
             setBackgroundColor={setBackgroundColor}
-          />
-          <StyleOptions
             borderStyle={borderStyle}
             setBorderStyle={setBorderStyle}
             showShadow={showShadow}
             setShowShadow={setShowShadow}
             isRound={isRound}
             setIsRound={setIsRound}
+            emojiText={emojiText}
+            setEmojiText={setEmojiText}
+            fontColor={fontColor}
+            setFontColor={setFontColor}
+            onCrop={showCroppedImage}
+            onReset={handleReset}
           />
-          <EmojiTextInput emojiText={emojiText} setEmojiText={setEmojiText} />
-          <label className="flex items-center space-x-2 mb-2">
-            <span className="text-emerald-400 font-semibold drop-shadow-md mb-2">Choose Text Color (defaults to white):</span>
-            <input
-              type="color"
-              value={fontColor}
-              onChange={e => setFontColor(e.target.value)}
-              className="w-8 h-8 p-0 border border-gray-400 rounded"
-            />
-          </label>
-
-          <button type="button" className="btn-primary mt-4 cursor-pointer" onClick={showCroppedImage}>
-            Crop Image and Preview Emoji
-          </button>
-          <button type="button" className="btn-primary mt-4 cursor-pointer" onClick={handleReset}>
-            Start Over
-          </button>
-
         </>
       )}
 
