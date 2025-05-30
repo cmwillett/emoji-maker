@@ -40,6 +40,9 @@ export default function App() {
   const [emojiText, setEmojiText] = useState('');
   const [fontColor, setFontColor] = useState('#ffffff'); // Default to white
   const cropperDiameter = 256; // or whatever your cropper's pixel size is
+  const previewCanvas = document.createElement('canvas');
+  const previewCtx = previewCanvas.getContext('2d');
+  previewCtx.font = `bold ${Math.floor(cropperDiameter / 8)}px sans-serif`;
 
   const [emojiCount, setEmojiCount] = useState(null);
   useEffect(() => {
@@ -228,13 +231,13 @@ export default function App() {
                 className="absolute left-1/2 top-1/2 flex flex-col items-center justify-center"
                 style={{
                   transform: 'translate(-50%, -50%)',
-                  width: '65%', // match maxWidth/circleDiameter ratio
+                  width: '65%',
                   maxWidth: '65%',
-                  height: '100%', // fill the cropper area
+                  height: '100%',
                   color: fontColor,
                   textShadow: '2px 2px 4px #000',
                   fontWeight: 'bold',
-                  fontSize: `calc(${cropperDiameter}px / 8)`, // match canvas font size
+                  fontSize: `calc(${cropperDiameter}px / 8)`,
                   lineHeight: 1.2,
                   pointerEvents: 'none',
                   textAlign: 'center',
@@ -248,7 +251,7 @@ export default function App() {
                 }}
               >
                 {getWrappedLines(
-                  { measureText: (t) => ({ width: t.length * (cropperDiameter / 16) }) }, // crude estimate for preview
+                  previewCtx,
                   emojiText,
                   cropperDiameter * 0.65
                 ).map((line, i) => (
