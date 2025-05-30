@@ -104,31 +104,31 @@ export default function App() {
         finalBlob = bgRemoved;
       }
 
-// Convert blob to image
-const img = await createImageBitmap(finalBlob);
-const canvas = document.createElement('canvas');
-canvas.width = img.width;
-canvas.height = img.height;
-const ctx = canvas.getContext('2d');
-ctx.drawImage(img, 0, 0);
+      // Convert blob to image
+      const img = await createImageBitmap(finalBlob);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
 
-// Draw text (customize font, color, position as needed)
-if (emojiText) {
-  ctx.font = `bold ${Math.floor(canvas.height / 8)}px sans-serif`; // Larger, dynamic font
-  ctx.fillStyle = fontColor;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.strokeStyle = 'black';
-  ctx.lineWidth = 4;
-  const y = canvas.height *0.75;
-  ctx.strokeText(emojiText, canvas.width / 2, y);
-  ctx.fillText(emojiText, canvas.width / 2, y);
-}
+      // Draw text (customize font, color, position as needed)
+      if (emojiText) {
+        ctx.font = `bold ${Math.floor(canvas.height / 8)}px sans-serif`; // Larger, dynamic font
+        ctx.fillStyle = fontColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
+        const y = canvas.height *0.75;
+        ctx.strokeText(emojiText, canvas.width / 2, y);
+        ctx.fillText(emojiText, canvas.width / 2, y);
+      }
 
-// Convert canvas back to blob
-const withTextBlob = await new Promise((resolve) =>
-  canvas.toBlob(resolve, 'image/png')
-);
+      // Convert canvas back to blob
+      const withTextBlob = await new Promise((resolve) =>
+        canvas.toBlob(resolve, 'image/png')
+      );
 
       console.log("Final blob:", finalBlob);
 
@@ -146,7 +146,7 @@ const withTextBlob = await new Promise((resolve) =>
       } finally {
             setLoading(false);
     }
-  }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText]);
+  }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor]);
 
   const handleReset = () => {
     setImageSrc(null)
@@ -203,12 +203,12 @@ const withTextBlob = await new Promise((resolve) =>
           />
           <EmojiTextInput emojiText={emojiText} setEmojiText={setEmojiText} />
           <label className="flex items-center space-x-2 mb-2">
-            <span>Font Color:</span>
+            <span className="text-emerald-400 font-bold">Choose Text Color (defaults to white):</span>
             <input
               type="color"
               value={fontColor}
               onChange={e => setFontColor(e.target.value)}
-              className="w-8 h-8 p-0 border-none"
+              className="w-8 h-8 p-0 border border-gray-400 rounded"
             />
           </label>
           <button type="button" className="btn-primary mt-4 cursor-pointer" onClick={showCroppedImage}>
