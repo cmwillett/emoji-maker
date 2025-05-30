@@ -36,6 +36,7 @@ export default function App() {
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
   const [emojiText, setEmojiText] = useState('');
+  const [fontColor, setFontColor] = useState('#ffffff'); // Default to white
 
   const [emojiCount, setEmojiCount] = useState(null);
   useEffect(() => {
@@ -114,7 +115,7 @@ ctx.drawImage(img, 0, 0);
 // Draw text (customize font, color, position as needed)
 if (emojiText) {
   ctx.font = `bold ${Math.floor(canvas.height / 8)}px sans-serif`; // Larger, dynamic font
-  ctx.fillStyle = 'white';
+  ctx.fillStyle = fontColor;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.strokeStyle = 'black';
@@ -201,6 +202,15 @@ const withTextBlob = await new Promise((resolve) =>
             setIsRound={setIsRound}
           />
           <EmojiTextInput emojiText={emojiText} setEmojiText={setEmojiText} />
+          <label className="flex items-center space-x-2 mb-2">
+            <span>Font Color:</span>
+            <input
+              type="color"
+              value={fontColor}
+              onChange={e => setFontColor(e.target.value)}
+              className="w-8 h-8 p-0 border-none"
+            />
+          </label>
           <button type="button" className="btn-primary mt-4 cursor-pointer" onClick={showCroppedImage}>
             Crop Image and Preview Emoji
           </button>
