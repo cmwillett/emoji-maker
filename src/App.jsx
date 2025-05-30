@@ -112,7 +112,7 @@ const ctx = canvas.getContext('2d');
 ctx.drawImage(img, 0, 0);
 
 // Draw text (customize font, color, position as needed)
-if (textToDraw) {
+if (emojiText) {
   ctx.font = `bold ${Math.floor(canvas.height / 8)}px sans-serif`; // Larger, dynamic font
   ctx.fillStyle = 'white';
   ctx.textAlign = 'center';
