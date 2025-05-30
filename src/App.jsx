@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
 import getCroppedImg from './utils/utils'
-import { removeBackground } from './lib/removeBackground'
 import Header from './components/Header';
 import InstallShareButtons from './components/InstallShareButtons';
 import CropperSection from './components/CropperSection';
@@ -14,6 +13,7 @@ import ContactModal from './components/ContactModal';
 import AboutModal from './components/AboutModal';
 import Footer from './components/Footer';
 import { applyBackgroundColor, incrementEmojiCount, fetchEmojiCount } from './utils/utils';
+import { removeBackgroundLocal } from './lib/removeBackground';
 
 export default function App() {
   const [loading, setLoading] = useState(false)
@@ -79,7 +79,7 @@ export default function App() {
       console.log("Cropped blob:", blob);
 
       // Step 2: Remove the background
-      const bgRemoved = await removeBackground(blob);
+      const bgRemoved = await removeBackgroundLocal(blob);
       console.log("Background removed:", bgRemoved);
 
       // Handle specific error conditions
@@ -111,15 +111,11 @@ export default function App() {
       // Step 5: Increment the emoji counter
       await incrementEmojiCount(setEmojiCount);
     } catch (e) {
-      console.error(e);
-      setErrorMessage(
-        e.message?.includes("background removal failed")
-          ? "Something went wrong while removing the background. Please try again with a different image."
-          : e.message || 'Something went wrong while processing the image.'
-      );
-      setShowErrorModal(true);
-    } finally {
-      setLoading(false);
+        console.error(e);
+        setErrorMessage(e.message || 'Something went wrong while processing the image.');
+        setShowErrorModal(true);
+      } finally {
+            setLoading(false);
     }
   }, [imageSrc, croppedAreaPixels, backgroundColor]);
 
