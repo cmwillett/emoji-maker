@@ -34,9 +34,9 @@ export default function EmojiActions({
         setIsRound={setIsRound}
       />
       <EmojiTextInput emojiText={emojiText} setEmojiText={setEmojiText} />
-      <label className="flex items-center space-x-2 mb-2">
+      <label className="flex flex-col items-center space-x-2 mb-2">
         <span className="text-emerald-400 font-semibold drop-shadow-md mb-2">
-          Choose Text Color (defaults to white):
+          Text Color (defaults to white):
         </span>
         <input
           type="color"

@@ -28,9 +28,9 @@ export default function App() {
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [showInstall, setShowInstall] = useState(false)
   const [backgroundColor, setBackgroundColor] = useState('')
-  const [borderStyle, setBorderStyle] = useState('solid')
-  const [showShadow, setShowShadow] = useState(true)
-  const [isRound, setIsRound] = useState(true)
+  const [borderStyle, setBorderStyle] = useState('none')
+  const [showShadow, setShowShadow] = useState(false)
+  const [isRound, setIsRound] = useState(false)
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [showContactModal, setShowContactModal] = useState(false);
@@ -138,6 +138,57 @@ export default function App() {
       //Step 6: Draw the image onto the canvas
       ctx.drawImage(img, 0, 0);
 
+      // If a shadow style is selected, draw it
+      if (showShadow) {
+        ctx.save();
+        ctx.shadowColor = 'rgba(0,0,0,0.5)';
+        ctx.shadowBlur = 20;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 8;
+
+        // Draw a shape matching the emoji (circle or rect) to apply the shadow
+        if (isRound) {
+          ctx.beginPath();
+          ctx.arc(
+            canvas.width / 2,
+            canvas.height / 2,
+            Math.min(canvas.width, canvas.height) / 2 - 8, // -8 to keep shadow inside
+            0,
+            Math.PI * 2
+          );
+          ctx.closePath();
+          ctx.fillStyle = 'rgba(0,0,0,0)'; // Transparent fill, just for shadow
+          ctx.fill();
+        } else {
+          ctx.fillStyle = 'rgba(0,0,0,0)';
+          ctx.fillRect(8, 8, canvas.width - 16, canvas.height - 16);
+        }
+        ctx.restore();
+      }
+
+      // If a border style is selected, draw it
+      if (borderStyle === 'solid') {
+        ctx.save();
+        if (isRound) {
+          ctx.beginPath();
+          ctx.arc(
+            canvas.width / 2,
+            canvas.height / 2,
+            Math.min(canvas.width, canvas.height) / 2 - 2, // -2 for border width
+            0,
+            Math.PI * 2
+          );
+          ctx.lineWidth = 4; // Adjust as needed
+          ctx.strokeStyle = 'white'; // Adjust as needed
+          ctx.stroke();
+        } else {
+          ctx.lineWidth = 4;
+          ctx.strokeStyle = 'white';
+          ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
+        }
+        ctx.restore();
+      }
+
       //Step 7: Draw text (customize font, color, position as needed)
       if (emojiText) {
         ctx.font = `bold ${Math.floor(canvas.height / 12)}px sans-serif`;
@@ -202,6 +253,11 @@ export default function App() {
     setCroppedAreaPixels(null)
     setCroppedImage(null)
     setEmojiText('')
+    setBackgroundColor('')
+    setBorderStyle('none')
+    setShowShadow(false)
+    setIsRound(false)
+    setFontColor('#ffffff') // Reset to default white
   }
 
   //Style for the crop container
