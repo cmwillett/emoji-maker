@@ -30,7 +30,7 @@ export default function EmojiActions({
         isRound={isRound}
         setIsRound={setIsRound}
       />
-      <EmojiTextInput emojiText={emojiText} setEmojiText={setEmojiText} presetTextColors={presetTextColors}/>
+      <EmojiTextInput emojiText={emojiText} setEmojiText={setEmojiText} presetTextColors={presetTextColors} fontColor={fontColor} setFontColor={setFontColor}/>
 
       <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4 flex flex-col items-center gap-2">
         <button
