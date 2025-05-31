@@ -3,13 +3,17 @@ import BackgroundColorPicker from './BackgroundColorPicker';
 import StyleOptions from './StyleOptions';
 import EmojiTextInput from './EmojiTextInput';
 
+const presetTextColors = [
+  "#ffffff", "#000000", "#ff0000", "#00ff00", "#0000ff",
+  "#ffa500", "#800080", "#00ffff", "#ff69b4", "#ffd700", "#87ceeb"
+];
+
+const row1 = presetTextColors.slice(0, Math.ceil(presetTextColors.length / 2));
+const row2 = presetTextColors.slice(Math.ceil(presetTextColors.length / 2));
+
 export default function EmojiActions({
   backgroundColor,
   setBackgroundColor,
-  borderStyle,
-  setBorderStyle,
-  showShadow,
-  setShowShadow,
   isRound,
   setIsRound,
   emojiText,
@@ -26,31 +30,51 @@ export default function EmojiActions({
         setBackgroundColor={setBackgroundColor}
       />
       <StyleOptions
-        borderStyle={borderStyle}
-        setBorderStyle={setBorderStyle}
-        showShadow={showShadow}
-        setShowShadow={setShowShadow}
         isRound={isRound}
         setIsRound={setIsRound}
       />
       <EmojiTextInput emojiText={emojiText} setEmojiText={setEmojiText} />
-      <label className="flex flex-col items-center space-x-2 mb-2">
-        <span className="text-emerald-400 font-semibold drop-shadow-md mb-2">
-          Text Color (defaults to white):
-        </span>
-        <input
-          type="color"
-          value={fontColor}
-          onChange={e => setFontColor(e.target.value)}
-          className="w-8 h-8 p-0 border border-gray-400 rounded"
-        />
-      </label>
+        <label className="flex flex-col items-center mb-2">
+          <span className="text-emerald-400 font-semibold drop-shadow-md mb-2">
+            Text Color (defaults to white):
+          </span>
+          <div className="flex flex-col gap-1">
+            <div className="flex gap-2 justify-center">
+              {row1.map((color) => (
+                <button
+                  key={color + '-1'}
+                  className="w-6 h-6 rounded-full border cursor-pointer"
+                  style={{
+                    backgroundColor: color,
+                    borderColor: color === fontColor ? 'lime' : 'white'
+                  }}
+                  onClick={() => setFontColor(color)}
+                  aria-label={`Set text color to ${color}`}
+                ></button>
+              ))}
+            </div>
+            <div className="flex gap-2 justify-center">
+              {row2.map((color) => (
+                <button
+                  key={color + '-2'}
+                  className="w-6 h-6 rounded-full border cursor-pointer"
+                  style={{
+                    backgroundColor: color,
+                    borderColor: color === fontColor ? 'lime' : 'white'
+                  }}
+                  onClick={() => setFontColor(color)}
+                  aria-label={`Set text color to ${color}`}
+                ></button>
+              ))}
+            </div>
+          </div>
+        </label>
       <button
         type="button"
         className="btn-primary mt-4 cursor-pointer"
         onClick={onCrop}
       >
-        Crop Image and Preview Emoji
+        Preview Emoji/Meme
       </button>
       <button
         type="button"

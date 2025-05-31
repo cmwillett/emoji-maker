@@ -9,7 +9,7 @@ export default function EmojiTextInput({ emojiText, setEmojiText }) {
         value={emojiText}
         onChange={(e) => setEmojiText(e.target.value)}
         placeholder="Add text here"
-        className="mb-2 p-1 border rounded"
+        className="mb-2 p-1 border rounded text-center"
       />
     </div>
   );
