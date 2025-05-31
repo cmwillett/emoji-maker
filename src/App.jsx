@@ -140,7 +140,7 @@ export default function App() {
 
       //Step 7: Draw text (customize font, color, position as needed)
       if (emojiText) {
-        ctx.font = `bold ${Math.floor(canvas.height / 8)}px sans-serif`;
+        ctx.font = `bold ${Math.floor(canvas.height / 12)}px sans-serif`;
         ctx.fillStyle = fontColor;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';

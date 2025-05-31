@@ -14,7 +14,7 @@ export default function EmojiTextOverlay({ emojiText, previewCtx, cropperDiamete
         color: fontColor,
         textShadow: '2px 2px 4px #000',
         fontWeight: 'bold',
-        fontSize: `calc(${cropperDiameter}px / 8)`,
+        fontSize: `calc(${cropperDiameter}px / 12)`,
         lineHeight: 1.2,
         pointerEvents: 'none',
         textAlign: 'center',
