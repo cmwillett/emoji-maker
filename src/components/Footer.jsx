@@ -2,6 +2,7 @@ import React from 'react';
 
 export default function Footer({ onAbout, onContact }) {
   return (
+    <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
     <footer className="mt-8 w-full text-center space-y-2">
       <div className="flex justify-center gap-4">
         <button
@@ -19,5 +20,6 @@ export default function Footer({ onAbout, onContact }) {
       </div>
       <p className="text-xs text-emerald-500 mt-1">© 2025 The Craig, Inc.</p>
     </footer>
+    </div>
   );
 }

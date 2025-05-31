@@ -8,9 +8,6 @@ const presetTextColors = [
   "#ffa500", "#800080", "#00ffff", "#ff69b4", "#ffd700", "#87ceeb"
 ];
 
-const row1 = presetTextColors.slice(0, Math.ceil(presetTextColors.length / 2));
-const row2 = presetTextColors.slice(Math.ceil(presetTextColors.length / 2));
-
 export default function EmojiActions({
   backgroundColor,
   setBackgroundColor,
@@ -33,56 +30,24 @@ export default function EmojiActions({
         isRound={isRound}
         setIsRound={setIsRound}
       />
-      <EmojiTextInput emojiText={emojiText} setEmojiText={setEmojiText} />
-        <label className="flex flex-col items-center mb-2">
-          <span className="text-emerald-400 font-semibold drop-shadow-md mb-2">
-            Text Color (defaults to white):
-          </span>
-          <div className="flex flex-col gap-1">
-            <div className="flex gap-2 justify-center">
-              {row1.map((color) => (
-                <button
-                  key={color + '-1'}
-                  className="w-6 h-6 rounded-full border cursor-pointer"
-                  style={{
-                    backgroundColor: color,
-                    borderColor: color === fontColor ? 'lime' : 'white'
-                  }}
-                  onClick={() => setFontColor(color)}
-                  aria-label={`Set text color to ${color}`}
-                ></button>
-              ))}
-            </div>
-            <div className="flex gap-2 justify-center">
-              {row2.map((color) => (
-                <button
-                  key={color + '-2'}
-                  className="w-6 h-6 rounded-full border cursor-pointer"
-                  style={{
-                    backgroundColor: color,
-                    borderColor: color === fontColor ? 'lime' : 'white'
-                  }}
-                  onClick={() => setFontColor(color)}
-                  aria-label={`Set text color to ${color}`}
-                ></button>
-              ))}
-            </div>
-          </div>
-        </label>
-      <button
-        type="button"
-        className="btn-primary mt-4 cursor-pointer"
-        onClick={onCrop}
-      >
-        Preview Emoji/Meme
-      </button>
-      <button
-        type="button"
-        className="btn-primary mt-4 cursor-pointer"
-        onClick={onReset}
-      >
-        Start Over
-      </button>
+      <EmojiTextInput emojiText={emojiText} setEmojiText={setEmojiText} presetTextColors={presetTextColors}/>
+
+      <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4 flex flex-col items-center gap-2">
+        <button
+          type="button"
+          className="btn-primary cursor-pointer"
+          onClick={onReset}
+        >
+          Start Over
+        </button>
+        <button
+          type="button"
+          className="btn-primary cursor-pointer"
+          onClick={onCrop}
+        >
+          Preview Emoji/Meme
+        </button>
+      </div>
     </div>
   );
 }

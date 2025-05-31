@@ -22,7 +22,7 @@ export default function AboutModal({ open, onClose }) {
             <li>Crop the photo</li>
             <li>Remove the background</li>
             <li>Choose a background color</li>
-            <li>Apply styles like borders or shadows</li>
+            <li>Apply styles</li>
             <li>Add text to the photo</li>
             <li>Set the text color</li>
           </ul>

@@ -11,7 +11,7 @@ export default function EmojiPreview({
 
   return (
     <div className="mt-6 flex flex-col items-center space-y-2">
-      <h2 className="text-emerald-400 font-semibold drop-shadow-md mb-2">Preview:</h2>
+      <h2 className="text-emerald-400 font-semibold drop-shadow-md mb-2">Preview</h2>
       <div
         className={`w-32 h-32 flex items-center justify-center box-border
           ${isRound ? 'rounded-full' : 'rounded-lg'} 
