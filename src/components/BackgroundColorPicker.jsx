@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function BackgroundColorPicker({ backgroundColor, setBackgroundColor }) {
+export default function BackgroundColorPicker({ backgroundColor, setBackgroundColor, keepOriginalBg, setKeepOriginalBg }) {
   const presetColors = [
     "#ffffff", "#000000", "#ff0000", "#00ff00", "#0000ff",
     "#ffa500", "#800080", "#00ffff", "#ff69b4", "#ffd700", "#87ceeb"
@@ -11,19 +11,34 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
 
   return (
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
+            {/* Keep Original Background Option */}
+      <div className="flex items-center justify-center mb-2">
+        <input
+          type="checkbox"
+          id="keep-original-bg"
+          checked={keepOriginalBg}
+          onChange={e => setKeepOriginalBg(e.target.checked)}
+          className="mr-2"
+        />
+        <label htmlFor="keep-original-bg" className="text-emerald-400 font-semibold">
+          Keep Original Background
+        </label>
+      </div>
       <div className="mt-4 text-center">
         <label className="block text-emerald-400 font-semibold drop-shadow-md mb-2">
           Current Background
         </label>
         <div className="flex justify-center items-center h-8">
-          {backgroundColor ? (
+          {keepOriginalBg ? (
+            <span className="text-small text-white">Original Background</span>
+          ) : backgroundColor ? (
             <span
               className="inline-block w-8 h-8 rounded border"
               style={{ backgroundColor: backgroundColor, borderColor: 'gray' }}
               title={backgroundColor}
             ></span>
           ) : (
-            <span className="text-small text-white">No Background</span>
+            <span className="text-small text-white">Remove Background</span>
           )}
         </div>
         <p className="text-emerald-400 font-semibold drop-shadow-md mb-2">Background Colors</p>
@@ -34,7 +49,7 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
             className="text-xs text-black bg-white border border-white rounded px-2 hover:bg-gray-200 cursor-pointer"
             onClick={() => setBackgroundColor('')}
           >
-            No Background
+            Remove Background
           </button>
         </div>
 

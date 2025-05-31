@@ -19,12 +19,16 @@ export default function EmojiActions({
   setFontColor,
   onCrop,
   onReset,
+  keepOriginalBg,
+  setKeepOriginalBg
 }) {
   return (
     <div className="flex flex-col items-center gap-4 w-full">
       <BackgroundColorPicker
         backgroundColor={backgroundColor}
         setBackgroundColor={setBackgroundColor}
+        keepOriginalBg={keepOriginalBg}
+        setKeepOriginalBg={setKeepOriginalBg}
       />
       <StyleOptions
         isRound={isRound}

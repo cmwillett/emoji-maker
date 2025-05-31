@@ -41,6 +41,7 @@ export default function App() {
   const previewCanvas = document.createElement('canvas');
   const previewCtx = previewCanvas.getContext('2d');
   previewCtx.font = `bold ${Math.floor(cropperDiameter / 8)}px sans-serif`;
+  const [keepOriginalBg, setKeepOriginalBg] = useState(false);
 
   //Fetch initial emoji count
   const [emojiCount, setEmojiCount] = useState(null);
@@ -91,27 +92,33 @@ export default function App() {
       const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 'image/png', true);
       console.log("Cropped blob:", blob);
 
-      // Step 2: Remove the background
-      const bgRemoved = await removeBackgroundLocal(blob);
-      console.log("Background removed:", bgRemoved);
-
-      // Step 3: Handle specific error conditions
-      if (!bgRemoved || bgRemoved instanceof Error || (typeof bgRemoved === 'object' && bgRemoved.error)) {
-        if (bgRemoved?.error === 'no_foreground') {
-          setErrorMessage("We couldn't detect a clear subject in the image. Try cropping closer or using a photo with more contrast.");
-        } else {
-          setErrorMessage("Something went wrong while removing the background. Please try again with a different image.");
-        }
-        setShowErrorModal(true);
-        return;
-      }
-
-      // Step 4: Apply background color if selected
+      // Step 2: Handle background logic
       let finalBlob;
-      if (backgroundColor) {
-        finalBlob = await applyBackgroundColor(bgRemoved, backgroundColor);
+      if (keepOriginalBg) {
+        // Skip background removal and coloring, use original cropped blob
+        finalBlob = blob;
       } else {
-        finalBlob = bgRemoved;
+        // Remove the background
+        const bgRemoved = await removeBackgroundLocal(blob);
+        console.log("Background removed:", bgRemoved);
+
+        // Handle specific error conditions
+        if (!bgRemoved || bgRemoved instanceof Error || (typeof bgRemoved === 'object' && bgRemoved.error)) {
+          if (bgRemoved?.error === 'no_foreground') {
+            setErrorMessage("We couldn't detect a clear subject in the image. Try cropping closer or using a photo with more contrast.");
+          } else {
+            setErrorMessage("Something went wrong while removing the background. Please try again with a different image.");
+          }
+          setShowErrorModal(true);
+          return;
+        }
+
+        // Apply background color if selected
+        if (backgroundColor) {
+          finalBlob = await applyBackgroundColor(bgRemoved, backgroundColor);
+        } else {
+          finalBlob = bgRemoved;
+        }
       }
 
       //Step 5: Convert blob to image
@@ -269,6 +276,8 @@ export default function App() {
             setFontColor={setFontColor}
             onCrop={showCroppedImage}
             onReset={handleReset}
+            keepOriginalBg={keepOriginalBg}
+            setKeepOriginalBg={setKeepOriginalBg}
           />
         </>
       )}
