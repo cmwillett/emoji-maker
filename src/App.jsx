@@ -3,8 +3,6 @@ import getCroppedImg from './utils/utils'
 import Header from './components/Header';
 import InstallShareButtons from './components/InstallShareButtons';
 import CropperSection from './components/CropperSection';
-import BackgroundColorPicker from './components/BackgroundColorPicker';
-import StyleOptions from './components/StyleOptions';
 import EmojiPreview from './components/EmojiPreview';
 import LoadingIndicator from './components/LoadingIndicator';
 import ErrorModal from './components/ErrorModal';
@@ -14,13 +12,12 @@ import AboutModal from './components/AboutModal';
 import Footer from './components/Footer';
 import { applyBackgroundColor, incrementEmojiCount, fetchEmojiCount } from './utils/utils';
 import { removeBackgroundLocal } from './lib/removeBackground';
-import EmojiTextInput from './components/EmojiTextInput';
-import { wrapText } from './utils/utils';
 import { getWrappedLines } from './utils/utils';
 import Draggable from 'react-draggable';
 import EmojiTextOverlay from './components/EmojiTextOverlay';
 import EmojiActions from './components/EmojiActions';
 
+//Main App component
 export default function App() {
   const [loading, setLoading] = useState(false)
   const [imageSrc, setImageSrc] = useState(null)
@@ -47,11 +44,13 @@ export default function App() {
   const previewCtx = previewCanvas.getContext('2d');
   previewCtx.font = `bold ${Math.floor(cropperDiameter / 8)}px sans-serif`;
 
+  //Fetch initial emoji count
   const [emojiCount, setEmojiCount] = useState(null);
   useEffect(() => {
     fetchEmojiCount(setEmojiCount);
   }, []);
 
+  //Window event listener for PWA install prompt
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const handler = (e) => {
@@ -68,6 +67,7 @@ export default function App() {
     }
   }, [])
 
+  //Install PWA handler
   const handleInstallClick = () => {
     if (deferredPrompt) {
       deferredPrompt.prompt()
@@ -78,10 +78,12 @@ export default function App() {
     }
   }
 
+  //Crop complete handler
   const onCropComplete = useCallback((_, areaPixels) => {
     setCroppedAreaPixels(areaPixels)
   }, [])
 
+  //Function to show cropped image and process it
   const showCroppedImage = useCallback(async () => {
     try {
       setLoading(true);
@@ -94,7 +96,7 @@ export default function App() {
       const bgRemoved = await removeBackgroundLocal(blob);
       console.log("Background removed:", bgRemoved);
 
-      // Handle specific error conditions
+      // Step 3: Handle specific error conditions
       if (!bgRemoved || bgRemoved instanceof Error || (typeof bgRemoved === 'object' && bgRemoved.error)) {
         if (bgRemoved?.error === 'no_foreground') {
           setErrorMessage("We couldn't detect a clear subject in the image. Try cropping closer or using a photo with more contrast.");
@@ -105,7 +107,7 @@ export default function App() {
         return;
       }
 
-      // Step 3: Apply background color if selected
+      // Step 4: Apply background color if selected
       let finalBlob;
       if (backgroundColor) {
         finalBlob = await applyBackgroundColor(bgRemoved, backgroundColor);
@@ -113,7 +115,7 @@ export default function App() {
         finalBlob = bgRemoved;
       }
 
-      // Convert blob to image
+      //Step 5: Convert blob to image
       const img = await createImageBitmap(finalBlob);
       const canvas = document.createElement('canvas');
       canvas.width = img.width;
@@ -132,9 +134,11 @@ export default function App() {
         ctx.closePath();
         ctx.clip();
       }
+
+      //Step 6: Draw the image onto the canvas
       ctx.drawImage(img, 0, 0);
 
-      // Draw text (customize font, color, position as needed)
+      //Step 7: Draw text (customize font, color, position as needed)
       if (emojiText) {
         ctx.font = `bold ${Math.floor(canvas.height / 8)}px sans-serif`;
         ctx.fillStyle = fontColor;
@@ -162,23 +166,24 @@ export default function App() {
         });
       }
 
+      //Step 8: Restore context if using round crop
       if (isRound) {
         ctx.restore();
       }
 
-      // Convert canvas back to blob
+      //Step 9: Convert canvas back to blob
       const withTextBlob = await new Promise((resolve) =>
         canvas.toBlob(resolve, 'image/png')
       );
 
       console.log("Final blob:", finalBlob);
 
-      // Step 4: Generate final image preview
+      // Step 10: Generate final image preview
       const finalUrl = URL.createObjectURL(withTextBlob);
       console.log("Final image URL:", finalUrl);
       setCroppedImage(finalUrl);
 
-      // Step 5: Increment the emoji counter
+      // Step 11: Increment the emoji counter
       await incrementEmojiCount(setEmojiCount);
     } catch (e) {
         console.error(e);
@@ -189,6 +194,7 @@ export default function App() {
     }
   }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor]);
 
+  //Reset handler to clear all states
   const handleReset = () => {
     setImageSrc(null)
     setCrop({ x: 0, y: 0 })
@@ -198,6 +204,7 @@ export default function App() {
     setEmojiText('')
   }
 
+  //Style for the crop container
   const cropContainerStyle = {
     backgroundColor: backgroundColor || '#fff',
     border: borderStyle === 'solid' ? '4px solid white' : 'none',
@@ -206,21 +213,28 @@ export default function App() {
     overflow: 'hidden',
   }
 
+  //Render the frontend UI
   return (
+    // Main app container with background image and styles
     <div className="relative z-10 flex flex-col items-center justify-center min-h-screen space-y-4 p-4"
       style={{
         backgroundImage: "url('/background.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}>
+
+      {/*Set the header, emoji count, and install/share buttons*/}
       <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div> 
       <Header emojiCount={emojiCount} />
       <InstallShareButtons showInstall={showInstall} handleInstallClick={handleInstallClick} />
       
+      {/*Show the upload buttons if no image is selected*/}
       {!imageSrc && <UploadButtons onImageSelect={setImageSrc} />}
 
+      {/*Show the image cropper section if an image is selected*/}
       {imageSrc && (
         <>
+          {/* Show the cropper options, including emoji text and background */}
           <div className="relative w-fit mx-auto">
             <CropperSection
               imageSrc={imageSrc}
@@ -231,6 +245,7 @@ export default function App() {
               onCropComplete={onCropComplete}
               cropContainerStyle={cropContainerStyle}
             />
+            {/* Show the emoji text overlay if emojiText is set */}
             {emojiText && (
               <EmojiTextOverlay
                 emojiText={emojiText}
@@ -240,6 +255,7 @@ export default function App() {
               />
             )}
           </div>
+          {/* Show the emoji actions for customization */}
           <EmojiActions
             backgroundColor={backgroundColor}
             setBackgroundColor={setBackgroundColor}
@@ -259,8 +275,10 @@ export default function App() {
         </>
       )}
 
+      {/* Show the 'processing emoji line' if loading */}
       {loading && <LoadingIndicator />}
 
+      {/* Set the cropped emoji preview, with the share and download buttons */}
       <EmojiPreview
         croppedImage={croppedImage}
         isRound={isRound}
@@ -317,11 +335,13 @@ export default function App() {
           link.click();
         }}
       />
+      {/* Show the error modal if there's an error */}
       <ErrorModal
         open={showErrorModal}
         errorMessage={errorMessage}
         onClose={() => setShowErrorModal(false)}
       />
+      {/* Show the contact modal if contact is clicked */}
       <ContactModal
         open={showContactModal}
         onClose={() => setShowContactModal(false)}
@@ -330,10 +350,12 @@ export default function App() {
         contactSubmitted={contactSubmitted}
         setContactSubmitted={setContactSubmitted}
       />
+      {/* Show the about modal if about is clicked */}
       <AboutModal
         open={showAboutModal}
         onClose={() => setShowAboutModal(false)}
       />
+      {/* Footer with about and contact links */}
       <Footer
         onAbout={() => setShowAboutModal(true)}
         onContact={() => setShowContactModal(true)}
