@@ -15,12 +15,11 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
         <h2 className="block text-emerald-400 font-semibold drop-shadow-md mb-2 underline">
           Background Options
         </h2>
-        <label className="block text-emerald-400 font-semibold drop-shadow-md mb-2">
-          Current Background
-        </label>
-        <div className="flex justify-center items-center h-8 mb-2">
+
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <span className="text-emerald-400 font-semibold drop-shadow-md">Selected =</span>
           {keepOriginalBg ? (
-            <span className="text-small text-white">Original Background</span>
+            <span className="text-sm text-white">Use Original</span>
           ) : backgroundColor ? (
             <span
               className="inline-block w-8 h-8 rounded border"
@@ -28,9 +27,10 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
               title={backgroundColor}
             ></span>
           ) : (
-            <span className="text-small text-white">Remove Background</span>
+            <span className="text-sm text-white">Remove</span>
           )}
         </div>
+
         <p className="text-emerald-400 font-semibold drop-shadow-md mb-2">Background Colors</p>
         <div className="flex flex-col items-center justify-center mb-4 gap-2">
           <button

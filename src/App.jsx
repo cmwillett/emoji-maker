@@ -16,6 +16,8 @@ import { getWrappedLines } from './utils/utils';
 import Draggable from 'react-draggable';
 import EmojiTextOverlay from './components/EmojiTextOverlay';
 import EmojiActions from './components/EmojiActions';
+import OptionsTabs from './components/OptionsTabs';
+import ResetCreatePanel from './components/ResetCreatePanel';
 
 //Main App component
 export default function App() {
@@ -265,7 +267,28 @@ export default function App() {
               />
             )}
           </div>
-          {/* Show the emoji actions for customization */}
+
+          <OptionsTabs
+            backgroundColor={backgroundColor}
+            setBackgroundColor={setBackgroundColor}
+            keepOriginalBg={keepOriginalBg}
+            setKeepOriginalBg={setKeepOriginalBg}
+            isRound={isRound}
+            setIsRound={setIsRound}
+            emojiText={emojiText}
+            setEmojiText={setEmojiText}
+            fontColor={fontColor}
+            setFontColor={setFontColor}
+            presetTextColors={[
+              "#ffffff", "#000000", "#ff0000", "#00ff00", "#0000ff",
+              "#ffa500", "#800080", "#00ffff", "#ff69b4", "#ffd700", "#87ceeb"
+            ]}
+          />
+          <ResetCreatePanel
+            onReset={handleReset}
+            onCreate={showCroppedImage}
+          />
+          {/* Show the emoji actions for customization 
           <EmojiActions
             backgroundColor={backgroundColor}
             setBackgroundColor={setBackgroundColor}
@@ -279,7 +302,7 @@ export default function App() {
             onReset={handleReset}
             keepOriginalBg={keepOriginalBg}
             setKeepOriginalBg={setKeepOriginalBg}
-          />
+          /> */}
         </>
       )}
 
