@@ -9,7 +9,7 @@ export default function InstallShareButtons({ showInstall, handleInstallClick })
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
       <Stack direction="row" spacing={2} className="mt-4">
         {showInstall && (
-          <>
+          <div>
             <label className="block text-emerald-400 font-semibold drop-shadow-md mb-2">
               About/Contact
             </label>
@@ -25,7 +25,7 @@ export default function InstallShareButtons({ showInstall, handleInstallClick })
                 />
               </span>
             </Tooltip>
-          </>
+          </div>
         )}
       </Stack>
     </div>
