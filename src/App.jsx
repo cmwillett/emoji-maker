@@ -94,6 +94,7 @@ export default function App() {
 
       // Step 2: Handle background logic
       let finalBlob;
+      console.log("Keep original background:", keepOriginalBg);
       if (keepOriginalBg) {
         // Skip background removal and coloring, use original cropped blob
         finalBlob = blob;
@@ -198,7 +199,7 @@ export default function App() {
       } finally {
             setLoading(false);
     }
-  }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor]);
+  }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor, keepOriginalBg]);
 
   //Reset handler to clear all states
   const handleReset = () => {

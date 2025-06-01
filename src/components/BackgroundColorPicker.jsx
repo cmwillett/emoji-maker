@@ -47,7 +47,10 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
         <div className="flex justify-center mb-2">
           <button
             className="text-xs text-black bg-white border border-white rounded px-2 hover:bg-gray-200 cursor-pointer"
-            onClick={() => setBackgroundColor('')}
+            onClick={() => { 
+              setBackgroundColor('');
+              setKeepOriginalBg(false);
+            }}
           >
             Remove Background
           </button>
@@ -60,7 +63,10 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
                 key={color + '-1'}
                 className="w-6 h-6 rounded-full border cursor-pointer"
                 style={{ backgroundColor: color, borderColor: color === backgroundColor ? 'lime' : 'white' }}
-                onClick={() => setBackgroundColor(color)}
+                onClick={() => { 
+                  setBackgroundColor(color)
+                  setKeepOriginalBg(false); // Reset keepOriginalBg when selecting a color
+                }}
               ></button>
             ))}
           </div>
@@ -70,7 +76,10 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
                 key={color + '-2'}
                 className="w-6 h-6 rounded-full border cursor-pointer"
                 style={{ backgroundColor: color, borderColor: color === backgroundColor ? 'lime' : 'white' }}
-                onClick={() => setBackgroundColor(color)}
+                onClick={() => { 
+                  setBackgroundColor(color);
+                  setKeepOriginalBg(false); // Reset keepOriginalBg when selecting a color
+                  }}
               ></button>
             ))}
           </div>
