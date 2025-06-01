@@ -43,13 +43,14 @@ export default function EmojiActions({
           onClick={onReset}
         >
           Start Over
+          (Reset everything)
         </button>
         <button
           type="button"
           className="btn-primary cursor-pointer"
           onClick={onCrop}
         >
-          Preview Emoji/Meme
+          Create Emoji/Meme
         </button>
       </div>
     </div>

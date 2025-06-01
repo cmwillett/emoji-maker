@@ -11,24 +11,11 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
 
   return (
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
-            {/* Keep Original Background Option */}
-      <div className="flex items-center justify-center mb-2">
-        <input
-          type="checkbox"
-          id="keep-original-bg"
-          checked={keepOriginalBg}
-          onChange={e => setKeepOriginalBg(e.target.checked)}
-          className="mr-2"
-        />
-        <label htmlFor="keep-original-bg" className="text-emerald-400 font-semibold">
-          Keep Original Background
-        </label>
-      </div>
       <div className="mt-4 text-center">
         <label className="block text-emerald-400 font-semibold drop-shadow-md mb-2">
           Current Background
         </label>
-        <div className="flex justify-center items-center h-8">
+        <div className="flex justify-center items-center h-8 mb-2">
           {keepOriginalBg ? (
             <span className="text-small text-white">Original Background</span>
           ) : backgroundColor ? (
@@ -42,12 +29,16 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
           )}
         </div>
         <p className="text-emerald-400 font-semibold drop-shadow-md mb-2">Background Colors</p>
-        
-        {/* Centered No BG button above presets */}
-        <div className="flex justify-center mb-2">
+        <div className="flex flex-col items-center justify-center mb-4 gap-2">
           <button
-            className="text-xs text-black bg-white border border-white rounded px-2 hover:bg-gray-200 cursor-pointer"
-            onClick={() => { 
+            className="text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
+            onClick={() => setKeepOriginalBg(true)}
+          >
+            Keep Original Background
+          </button>
+          <button
+            className="text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
+            onClick={() => {
               setBackgroundColor('');
               setKeepOriginalBg(false);
             }}
@@ -55,7 +46,6 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
             Remove Background
           </button>
         </div>
-
         <div className="flex flex-col gap-1 mb-2">
           <div className="flex justify-center gap-2">
             {row1.map((color) => (
@@ -63,9 +53,9 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
                 key={color + '-1'}
                 className="w-6 h-6 rounded-full border cursor-pointer"
                 style={{ backgroundColor: color, borderColor: color === backgroundColor ? 'lime' : 'white' }}
-                onClick={() => { 
-                  setBackgroundColor(color)
-                  setKeepOriginalBg(false); // Reset keepOriginalBg when selecting a color
+                onClick={() => {
+                  setBackgroundColor(color);
+                  setKeepOriginalBg(false);
                 }}
               ></button>
             ))}
@@ -76,10 +66,10 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
                 key={color + '-2'}
                 className="w-6 h-6 rounded-full border cursor-pointer"
                 style={{ backgroundColor: color, borderColor: color === backgroundColor ? 'lime' : 'white' }}
-                onClick={() => { 
+                onClick={() => {
                   setBackgroundColor(color);
-                  setKeepOriginalBg(false); // Reset keepOriginalBg when selecting a color
-                  }}
+                  setKeepOriginalBg(false);
+                }}
               ></button>
             ))}
           </div>

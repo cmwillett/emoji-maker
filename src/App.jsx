@@ -41,7 +41,7 @@ export default function App() {
   const previewCanvas = document.createElement('canvas');
   const previewCtx = previewCanvas.getContext('2d');
   previewCtx.font = `bold ${Math.floor(cropperDiameter / 8)}px sans-serif`;
-  const [keepOriginalBg, setKeepOriginalBg] = useState(false);
+  const [keepOriginalBg, setKeepOriginalBg] = useState(true);
 
   //Fetch initial emoji count
   const [emojiCount, setEmojiCount] = useState(null);
