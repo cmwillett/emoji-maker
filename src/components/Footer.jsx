@@ -5,9 +5,9 @@ export default function Footer({ onAbout, onContact }) {
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
     <footer className="mt-8 w-full text-center space-y-2">
       <div className="flex flex-col items-center gap-2">
-        <label className="block text-emerald-400 font-semibold drop-shadow-md mb-2">
-          About/Contact
-        </label>
+        <h2 className="block text-emerald-400 font-semibold drop-shadow-md mb-2 underline">
+          About / Contact
+        </h2>
         <div className="flex gap-4">
           <button
             className="px-3 py-1 rounded bg-white bg-opacity-20 text-emerald-100 font-medium backdrop-blur hover:bg-opacity-30 hover:text-white transition"

@@ -12,6 +12,9 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
   return (
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
       <div className="mt-4 text-center">
+        <h2 className="block text-emerald-400 font-semibold drop-shadow-md mb-2 underline">
+          Background Options
+        </h2>
         <label className="block text-emerald-400 font-semibold drop-shadow-md mb-2">
           Current Background
         </label>

@@ -6,6 +6,9 @@ export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, set
 
   return (
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
+      <h2 className="text-center block text-emerald-400 font-semibold drop-shadow-md mb-2 underline">
+        Text Options
+      </h2>
       <p className="text-emerald-400 font-semibold drop-shadow-md mb-2 text-center">Add Text?</p>
       <div className="flex justify-center mb-2">
         <input
