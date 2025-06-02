@@ -1,5 +1,7 @@
 import React from 'react';
 import { customBackgrounds } from '../constants/customBackgrounds';
+import { EmojiButton } from './EmojiButton';
+import { Tooltip } from '@mui/material';
 
 export default function BackgroundColorPicker({ backgroundColor, setBackgroundColor, keepOriginalBg, setKeepOriginalBg, backgroundType, setBackgroundType }) {
   const presetColors = [
@@ -47,21 +49,37 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
 
         <p className="text-emerald-400 font-semibold drop-shadow-md mb-2">Background Colors</p>
         <div className="flex flex-col items-center justify-center mb-4 gap-2">
-          <button
-            className="text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
-            onClick={() => setKeepOriginalBg(true)}
-          >
-            Keep Original Background
-          </button>
-          <button
-            className="text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
-            onClick={() => {
-              setBackgroundColor('');
-              setKeepOriginalBg(false);
-            }}
-          >
-            Remove Background
-          </button>
+          <Tooltip title="Click to keep the original background from the photo" placement="right">
+            <span>
+              <button
+                className={`px-4 py-2 rounded font-semibold border transition
+                  ${keepOriginalBg
+                    ? 'bg-white text-emerald-500 border-emerald-400'
+                    : 'bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-600'}`}
+                onClick={() => setKeepOriginalBg(true)}
+                type="button"
+              >
+                Keep Original Background
+              </button>
+            </span>
+          </Tooltip>
+          <Tooltip title="Click to remove the background entirely from the photo" placement="right">
+            <span>
+              <button
+                className={`px-4 py-2 rounded font-semibold border transition
+                  ${!keepOriginalBg && !backgroundColor
+                    ? 'bg-white text-emerald-500 border-emerald-400'
+                    : 'bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-600'}`}
+                onClick={() => {
+                  setBackgroundColor('');
+                  setKeepOriginalBg(false);
+                }}
+                type="button"
+              >
+                Remove Background
+              </button>
+            </span>
+          </Tooltip>
         </div>
         <div className="flex flex-col gap-1 mb-2">
           <div className="flex justify-center gap-2">

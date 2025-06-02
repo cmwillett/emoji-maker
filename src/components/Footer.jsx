@@ -1,4 +1,6 @@
 import React from 'react';
+import { Tooltip } from '@mui/material';
+import { EmojiButton } from './EmojiButton';
 
 export default function Footer({ onAbout, onContact }) {
   return (
@@ -9,21 +11,25 @@ export default function Footer({ onAbout, onContact }) {
           About / Contact
         </h2>
         <div className="flex gap-4">
-          <button
-            className="px-3 py-1 rounded bg-white bg-opacity-20 text-emerald-100 font-medium backdrop-blur hover:bg-opacity-30 hover:text-white transition"
-            onClick={onAbout}
-          >
-            About this app
-          </button>
-          <button
-            className="px-3 py-1 rounded bg-white bg-opacity-20 text-emerald-100 font-medium backdrop-blur hover:bg-opacity-30 hover:text-white transition"
-            onClick={onContact}
-          >
-            Contact
-          </button>
+        <Tooltip title="Click to read about this app..." placement="right">
+          <span>
+            <EmojiButton
+              label="About this app"
+              onClick={onAbout}
+            />
+          </span>
+        </Tooltip>          
+        <Tooltip title="Click to contact the developer about anything" placement="right">
+          <span>
+            <EmojiButton
+              label="Contact Developer"
+              onClick={onContact}
+            />
+          </span>
+        </Tooltip> 
         </div>
       </div>
-      <p className="text-xs text-emerald-500 mt-1">© 2025 The Craig, Inc.</p>
+      <p className="text-small text-emerald-500 mt-1">© 2025 The Craig, Inc.</p>
     </footer>
     </div>
   );

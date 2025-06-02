@@ -1,4 +1,6 @@
 import React from 'react';
+import { Tooltip } from '@mui/material';
+import { EmojiButton } from './EmojiButton';
 
 export default function EmojiPreview({
   croppedImage,
@@ -25,15 +27,30 @@ export default function EmojiPreview({
         />
       </div>
       <div className="flex flex-col items-center gap-2 mt-4">
-        <button className="btn-primary cursor-pointer" onClick={onShareMobile}>
-          📤 Share (mobile)
-        </button>
-        <button className="btn-primary cursor-pointer" onClick={onShareClipboard}>
-          📋 Share (non-mobile)
-        </button>
-        <button className="btn-primary cursor-pointer" onClick={onDownload}>
-          ⬇️ Download
-        </button>
+        <Tooltip title="Click to share on a mobile device" placement="right">
+          <span>
+            <EmojiButton
+              label="📤 Share (mobile)"
+              onClick={onShareMobile}
+            />
+          </span>
+        </Tooltip>        
+        <Tooltip title="Click to share on a non-mobile device" placement="right">
+          <span>
+            <EmojiButton
+              label="📋 Share (non-mobile)"
+              onClick={onShareClipboard}
+            />
+          </span>
+        </Tooltip>  
+        <Tooltip title="Click to download to your device" placement="right">
+          <span>
+            <EmojiButton
+              label="⬇️ Download"
+              onClick={onDownload}
+            />
+          </span>
+        </Tooltip>  
       </div>
     </div>
     </div>
