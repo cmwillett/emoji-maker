@@ -24,6 +24,10 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
             <span className="text-sm text-white">Bubbles</span>
           ) : backgroundType === 'fire' ? (
             <span className="text-sm text-white">Fire</span>
+          ) : backgroundType === 'clouds' ? (
+            <span className="text-sm text-white">Clouds</span>
+          ) : backgroundType === 'forest trail' ? (
+            <span className="text-sm text-white">Forest Trail</span>
           ) : backgroundColor ? (
             <span
               className="inline-block w-8 h-8 rounded border"
@@ -107,6 +111,34 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
                 setKeepOriginalBg(false);
               }}
               title="Fire"
+            >
+            </button>
+                        <button
+              className="w-15 h-10 text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
+              style={{
+                backgroundImage: "url('/clouds.png')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+              onClick={() => { 
+                setBackgroundType('clouds')
+                setKeepOriginalBg(false);
+              }}
+              title="Clouds"
+            >
+            </button>
+                        <button
+              className="w-15 h-10 text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
+              style={{
+                backgroundImage: "url('/forestTrail.jpg')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+              onClick={() => { 
+                setBackgroundType('forest trail')
+                setKeepOriginalBg(false);
+              }}
+              title="Forest Trail"
             >
             </button>
           </div>

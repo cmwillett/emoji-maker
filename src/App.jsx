@@ -123,8 +123,8 @@ export default function App() {
         } else {
           finalBlob = bgRemoved;
         }
-        console.log('backgroundType:', backgroundType);
-        if (backgroundType === 'bubbles' || backgroundType === 'fire') {
+
+        if (backgroundType === 'bubbles' || backgroundType === 'fire' || backgroundType === 'clouds' || backgroundType === 'forest trail') {
             const img = await createImageBitmap(bgRemoved);
             const canvas = document.createElement('canvas');
             canvas.width = img.width;
@@ -132,7 +132,13 @@ export default function App() {
             const ctx = canvas.getContext('2d');
             // Draw pattern
             const patternImg = new window.Image();
-            patternImg.src = backgroundType === 'bubbles' ? '/bubbles.png' : '/fire.png';
+            const patternMap = {
+              bubbles: '/bubbles.png',
+              fire: '/fire.png',
+              clouds: '/clouds.png',
+              'forest trail': '/forestTrail.jpg'
+            }
+            patternImg.src = patternMap[backgroundType];
             await new Promise((res) => { patternImg.onload = res; });
             ctx.drawImage(patternImg, 0, 0, canvas.width, canvas.height);
             // Draw subject on top
