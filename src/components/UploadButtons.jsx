@@ -108,11 +108,11 @@ export default function UploadButtons({ onImageSelect }) {
             />
           </div>
         </Tooltip>
-        <Tooltip title="Choose from some common images..." placement="right">
+        <Tooltip title="Choose from some common memes..." placement="right">
           <div>
             <EmojiButton
               icon={<PhotoLibraryIcon />}
-              label="Choose from Common Images"
+              label="Choose from Common Memes"
               onClick={() => setGalleryOpen(true)}
             />
           </div>
