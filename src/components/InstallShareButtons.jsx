@@ -54,7 +54,7 @@ export default function InstallShareButtons({ showInstall, handleInstallClick })
           <Tooltip title="Click this to learn how to use this app!" placement="right">
             <span>
               <EmojiButton
-                icon={<ShareIcon />}
+                icon={<img src="/howto.png" alt="Reset" className="w-6 h-6" />}
                 label="How To"
                 onClick={() => setHowToOpen(true)}
               />
