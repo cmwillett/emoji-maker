@@ -10,6 +10,7 @@ export default function EmojiPreview({
   if (!croppedImage) return null;
 
   return (
+    <div className="bg-black/40 flex-col items-center border border-emerald-400 rounded-lg p-4 mb-4">
     <div className="mt-6 flex flex-col items-center space-y-2">
       <h2 className="text-emerald-400 font-semibold drop-shadow-md mb-2">Preview</h2>
       <div
@@ -34,6 +35,7 @@ export default function EmojiPreview({
           ⬇️ Download
         </button>
       </div>
+    </div>
     </div>
   );
 }
