@@ -30,6 +30,7 @@ export default function App() {
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [showInstall, setShowInstall] = useState(false)
   const [backgroundColor, setBackgroundColor] = useState('')
+  const [backgroundType, setBackgroundType] = useState('original'); // 'original', 'remove', 'color', 'bubbles', 'fire'
   const [isRound, setIsRound] = useState(false)
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -122,6 +123,25 @@ export default function App() {
         } else {
           finalBlob = bgRemoved;
         }
+        console.log('backgroundType:', backgroundType);
+        if (backgroundType === 'bubbles' || backgroundType === 'fire') {
+            const img = await createImageBitmap(bgRemoved);
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            // Draw pattern
+            const patternImg = new window.Image();
+            patternImg.src = backgroundType === 'bubbles' ? '/bubbles.png' : '/fire.png';
+            await new Promise((res) => { patternImg.onload = res; });
+            ctx.drawImage(patternImg, 0, 0, canvas.width, canvas.height);
+            // Draw subject on top
+            ctx.drawImage(img, 0, 0);
+            // Convert to blob
+            finalBlob = await new Promise((resolve) =>
+              canvas.toBlob(resolve, 'image/png')
+            );
+        }
       }
 
       //Step 5: Convert blob to image
@@ -201,7 +221,7 @@ export default function App() {
       } finally {
             setLoading(false);
     }
-  }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor, keepOriginalBg]);
+  }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor, keepOriginalBg, backgroundType]);
 
   //Reset handler to clear all states
   const handleReset = () => {
@@ -212,6 +232,8 @@ export default function App() {
     setCroppedImage(null)
     setEmojiText('')
     setBackgroundColor('')
+    setBackgroundType('original')
+    setKeepOriginalBg(true)
     setIsRound(false)
     setFontColor('#ffffff') // Reset to default white
   }
@@ -271,6 +293,8 @@ export default function App() {
           <OptionsTabs
             backgroundColor={backgroundColor}
             setBackgroundColor={setBackgroundColor}
+            backgroundType={backgroundType}
+            setBackgroundType={setBackgroundType}
             keepOriginalBg={keepOriginalBg}
             setKeepOriginalBg={setKeepOriginalBg}
             isRound={isRound}

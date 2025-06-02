@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function BackgroundColorPicker({ backgroundColor, setBackgroundColor, keepOriginalBg, setKeepOriginalBg }) {
+export default function BackgroundColorPicker({ backgroundColor, setBackgroundColor, keepOriginalBg, setKeepOriginalBg, backgroundType, setBackgroundType }) {
   const presetColors = [
     "#ffffff", "#000000", "#ff0000", "#00ff00", "#0000ff",
     "#ffa500", "#800080", "#00ffff", "#ff69b4", "#ffd700", "#87ceeb"
@@ -20,6 +20,10 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
           <span className="text-emerald-400 font-semibold drop-shadow-md">Selected =</span>
           {keepOriginalBg ? (
             <span className="text-sm text-white">Use Original</span>
+          ) : backgroundType === 'bubbles' ? (
+            <span className="text-sm text-white">Bubbles</span>
+          ) : backgroundType === 'fire' ? (
+            <span className="text-sm text-white">Fire</span>
           ) : backgroundColor ? (
             <span
               className="inline-block w-8 h-8 rounded border"
@@ -75,6 +79,36 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
                 }}
               ></button>
             ))}
+          </div>
+          <div className="flex items-center justify-center mb-4 gap-2">
+            <button
+              className="w-15 h-10 text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
+              style={{ 
+                backgroundImage: "url('/bubbles.png')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+              onClick={() => { 
+                setBackgroundType('bubbles')
+                setKeepOriginalBg(false);
+              }}
+              title="Bubbles"
+            >
+            </button>
+            <button
+              className="w-15 h-10 text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
+              style={{
+                backgroundImage: "url('/fire.png')",
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+              onClick={() => { 
+                setBackgroundType('fire')
+                setKeepOriginalBg(false);
+              }}
+              title="Fire"
+            >
+            </button>
           </div>
         </div>
       </div>

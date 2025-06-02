@@ -18,6 +18,8 @@ export default function OptionsTabs(props) {
             setBackgroundColor={props.setBackgroundColor}
             keepOriginalBg={props.keepOriginalBg}
             setKeepOriginalBg={props.setKeepOriginalBg}
+            backgroundType={props.backgroundType}
+            setBackgroundType={props.setBackgroundType}
           />
         )}
         {activeTab === 'Style' && (
