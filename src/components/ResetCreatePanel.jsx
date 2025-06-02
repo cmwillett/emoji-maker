@@ -1,4 +1,6 @@
 import React from 'react';
+import { EmojiButton } from './EmojiButton';
+import { Tooltip } from '@mui/material';
 
 export default function ResetCreatePanel({ onReset, onCreate }) {
   return (
@@ -6,18 +8,24 @@ export default function ResetCreatePanel({ onReset, onCreate }) {
       <h2 className="block text-emerald-400 font-semibold drop-shadow-md mb-2 underline">
         Reset/Create
       </h2>
-      <button
-        className="text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
-        onClick={onReset}
-      >
-        Start Over
-      </button>
-      <button
-        className="text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
-        onClick={onCreate}
-      >
-        Create Emoji/Meme
-      </button>
+        <Tooltip title="Reset all options and choose a new image!" placement="right">
+          <span>
+            <EmojiButton
+              icon={<img src="/reset.png" alt="Reset" className="w-6 h-6" />}
+              label="Start Over"
+              onClick={onReset}
+            />
+          </span>
+        </Tooltip>    
+        <Tooltip title="Create the emoji/meme and display it below!" placement="right">
+          <span>
+            <EmojiButton
+            icon={<img src="/create.png" alt="Create" className="w-6 h-6" />}
+              label="Create Emoji/Meme"
+              onClick={onCreate}
+            />
+          </span>
+        </Tooltip>          
     </div>
   );
 }
