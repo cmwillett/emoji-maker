@@ -122,7 +122,9 @@ export default function UploadButtons({ onImageSelect }) {
         <Box sx={{
           position: 'absolute', top: '50%', left: '50%',
           transform: 'translate(-50%, -50%)',
-          bgcolor: 'background.paper', p: 4, borderRadius: 2, boxShadow: 24
+          bgcolor: 'background.paper', p: 4, borderRadius: 2, boxShadow: 24,
+          maxHeight: '90vh',
+          overflowY: 'auto',
         }}>
           <h3>Choose an Image</h3>
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
@@ -136,6 +138,15 @@ export default function UploadButtons({ onImageSelect }) {
               />
             ))}
           </div>
+          <div className="flex justify-center">
+            <button
+              className="mt-4 rounded px-4 py-2 bg-emerald-400 text-black font-semibold hover:bg-emerald-500"
+              onClick={() => setGalleryOpen(false)}
+              type="button"
+            >
+              Cancel
+            </button>     
+          </div>     
         </Box>
       </Modal>      
     </div>
