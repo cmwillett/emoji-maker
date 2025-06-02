@@ -1,4 +1,5 @@
 import React from 'react';
+import { customBackgrounds } from './customBackgrounds';
 
 export default function BackgroundColorPicker({ backgroundColor, setBackgroundColor, keepOriginalBg, setKeepOriginalBg, backgroundType, setBackgroundType }) {
   const presetColors = [
@@ -8,6 +9,17 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
 
   const row1 = presetColors.slice(0, Math.ceil(presetColors.length / 2));
   const row2 = presetColors.slice(Math.ceil(presetColors.length / 2));
+  const backgroundTypeMap = Object.fromEntries(
+    customBackgrounds.map(bg => [bg.type, bg.title])
+  );
+
+  function chunkArray(arr, size) {
+    const result = [];
+    for (let i = 0; i < arr.length; i += size) {
+      result.push(arr.slice(i, i + size));
+    }
+    return result;
+  }
 
   return (
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
@@ -20,14 +32,8 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
           <span className="text-emerald-400 font-semibold drop-shadow-md">Selected =</span>
           {keepOriginalBg ? (
             <span className="text-sm text-white">Use Original</span>
-          ) : backgroundType === 'bubbles' ? (
-            <span className="text-sm text-white">Bubbles</span>
-          ) : backgroundType === 'fire' ? (
-            <span className="text-sm text-white">Fire</span>
-          ) : backgroundType === 'clouds' ? (
-            <span className="text-sm text-white">Clouds</span>
-          ) : backgroundType === 'forest trail' ? (
-            <span className="text-sm text-white">Forest Trail</span>
+          ) : backgroundType && backgroundTypeMap[backgroundType] ? (
+            <span className="text-sm text-white">{backgroundTypeMap[backgroundType]}</span>
           ) : backgroundColor ? (
             <span
               className="inline-block w-8 h-8 rounded border"
@@ -84,64 +90,26 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
               ></button>
             ))}
           </div>
-          <div className="flex items-center justify-center mb-4 gap-2">
-            <button
-              className="w-15 h-10 text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
-              style={{ 
-                backgroundImage: "url('/bubbles.png')",
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-              onClick={() => { 
-                setBackgroundType('bubbles')
-                setKeepOriginalBg(false);
-              }}
-              title="Bubbles"
-            >
-            </button>
-            <button
-              className="w-15 h-10 text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
-              style={{
-                backgroundImage: "url('/fire.png')",
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-              onClick={() => { 
-                setBackgroundType('fire')
-                setKeepOriginalBg(false);
-              }}
-              title="Fire"
-            >
-            </button>
-                        <button
-              className="w-15 h-10 text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
-              style={{
-                backgroundImage: "url('/clouds.png')",
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-              onClick={() => { 
-                setBackgroundType('clouds')
-                setKeepOriginalBg(false);
-              }}
-              title="Clouds"
-            >
-            </button>
-                        <button
-              className="w-15 h-10 text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
-              style={{
-                backgroundImage: "url('/forestTrail.jpg')",
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-              onClick={() => { 
-                setBackgroundType('forest trail')
-                setKeepOriginalBg(false);
-              }}
-              title="Forest Trail"
-            >
-            </button>
-          </div>
+          {chunkArray(customBackgrounds, 5).map((row, rowIndex) => (
+            <div key={rowIndex} className="flex items-center justify-center mb-4 gap-2">
+              {row.map(bg => (
+                <button
+                  key={bg.type}
+                  className="w-15 h-10 text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
+                  style={{
+                    backgroundImage: `url('${bg.img}')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                  }}
+                  onClick={() => { 
+                    setBackgroundType(bg.type)
+                    setKeepOriginalBg(false);
+                  }}
+                  title={bg.title}
+                />
+              ))}
+            </div>
+          ))}
         </div>
       </div>
     </div>

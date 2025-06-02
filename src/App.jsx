@@ -18,6 +18,7 @@ import EmojiTextOverlay from './components/EmojiTextOverlay';
 import EmojiActions from './components/EmojiActions';
 import OptionsTabs from './components/OptionsTabs';
 import ResetCreatePanel from './components/ResetCreatePanel';
+import { customBackgrounds } from './components/customBackgrounds';
 
 //Main App component
 export default function App() {
@@ -124,7 +125,9 @@ export default function App() {
           finalBlob = bgRemoved;
         }
 
-        if (backgroundType === 'bubbles' || backgroundType === 'fire' || backgroundType === 'clouds' || backgroundType === 'forest trail') {
+        const patternTypes = customBackgrounds.map(bg => bg.type);
+
+        if (patternTypes.includes(backgroundType)) {
             const img = await createImageBitmap(bgRemoved);
             const canvas = document.createElement('canvas');
             canvas.width = img.width;
@@ -132,12 +135,7 @@ export default function App() {
             const ctx = canvas.getContext('2d');
             // Draw pattern
             const patternImg = new window.Image();
-            const patternMap = {
-              bubbles: '/bubbles.png',
-              fire: '/fire.png',
-              clouds: '/clouds.png',
-              'forest trail': '/forestTrail.jpg'
-            }
+            const patternMap = Object.fromEntries(customBackgrounds.map(bg => [bg.type, bg.img]));
             patternImg.src = patternMap[backgroundType];
             await new Promise((res) => { patternImg.onload = res; });
             ctx.drawImage(patternImg, 0, 0, canvas.width, canvas.height);
