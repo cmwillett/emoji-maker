@@ -67,7 +67,9 @@ export default function InstallShareButtons({ showInstall, handleInstallClick })
             position: 'absolute', top: '50%', left: '50%',
             transform: 'translate(-50%, -50%)',
             bgcolor: 'background.paper', p: 4, borderRadius: 2, boxShadow: 24,
-            minWidth: 300, maxWidth: 500
+            minWidth: 300, maxWidth: 500,
+            maxHeight: '90vh',
+            overflowY: 'auto',
           }}>
           <div ref={howToContentRef}>
           <h2>How To Use This App</h2>
