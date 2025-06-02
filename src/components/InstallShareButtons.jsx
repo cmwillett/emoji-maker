@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 
 export default function InstallShareButtons({ showInstall, handleInstallClick }) {
   const [howToOpen, setHowToOpen] = React.useState(false);
+  const howToContentRef = React.useRef(null);
   return (
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
       <div>
@@ -61,29 +62,81 @@ export default function InstallShareButtons({ showInstall, handleInstallClick })
           </Tooltip>        
       </Stack>
       <Modal open={howToOpen} onClose={() => setHowToOpen(false)}>
-        <Box sx={{
-          position: 'absolute', top: '50%', left: '50%',
-          transform: 'translate(-50%, -50%)',
-          bgcolor: 'background.paper', p: 4, borderRadius: 2, boxShadow: 24,
-          minWidth: 300, maxWidth: 500
-        }}>
+        <Box
+          sx={{
+            position: 'absolute', top: '50%', left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper', p: 4, borderRadius: 2, boxShadow: 24,
+            minWidth: 300, maxWidth: 500
+          }}>
+          <div ref={howToContentRef}>
           <h2>How To Use This App</h2>
-          <ul style={{ margin: '1em 0', paddingLeft: '1.2em' }}>
-            <li>Upload or take a photo to get started.</li>
-            <li>Crop and adjust your image as needed.</li>
-            <li>Pick a background color or pattern.</li>
-            <li>Add emoji text and customize the font color.</li>
-            <li>Click "Create Emoji/Meme" to generate your image.</li>
-            <li>Download or share your creation!</li>
-          </ul>
-          <button
-            className="rounded px-4 py-2 bg-emerald-400 text-black font-semibold hover:bg-emerald-500 mt-2"
-            onClick={() => setHowToOpen(false)}
-          >
-            Close
-          </button>
+          <ol style={{ margin: '1em 0', paddingLeft: '1.2em' }}>
+            <li>Take a photo, upload a photo, or choose a common photo to get started...</li>
+              <ul style={{ margin: '1em 0', paddingLeft: '1.2em' }}>
+                <li>Click the "Take Photo", "Choose From Gallery", or "Choose From Common Images" button</li>
+              </ul>
+            <li>Edit the photo</li>
+              <ul style={{ margin: '1em 0', paddingLeft: '1.2em' }}>
+                <li>Drag the photo to position it how you want</li>
+                <li>Use the "Zoom Slider" to zoom in on the picture if desired</li>
+                <li>Change the background however desired</li>
+                  <ul style={{ margin: '1em 0', paddingLeft: '1.2em' }}>
+                    <li>Default is "Keep Original Background"</li>
+                    <li>Click "Remove Background" if you want the background removed entirely</li>
+                    <li>Choose a color from the palette if you want the background to be a solid color</li>
+                    <li>Choose one of the custom backgrounds if you want an image as a background (bubbles, fire, etc)</li>
+                    <li>If you want to update any styles, click the "Style" tab</li>
+                      <ul style={{ margin: '1em 0', paddingLeft: '1.2em' }}>
+                        <li>Select "Circular Emoji" if you want it to be in a circle instead of a square</li>
+                      </ul>
+                    <li>If you want to add text, click the "Text" tab</li>
+                      <ul style={{ margin: '1em 0', paddingLeft: '1.2em' }}>
+                        <li>Add whatever text you want in the "Add Text?" input</li>
+                        <li>Choose a color from the palette if you don't want white text</li>
+                      </ul>
+                  </ul>
+              </ul>
+            <li>Click "Start Over" if you want to reset everything and start from scratch</li>
+            <li>Click "Create Emoji/Meme" to create the image you desire...</li>
+              <ul style={{ margin: '1em 0', paddingLeft: '1.2em' }}>
+                <li>Your image will display in a new "Preview" section below...</li>
+              </ul>
+            <li>Share or Download the final product</li>
+              <ul style={{ margin: '1em 0', paddingLeft: '1.2em' }}>
+                <li>Click the "Share (mobile)" button if you're on a mobile device</li>
+                <li>Click the "Share (non-mobile)" button if you're on a non-mobile device</li>
+                <li>Click the "Download" button to save the image to your device</li>
+              </ul>
+          </ol>
+            <button
+              className="rounded px-4 py-2 bg-emerald-400 text-black font-semibold hover:bg-emerald-500"
+              onClick={() => {
+                if (!howToContentRef.current) return;
+                const printContents = howToContentRef.current.innerHTML;
+                const printWindow = window.open('', '', 'height=600,width=800');
+                printWindow.document.write('<html><head><title>How To Use This App</title>');
+                printWindow.document.write('<style>body{font-family:sans-serif;padding:2em;} ol,ul{margin-left:1.2em;}</style>');
+                printWindow.document.write('</head><body >');
+                printWindow.document.write(printContents);
+                printWindow.document.write('</body></html>');
+                printWindow.document.close();
+                printWindow.focus();
+                printWindow.print();
+                printWindow.close();
+              }}
+            >
+              Print
+            </button>
+            <button
+              className="rounded px-4 py-2 bg-emerald-400 text-black font-semibold hover:bg-emerald-500"
+              onClick={() => setHowToOpen(false)}
+            >
+              Close
+            </button>
+          </div>
         </Box>
-      </Modal>             
+      </Modal>           
     </div>
   ); 
 }
