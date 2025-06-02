@@ -28,7 +28,7 @@ export default function AboutModal({ open, onClose }) {
           </ul>
           <div className="font-semibold mt-3 mb-1">Once you have it set, you can then:</div>
           <ul className="list-disc list-inside ml-4">
-            <li>Share your emoji</li>
+            <li>Share your photo</li>
             <li>Copy it to clipboard</li>
             <li>Download it</li>
           </ul>
