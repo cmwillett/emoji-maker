@@ -6,5 +6,6 @@ export const customBackgrounds = [
   { type: 'space', img: '/space.png', title: 'Space' },
   { type: 'mountains', img: '/mountains.png', title: 'Mountains' },
   { type: 'math', img: '/math.jpg', title: 'Math' },
+  { type: 'sport', img: '/basketballcourt.jpg', title: 'Basketball Court' },
   // Add more as needed
 ];
