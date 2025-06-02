@@ -53,10 +53,14 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
             <span>
               <button
                 className={`px-4 py-2 rounded font-semibold border transition
-                  ${keepOriginalBg
+                  ${keepOriginalBg && !backgroundColor && !backgroundType
                     ? 'bg-white text-emerald-500 border-emerald-400'
                     : 'bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-600'}`}
-                onClick={() => setKeepOriginalBg(true)}
+                onClick={() => {
+                  setKeepOriginalBg(true)
+                  setBackgroundColor('');
+                  setBackgroundType('');
+                }}
                 type="button"
               >
                 Keep Original Background
@@ -67,12 +71,13 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
             <span>
               <button
                 className={`px-4 py-2 rounded font-semibold border transition
-                  ${!keepOriginalBg && !backgroundColor
+                  ${!keepOriginalBg && !backgroundColor && !backgroundType
                     ? 'bg-white text-emerald-500 border-emerald-400'
                     : 'bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-600'}`}
                 onClick={() => {
                   setBackgroundColor('');
                   setKeepOriginalBg(false);
+                  setBackgroundType('');
                 }}
                 type="button"
               >
