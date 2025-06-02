@@ -1,0 +1,28 @@
+// filepath: c:\Dev\EmojiCreator\emoji-creator\src\constants\galleryImages.js
+export const galleryImages = [
+  '/gallery/Taken.jpg',
+  '/gallery/AlienGod.jpg',
+  'gallery/ChangeMyMind.png',
+  'gallery/chooseredbutton.png',
+  'gallery/deathknocking.png',
+  'gallery/girlburninghouse.png',
+  'gallery/girleww.jpg',
+  'gallery/secrets.jpg',
+  'gallery/goodfellaslaugh.jpg',
+  'gallery/jokerdancing.jpg',
+  'gallery/michaeljacksonpopcorn.png',
+  'gallery/sideeye.png',
+  'gallery/piratesrunningfrom.png',
+  'gallery/spidermanpointing.jpg',
+  'gallery/stadiumangry.jpg',
+  'gallery/sweating.jpg',
+  'gallery/theexpert.jpg',
+  'gallery/theofficeideaboard.jpg',
+  'gallery/homerbackingintobushes.jpg',
+  'gallery/smartthinker.jpg',
+  'gallery/wandavisionwinkingeye.jpg',
+  'gallery/onedoesnotsimply.jpg',
+  'gallery/willsmithslap.JPG',
+  'gallery/womanyellingat.jpg',
+  // Add more image paths
+];

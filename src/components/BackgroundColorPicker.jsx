@@ -1,5 +1,5 @@
 import React from 'react';
-import { customBackgrounds } from './customBackgrounds';
+import { customBackgrounds } from '../constants/customBackgrounds';
 
 export default function BackgroundColorPicker({ backgroundColor, setBackgroundColor, keepOriginalBg, setKeepOriginalBg, backgroundType, setBackgroundType }) {
   const presetColors = [

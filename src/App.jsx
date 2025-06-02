@@ -18,7 +18,7 @@ import EmojiTextOverlay from './components/EmojiTextOverlay';
 import EmojiActions from './components/EmojiActions';
 import OptionsTabs from './components/OptionsTabs';
 import ResetCreatePanel from './components/ResetCreatePanel';
-import { customBackgrounds } from './components/customBackgrounds';
+import { customBackgrounds } from './constants/customBackgrounds';
 
 //Main App component
 export default function App() {
