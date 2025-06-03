@@ -63,11 +63,14 @@ export default function UploadButtons({ onImageSelect }) {
   };  
 
   return (
-    <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
-      <Stack direction="column" spacing={2} className="mt-4 items-center">
-        <h2 className="underline block text-emerald-400 font-semibold drop-shadow-md mb-2 text-center">
-          Step1. Take/choose a photo
+    <div className="bg-black/40 border border-emerald-400 rounded-lg p-2 mb-2">
+      <Stack direction="column" spacing={1} className="mt-1 items-center mb-2">
+        <h2 className="mt-0 block text-emerald-400 font-semibold drop-shadow-md mb-1 text-center underline">
+          Step 1
         </h2>
+        <p className="block text-emerald-400 font-semibold drop-shadow-md mb-2 text-center mt-1">
+          Take or choose a photo
+        </p>
         <Tooltip title="Use your device's camera to take a new photo..." placement="right">
           <div>
             <EmojiButton

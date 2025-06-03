@@ -6,8 +6,8 @@ export default function StyleOptions({
 }) {
   return (
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
-      <div className="mt-4 text-center">
-        <h2 className="block text-emerald-400 font-semibold drop-shadow-md mb-2 underline">
+      <div className="mt-0 text-center">
+        <h2 className="block text-emerald-400 font-semibold drop-shadow-md mb-2 underline mt-0">
           Style Options
         </h2>
         <div className="flex flex-wrap justify-center gap-3 text-sm text-white">

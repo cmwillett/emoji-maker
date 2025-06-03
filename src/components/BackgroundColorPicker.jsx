@@ -24,14 +24,14 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
   }
 
   return (
-    <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
-      <div className="mt-4 text-center">
-        <h2 className="block text-emerald-400 font-semibold drop-shadow-md mb-2 underline">
+    <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-2">
+      <div className="mt-1 text-center">
+        <h2 className="block text-emerald-400 font-semibold drop-shadow-md mb-2 underline mt-0">
           Background Options
         </h2>
 
         <div className="flex items-center justify-center gap-2 mb-2">
-          <span className="text-emerald-400 font-semibold drop-shadow-md">Selected =</span>
+          <span className="text-emerald-400 font-semibold drop-shadow-md mb-0">Selected =</span>
           {keepOriginalBg ? (
             <span className="text-sm text-white">Use Original</span>
           ) : backgroundType && backgroundTypeMap[backgroundType] ? (
@@ -46,8 +46,6 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
             <span className="text-sm text-white">Remove</span>
           )}
         </div>
-
-        <p className="text-emerald-400 font-semibold drop-shadow-md mb-2">Background Colors</p>
         <div className="flex flex-col items-center justify-center mb-4 gap-2">
           <Tooltip title="Click to keep the original background from the photo" placement="right">
             <span>
@@ -87,7 +85,7 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
           </Tooltip>
         </div>
         <div className="flex flex-col gap-1 mb-2">
-          <div className="flex justify-center gap-2">
+          <div className="flex justify-center gap-2 mb-2">
             {row1.map((color) => (
               <button
                 key={color + '-1'}
@@ -100,7 +98,7 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
               ></button>
             ))}
           </div>
-          <div className="flex justify-center gap-2">
+          <div className="flex justify-center gap-2 mb-2">
             {row2.map((color) => (
               <button
                 key={color + '-2'}

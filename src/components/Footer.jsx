@@ -4,10 +4,10 @@ import { EmojiButton } from './EmojiButton';
 
 export default function Footer({ onAbout, onContact }) {
   return (
-    <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
-    <footer className="mt-8 w-full text-center space-y-2">
-      <div className="flex flex-col items-center gap-2">
-        <h2 className="block text-emerald-400 font-semibold drop-shadow-md mb-2 underline">
+    <div className="bg-black/40 border border-emerald-400 rounded-lg p-1 mb-4">
+    <footer className="mt-2 w-full text-center space-y-2 mb-2">
+      <div className="flex flex-col items-center gap-1">
+        <h2 className="block text-emerald-400 font-semibold drop-shadow-md mb-2 underline mt-0">
           About / Contact
         </h2>
         <div className="flex gap-4">

@@ -6,7 +6,7 @@ export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, set
 
   return (
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
-      <h2 className="text-center block text-emerald-400 font-semibold drop-shadow-md mb-2 underline">
+      <h2 className="text-center block text-emerald-400 font-semibold drop-shadow-md mb-2 underline mt-0">
         Text Options
       </h2>
       <p className="text-emerald-400 font-semibold drop-shadow-md mb-2 text-center">Add Text?</p>
@@ -16,7 +16,7 @@ export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, set
           value={emojiText}
           onChange={(e) => setEmojiText(e.target.value)}
           placeholder="Add text here"
-          className="p-1 border rounded text-center w-full max-w-xs"
+          className="p-1 border rounded text-center w-full max-w-xs mb-2"
         />
       </div>
 
@@ -26,7 +26,7 @@ export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, set
           Text Color (defaults to white):
         </span>
         <div className="flex flex-col gap-1">
-          <div className="flex gap-2 justify-center">
+          <div className="flex gap-2 justify-center mb-2">
             {row1.map((color) => (
               <button
                 key={color + '-1'}

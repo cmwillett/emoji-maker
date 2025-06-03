@@ -12,8 +12,8 @@ export default function InstallShareButtons({ showInstall, handleInstallClick })
   return (
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
       <div>
-        <h2 className="underline text-center block text-emerald-400 font-semibold drop-shadow-md mb-2">
-          {showInstall ? "Install/Share/How To" : "Share/How To"}
+        <h2 className="underline text-center block text-emerald-400 font-semibold drop-shadow-md mb-2 mt-0">
+          {showInstall ? "Install/Share App/How To" : "Share App/How To"}
         </h2>
       </div>
       <Stack direction="row" spacing={2} className="mt-4">
