@@ -14,8 +14,8 @@ export default function LoadingIndicator() {
       <style>
         {`@keyframes spin { 100% { transform: rotate(360deg); } }`}
       </style>
-      <p className="text-emerald-400 mt-2">Processing your emoji...</p>
-      <p className="text-emerald-400 mt-2">This can take a minute...</p>
+      <p className="text-emerald-400 mt-2">Activating the workers...</p>
+      <p className="text-emerald-400 mt-2">Workers are building the photo...</p>
     </div>
   );
 }
