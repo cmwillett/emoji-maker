@@ -264,7 +264,6 @@ export default function App() {
       {/*Set the header, emoji count, and install/share buttons*/}
       <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div> 
       <Header emojiCount={emojiCount} />
-      <InstallShareButtons showInstall={showInstall} handleInstallClick={handleInstallClick} />
       
       {/*Show the upload buttons if no image is selected*/}
       {!imageSrc && <UploadButtons onImageSelect={setImageSrc} />}
@@ -392,6 +391,7 @@ export default function App() {
           link.click();
         }}
       />
+      <InstallShareButtons showInstall={showInstall} handleInstallClick={handleInstallClick} />
       {/* Show the error modal if there's an error */}
       <ErrorModal
         open={showErrorModal}
