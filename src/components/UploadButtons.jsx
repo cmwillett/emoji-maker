@@ -66,7 +66,7 @@ export default function UploadButtons({ onImageSelect }) {
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
       <Stack direction="column" spacing={2} className="mt-4 items-center">
         <h2 className="underline block text-emerald-400 font-semibold drop-shadow-md mb-2">
-          Get Started
+          Step1. Take/choose a photo below
         </h2>
         <Tooltip title="Use your device's camera to take a new photo..." placement="right">
           <div>

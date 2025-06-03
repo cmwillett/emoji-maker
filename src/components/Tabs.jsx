@@ -2,9 +2,12 @@ import React from 'react';
 
 export default function Tabs({ tabs, activeTab, setActiveTab }) {
   return (
-    <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
-      <h2 className="text-center text-emerald-400 font-semibold drop-shadow-md mb-2 underline">
-        Options
+    <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4 gap-2">
+      <h2 className="text-center text-emerald-400 font-semibold drop-shadow-md mb-0">
+        Step 2. Zoom/Adjust the photo above
+      </h2>
+      <h2 className="text-center text-emerald-400 font-semibold drop-shadow-md mb-4 mt-0">
+        and/or choose options below
       </h2>
       <div className="flex justify-center">
         {tabs.map((tab) => (
