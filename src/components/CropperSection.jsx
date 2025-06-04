@@ -70,11 +70,13 @@ const handleResizeMouseUp = () => {
   };
 
 const handleMouseMove = (e) => {
-  if (isResizing.current) return; // Don't drag while resizing
+  if (isResizing.current) return;
   if (!isDragging.current) return;
+  const newX = e.clientX - startX.current;
+  const newY = e.clientY - startY.current;
   setTextPosition({
-    x: e.clientX - startX.current,
-    y: e.clientY - startY.current,
+    x: Math.max(0, Math.min(newX, 320 - textBoxSize.width)), // 320 = overlay width
+    y: Math.max(0, Math.min(newY, 320 - textBoxSize.height)), // 320 = overlay height
   });
 };
 
@@ -106,20 +108,22 @@ const getBackgroundStyle = () => {
   return (
     <>
       <div className="relative w-80 h-80 mt-6"
-      style={{cropContainerStyle, ...getBackgroundStyle()}}
+      style={{cropContainerStyle, ...getBackgroundStyle(), border: '2px solid red'}}
     >
-        <Cropper
-          image={imageSrc}
-          crop={crop}
-          zoom={zoom}
-          aspect={1}
-          onCropChange={setCrop}
-          onZoomChange={setZoom}
-          onCropComplete={onCropComplete}
-          cropShape="rect"
-          showGrid={false}
-          restrictPosition={false}
-        />
+<Cropper
+  image={imageSrc}
+  crop={crop}
+  zoom={zoom}
+  aspect={1}
+  onCropChange={setCrop}
+  onZoomChange={setZoom}
+  onCropComplete={onCropComplete}
+  cropShape="rect"
+  showGrid={false}
+  restrictPosition={false}
+  style={{ width: '100%', height: '100%', border: '2px solid blue' }}
+  //objectFit="cover"
+/>
 {emojiText && (
   <div
     ref={textRef}
@@ -132,6 +136,9 @@ const getBackgroundStyle = () => {
       userSelect: 'none',
       fontWeight: 'bold',
       fontSize: 24,
+      fontFamily: 'sans-serif',
+      lineHeight: 1.2,
+      padding: 4,
       textShadow: '0 0 4px #000',
       width: textBoxSize.width,
       height: textBoxSize.height,

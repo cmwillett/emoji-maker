@@ -186,22 +186,43 @@ const onCropComplete = useCallback(async (_, areaPixels) => {
       ctx.drawImage(img, 0, 0);
 
       //Step 7: Draw text (customize font, color, position as needed)
+const previewWidth = 320;  // width of your overlay
+const previewHeight = 320; // height of your overlay
+
+const scaleX = canvas.width / previewWidth;
+const scaleY = canvas.height / previewHeight;
+
+const scaledTextBoxWidth = textBoxSize.width * scaleX;
+const scaledTextBoxHeight = textBoxSize.height * scaleY;
+const scaledTextPosition = {
+  x: textPosition.x * scaleX,
+  y: textPosition.y * scaleY,
+};
+
+const offsetX = croppedAreaPixels?.x ? croppedAreaPixels.x * scaleX : 0;
+const offsetY = croppedAreaPixels?.y ? croppedAreaPixels.y * scaleY : 0;
+
 if (emojiText) {
-  ctx.font = `bold ${Math.floor(canvas.height / 12)}px sans-serif`;
+  const overlayFontSize = 24; // match overlay
+  ctx.font = `bold ${overlayFontSize * scaleY}px sans-serif`;
   ctx.fillStyle = fontColor;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
   ctx.strokeStyle = 'black';
   ctx.lineWidth = 4;
 
-  // Use the text box width for wrapping
-  const maxWidth = textBoxSize.width;
+  const maxWidth = textBoxSize.width * scaleX;
   const lines = getWrappedLines(ctx, emojiText, maxWidth);
-  const lineHeight = Math.floor(canvas.height / 12) * 1.2;
+  const lineHeight = overlayFontSize * scaleY * 1.2;
+  const padding = 4 * scaleY;
+
+  // Scale the text position directly from overlay to canvas
+  const drawX = textPosition.x * scaleX;
+  const drawY = textPosition.y * scaleY;
 
   lines.forEach((line, i) => {
-    ctx.strokeText(line, textPosition.x, textPosition.y + i * lineHeight);
-    ctx.fillText(line, textPosition.x, textPosition.y + i * lineHeight);
+    ctx.strokeText(line, drawX + padding, drawY + padding + i * lineHeight);
+    ctx.fillText(line, drawX + padding, drawY + padding + i * lineHeight);
   });
 
         // Use a diameter-based maxWidth for circular output
@@ -274,6 +295,8 @@ if (emojiText) {
     borderRadius: isRound ? '9999px' : '0.5rem',
     boxShadow: 'none',
     overflow: 'hidden',
+    width: '100%',
+    height: '100%',
   }
 
   //Render the frontend UI
