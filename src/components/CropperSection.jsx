@@ -26,7 +26,7 @@ export default function CropperSection({
         />
       </div>
       <div className="w-80 mt-4">
-        <p className="text-emerald-400 font-semibold drop-shadow-md mb-2">Zoom</p>
+        <p className="text-center text-emerald-400 font-semibold drop-shadow-md mb-2">Zoom Slider</p>
         <input
           type="range"
           value={zoom}

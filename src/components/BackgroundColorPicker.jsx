@@ -112,22 +112,24 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
             ))}
           </div>
           {chunkArray(customBackgrounds, 5).map((row, rowIndex) => (
-            <div key={rowIndex} className="flex items-center justify-center mb-4 gap-2">
+            <div key={rowIndex} className="flex items-center justify-center mb-1 gap-2">
               {row.map(bg => (
-                <button
-                  key={bg.type}
-                  className="w-15 h-10 text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
-                  style={{
-                    backgroundImage: `url('${bg.img}')`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                  }}
-                  onClick={() => { 
-                    setBackgroundType(bg.type)
-                    setKeepOriginalBg(false);
-                  }}
-                  title={bg.title}
-                />
+                <div key={bg.type} className="flex flex-col items-center"> {/* Container for button and label, flex-col arranges vertically */}
+                  <button
+                    className="w-15 h-10 text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
+                    style={{
+                      backgroundImage: `url('${bg.img}')`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                    onClick={() => {
+                      setBackgroundType(bg.type);
+                      setKeepOriginalBg(false);
+                    }}
+                    title={bg.title}
+                  />
+                  <div className="mt-1 text-xs text-emerald-400">{bg.title}</div> {/* Label using bg.title */}
+                </div>
               ))}
             </div>
           ))}
