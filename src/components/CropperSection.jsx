@@ -35,16 +35,18 @@ export default function CropperSection({
 
 const handleResizeTouchStart = (e) => {
   e.stopPropagation();
+  e.preventDefault(); // <-- Add this
   isResizing.current = true;
   const touch = e.touches[0];
   startX.current = touch.clientX;
   startY.current = touch.clientY;
   initialBoxSize.current = { ...textBoxSize };
-  document.addEventListener('touchmove', handleResizeTouchMove);
+  document.addEventListener('touchmove', handleResizeTouchMove, { passive: false }); // <-- passive: false
   document.addEventListener('touchend', handleResizeTouchEnd);
 };
 
 const handleResizeTouchMove = (e) => {
+  e.preventDefault(); // <-- Add this
   if (!isResizing.current) return;
   const touch = e.touches[0];
   const deltaX = touch.clientX - startX.current;
@@ -64,15 +66,17 @@ const handleResizeTouchEnd = () => {
 
 const handleTouchStart = (e) => {
   e.stopPropagation();
+  e.preventDefault(); // <-- Add this
   isDragging.current = true;
   const touch = e.touches[0];
   startX.current = touch.clientX - textPosition.x;
   startY.current = touch.clientY - textPosition.y;
-  document.addEventListener('touchmove', handleTouchMove);
+  document.addEventListener('touchmove', handleTouchMove, { passive: false }); // <-- passive: false
   document.addEventListener('touchend', handleTouchEnd);
 };
 
 const handleTouchMove = (e) => {
+  e.preventDefault(); // <-- Add this
   if (isResizing.current) return;
   if (!isDragging.current) return;
   const touch = e.touches[0];
