@@ -1,5 +1,10 @@
 import React from 'react';
 import Cropper from 'react-easy-crop';
+import customBackgrounds from '../constants/customBackgrounds';
+
+const patternMap = Object.fromEntries(
+  customBackgrounds.map(bg => [bg.type, bg.img])
+);  
 
 export default function CropperSection({
   imageSrc,
@@ -9,12 +14,34 @@ export default function CropperSection({
   setZoom,
   onCropComplete,
   cropContainerStyle,
+  backgroundType, 
+  backgroundColor,
+  patternTypes,
 }) {
   if (!imageSrc) return null;
-
+  //console.log('Background Type:', backgroundType);
+  //console.log('Background Color:', backgroundColor);
+  //console.log('Pattern Types:', patternTypes);
+const getBackgroundStyle = () => {
+  if (backgroundColor) {
+    return { background: backgroundColor };
+  } else if (patternTypes && patternTypes.includes(backgroundType)) {
+    const imgUrl = patternMap[backgroundType];
+    if (imgUrl) {
+      return {
+        backgroundImage: `url(${imgUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      };
+    }
+  }
+  return { background: backgroundType === 'remove' ? 'transparent' : '#fff' };
+};
   return (
     <>
-      <div className="relative w-80 h-80 mt-6" style={cropContainerStyle}>
+      <div className="relative w-80 h-80 mt-6"
+      style={{cropContainerStyle, ...getBackgroundStyle()}}
+    >
         <Cropper
           image={imageSrc}
           crop={crop}
@@ -23,6 +50,9 @@ export default function CropperSection({
           onCropChange={setCrop}
           onZoomChange={setZoom}
           onCropComplete={onCropComplete}
+          cropShape="rect"
+          showGrid={false}
+          restrictPosition={false}
         />
       </div>
       <div className="w-80 mt-4">
@@ -30,7 +60,7 @@ export default function CropperSection({
         <input
           type="range"
           value={zoom}
-          min="1"
+          min="0.2"
           max="3"
           step="0.1"
           onChange={(e) => setZoom(Number(e.target.value))}

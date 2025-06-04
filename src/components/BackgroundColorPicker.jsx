@@ -1,5 +1,5 @@
 import React from 'react';
-import { customBackgrounds } from '../constants/customBackgrounds';
+import customBackgrounds from '../constants/customBackgrounds';
 import { EmojiButton } from './EmojiButton';
 import { Tooltip } from '@mui/material';
 
@@ -14,6 +14,14 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
   const backgroundTypeMap = Object.fromEntries(
     customBackgrounds.map(bg => [bg.type, bg.title])
   );
+
+  const handleBackgroundTypeChange = (type) => {
+  setBackgroundType(type);
+  if (type !== 'color') {
+    setBackgroundColor(''); // Reset color if switching away from solid color
+  }
+  // Optionally reset other background-related state here
+};
 
   function chunkArray(arr, size) {
     const result = [];
@@ -94,6 +102,7 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
                 onClick={() => {
                   setBackgroundColor(color);
                   setKeepOriginalBg(false);
+                  setBackgroundType('color'); // Set type to 'color' when selecting a color
                 }}
               ></button>
             ))}
@@ -107,6 +116,7 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
                 onClick={() => {
                   setBackgroundColor(color);
                   setKeepOriginalBg(false);
+                  setBackgroundType('color'); // Set type to 'color' when selecting a color
                 }}
               ></button>
             ))}
@@ -125,6 +135,7 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
                     onClick={() => {
                       setBackgroundType(bg.type);
                       setKeepOriginalBg(false);
+                      setBackgroundColor(''); // Reset color when selecting a background type
                     }}
                     title={bg.title}
                   />

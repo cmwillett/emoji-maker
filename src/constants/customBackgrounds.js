@@ -1,4 +1,4 @@
-export const customBackgrounds = [
+const customBackgrounds = [
   { type: 'bubbles', img: '/backgrounds/bubbles.png', title: 'Bubbles' },
   { type: 'fire', img: '/backgrounds/fire.jpg', title: 'Fire' },
   { type: 'clouds', img: '/backgrounds/clouds.png', title: 'Clouds' },
@@ -19,3 +19,4 @@ export const customBackgrounds = [
   { type: 'dancestudio', img: '/backgrounds/dancestudio.jpeg', title: 'Dance' },
   // Add more as needed
 ];
+export default customBackgrounds;

@@ -18,7 +18,7 @@ import EmojiTextOverlay from './components/EmojiTextOverlay';
 import EmojiActions from './components/EmojiActions';
 import OptionsTabs from './components/OptionsTabs';
 import ResetCreatePanel from './components/ResetCreatePanel';
-import { customBackgrounds } from './constants/customBackgrounds';
+import customBackgrounds from './constants/customBackgrounds';
 
 //Main App component
 export default function App() {
@@ -46,6 +46,8 @@ export default function App() {
   const previewCtx = previewCanvas.getContext('2d');
   previewCtx.font = `bold ${Math.floor(cropperDiameter / 8)}px sans-serif`;
   const [keepOriginalBg, setKeepOriginalBg] = useState(true);
+  const [bgRemovedPreview, setBgRemovedPreview] = useState(null);
+  const patternTypes = customBackgrounds.map(bg => bg.type);
 
   //Fetch initial emoji count
   const [emojiCount, setEmojiCount] = useState(null);
@@ -82,9 +84,19 @@ export default function App() {
   }
 
   //Crop complete handler
-  const onCropComplete = useCallback((_, areaPixels) => {
-    setCroppedAreaPixels(areaPixels)
-  }, [])
+const onCropComplete = useCallback(async (_, areaPixels) => {
+  setCroppedAreaPixels(areaPixels);
+
+  // Only remove background if needed
+  /*if (!keepOriginalBg && imageSrc && areaPixels) {
+    console.log("I'm here");
+    const blob = await getCroppedImg(imageSrc, areaPixels, 'image/png', true);
+    const bgRemoved = await removeBackgroundLocal(blob);
+    setBgRemovedPreview(URL.createObjectURL(bgRemoved));
+  } else {
+    setBgRemovedPreview(null);
+  }*/
+}, [imageSrc, keepOriginalBg]);
 
   //Function to show cropped image and process it
   const showCroppedImage = useCallback(async () => {
@@ -240,6 +252,7 @@ export default function App() {
     setKeepOriginalBg(true)
     setIsRound(false)
     setFontColor('#ffffff') // Reset to default white
+    setBgRemovedPreview(null);
   }
 
   //Style for the crop container
@@ -274,13 +287,16 @@ export default function App() {
           {/* Show the cropper options, including emoji text and background */}
           <div className="relative w-fit mx-auto">
             <CropperSection
-              imageSrc={imageSrc}
+              imageSrc={bgRemovedPreview || imageSrc}
               crop={crop}
               setCrop={setCrop}
               zoom={zoom}
               setZoom={setZoom}
               onCropComplete={onCropComplete}
               cropContainerStyle={cropContainerStyle}
+              backgroundType={backgroundType}
+              backgroundColor={backgroundColor}
+              patternTypes={patternTypes}
             />
             {/* Show the emoji text overlay if emojiText is set */}
             {emojiText && (
