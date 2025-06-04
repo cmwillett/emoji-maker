@@ -6,7 +6,7 @@ import EmojiTextInput from './EmojiTextInput';
 
 export default function OptionsTabs(props) {
   const [activeTab, setActiveTab] = useState('Background');
-  const tabs = ['Background', 'Style', 'Text'];
+  const tabs = ['Background', 'Text'];
 
   return (
     <div>
@@ -22,13 +22,13 @@ export default function OptionsTabs(props) {
             setBackgroundType={props.setBackgroundType}
           />
         )}
-        {activeTab === 'Style' && (
+        {/*{activeTab === 'Style' && (
           <StyleOptions
             isRound={props.isRound}
             setIsRound={props.setIsRound}
             // ...other style props if needed
           />
-        )}
+        )}*/}
         {activeTab === 'Text' && (
           <EmojiTextInput
             emojiText={props.emojiText}

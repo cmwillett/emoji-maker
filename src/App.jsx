@@ -48,6 +48,8 @@ export default function App() {
   const [keepOriginalBg, setKeepOriginalBg] = useState(true);
   const [bgRemovedPreview, setBgRemovedPreview] = useState(null);
   const patternTypes = customBackgrounds.map(bg => bg.type);
+  const [textPosition, setTextPosition] = useState({ x: 0, y: 0 });
+  const [textBoxSize, setTextBoxSize] = useState({ width: 180, height: 60 });
 
   //Fetch initial emoji count
   const [emojiCount, setEmojiCount] = useState(null);
@@ -184,16 +186,26 @@ const onCropComplete = useCallback(async (_, areaPixels) => {
       ctx.drawImage(img, 0, 0);
 
       //Step 7: Draw text (customize font, color, position as needed)
-      if (emojiText) {
-        ctx.font = `bold ${Math.floor(canvas.height / 12)}px sans-serif`;
-        ctx.fillStyle = fontColor;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.strokeStyle = 'black';
-        ctx.lineWidth = 4;
+if (emojiText) {
+  ctx.font = `bold ${Math.floor(canvas.height / 12)}px sans-serif`;
+  ctx.fillStyle = fontColor;
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  ctx.strokeStyle = 'black';
+  ctx.lineWidth = 4;
+
+  // Use the text box width for wrapping
+  const maxWidth = textBoxSize.width;
+  const lines = getWrappedLines(ctx, emojiText, maxWidth);
+  const lineHeight = Math.floor(canvas.height / 12) * 1.2;
+
+  lines.forEach((line, i) => {
+    ctx.strokeText(line, textPosition.x, textPosition.y + i * lineHeight);
+    ctx.fillText(line, textPosition.x, textPosition.y + i * lineHeight);
+  });
 
         // Use a diameter-based maxWidth for circular output
-        const circleDiameter = Math.min(canvas.width, canvas.height);
+        /*const circleDiameter = Math.min(canvas.width, canvas.height);
         const maxWidth = circleDiameter * 0.65; // 65% for extra padding
         const lineHeight = Math.floor(canvas.height / 8) * 1.2;
 
@@ -208,7 +220,7 @@ const onCropComplete = useCallback(async (_, areaPixels) => {
         lines.forEach((line, i) => {
           ctx.strokeText(line.trim(), canvas.width / 2, startY + i * lineHeight);
           ctx.fillText(line.trim(), canvas.width / 2, startY + i * lineHeight);
-        });
+        });*/
       }
 
       //Step 8: Restore context if using round crop
@@ -297,16 +309,22 @@ const onCropComplete = useCallback(async (_, areaPixels) => {
               backgroundType={backgroundType}
               backgroundColor={backgroundColor}
               patternTypes={patternTypes}
+              emojiText={emojiText}
+              fontColor={fontColor}
+              textPosition={textPosition}
+              setTextPosition={setTextPosition}
+              textBoxSize={textBoxSize}
+              setTextBoxSize={setTextBoxSize}
             />
             {/* Show the emoji text overlay if emojiText is set */}
-            {emojiText && (
+            {/*{emojiText && (
               <EmojiTextOverlay
                 emojiText={emojiText}
                 previewCtx={previewCtx}
                 cropperDiameter={cropperDiameter}
                 fontColor={fontColor}
               />
-            )}
+            )}*/}
           </div>
 
           <OptionsTabs
