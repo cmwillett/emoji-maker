@@ -16,5 +16,6 @@ export const customBackgrounds = [
   { type: 'spaceship', img: '/backgrounds/spaceship.webp', title: 'Spaceship' },
   { type: 'ufo', img: '/backgrounds/ufo.jpg', title: 'UFO' },
   { type: 'alien', img: '/backgrounds/alien.jpg', title: 'Alien' },
+  { type: 'dancestudio', img: '/backgrounds/dancestudio.jpeg', title: 'Dance' },
   // Add more as needed
 ];
