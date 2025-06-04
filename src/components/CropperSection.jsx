@@ -33,6 +33,63 @@ export default function CropperSection({
   const isResizing = useRef(false);
   const initialBoxSize = useRef({ width: 0, height: 0 });
 
+const handleResizeTouchStart = (e) => {
+  e.stopPropagation();
+  isResizing.current = true;
+  const touch = e.touches[0];
+  startX.current = touch.clientX;
+  startY.current = touch.clientY;
+  initialBoxSize.current = { ...textBoxSize };
+  document.addEventListener('touchmove', handleResizeTouchMove);
+  document.addEventListener('touchend', handleResizeTouchEnd);
+};
+
+const handleResizeTouchMove = (e) => {
+  if (!isResizing.current) return;
+  const touch = e.touches[0];
+  const deltaX = touch.clientX - startX.current;
+  const deltaY = touch.clientY - startY.current;
+  setTextBoxSize(prev => {
+    const newWidth = Math.max(60, Math.min(initialBoxSize.current.width + deltaX, 300));
+    const newHeight = Math.max(24, Math.min(initialBoxSize.current.height + deltaY, 200));
+    return { width: newWidth, height: newHeight };
+  });
+};
+
+const handleResizeTouchEnd = () => {
+  isResizing.current = false;
+  document.removeEventListener('touchmove', handleResizeTouchMove);
+  document.removeEventListener('touchend', handleResizeTouchEnd);
+};
+
+const handleTouchStart = (e) => {
+  e.stopPropagation();
+  isDragging.current = true;
+  const touch = e.touches[0];
+  startX.current = touch.clientX - textPosition.x;
+  startY.current = touch.clientY - textPosition.y;
+  document.addEventListener('touchmove', handleTouchMove);
+  document.addEventListener('touchend', handleTouchEnd);
+};
+
+const handleTouchMove = (e) => {
+  if (isResizing.current) return;
+  if (!isDragging.current) return;
+  const touch = e.touches[0];
+  const newX = touch.clientX - startX.current;
+  const newY = touch.clientY - startY.current;
+  setTextPosition({
+    x: Math.max(0, Math.min(newX, 320 - textBoxSize.width)),
+    y: Math.max(0, Math.min(newY, 320 - textBoxSize.height)),
+  });
+};
+
+const handleTouchEnd = () => {
+  isDragging.current = false;
+  document.removeEventListener('touchmove', handleTouchMove);
+  document.removeEventListener('touchend', handleTouchEnd);
+};
+
   const handleResizeMouseDown = (e) => {
   e.stopPropagation();
   isResizing.current = true;
@@ -150,6 +207,7 @@ const getBackgroundStyle = () => {
       boxSizing: 'border-box',
     }}
     onMouseDown={handleMouseDown}
+    onTouchStart={handleTouchStart}
   >
     <div
       style={{
@@ -179,6 +237,7 @@ const getBackgroundStyle = () => {
     e.stopPropagation(); // Prevent drag from starting
     handleResizeMouseDown(e);
   }}
+  onTouchStart={handleResizeTouchStart}
     />
   </div>
 )}     
