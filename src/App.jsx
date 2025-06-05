@@ -244,6 +244,7 @@ export default function App() {
 
         // Scale the text position directly from overlay to canvas
         // Center X of the text box
+
         const drawX = (textPosition.x + textBoxSize.width / 2) * scaleX;
         const drawY = textPosition.y * scaleY;
 
