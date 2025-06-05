@@ -57,6 +57,7 @@ export default function App() {
     fetchEmojiCount(setEmojiCount);
   }, []);
 
+  //initial image upload handler
   useEffect(() => {
     if (!imageSrc) return;
 
@@ -66,14 +67,14 @@ export default function App() {
       const imgAspect = img.width / img.height;
       const cropperAspect = 1; // square
 
-      let newZoom = 1;
+      let newZoom;
       if (imgAspect > cropperAspect) {
-        // Image is wider than cropper, fit height
         newZoom = 320 / img.height;
       } else {
-        // Image is taller or square, fit width
         newZoom = 320 / img.width;
       }
+      // Never zoom out smaller than 1:1 (natural size)
+      newZoom = Math.max(newZoom, 1);
       setZoom(newZoom);
       setCrop({ x: 0, y: 0 });
     };
@@ -309,7 +310,7 @@ export default function App() {
     setIsRound(false)
     setFontColor('#ffffff') // Reset to default white
     setBgRemovedPreview(null);
-    textBoxSize({ width: 180, height: 60 });
+    setTextBoxSize({ width: 180, height: 60 });
     setTextPosition({ x: 0, y: 0 });
   }
 
@@ -336,7 +337,7 @@ export default function App() {
 
       {/*Set the header, emoji count, and install/share buttons*/}
       <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div> 
-      <Header emojiCount={emojiCount} />
+      {!imageSrc && <Header emojiCount={emojiCount} />}
       
       {/*Show the upload buttons if no image is selected*/}
       {!imageSrc && <UploadButtons onImageSelect={setImageSrc} />}

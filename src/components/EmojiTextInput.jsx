@@ -3,21 +3,23 @@ import React from 'react';
 export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, setFontColor, presetTextColors }) {
   const row1 = presetTextColors.slice(0, Math.ceil(presetTextColors.length / 2));
   const row2 = presetTextColors.slice(Math.ceil(presetTextColors.length / 2));
+  const [showInfo, setShowInfo] = React.useState(false);  
 
   return (
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
       <h2 className="text-center block text-emerald-400 font-semibold drop-shadow-md mb-2 underline mt-0">
         Text Options
       </h2>
-        <ul className="ml-4 mt-0">
-        <li className="text-emerald-400 font-semibold drop-shadow-md mb-0 text-left">Add text in the box below</li>
-        <li className="text-emerald-400 font-semibold drop-shadow-md mb-0 text-left mt-0">Choose a font color if desired</li>
-        <li className="text-emerald-400 font-semibold drop-shadow-md mb-0 text-left mt-0">Up above, drag the textbox where</li>
-        <p className="text-emerald-400 font-semibold drop-shadow-md mb-0 text-left mt-0">you want it</p>
-        <li className="text-emerald-400 font-semibold drop-shadow-md mb-0 text-left mt-0">Resize the box by dragging the</li>
-        <p className="text-emerald-400 font-semibold drop-shadow-md mb-0 text-left mt-0">little box in the bottom righthand</p>
-        <p className="text-emerald-400 font-semibold drop-shadow-md mb-2 text-left mt-0">corner</p>
-      </ul>
+      <div className="flex justify-center mb-2">
+<button
+  className="text-xs px-2 py-1 rounded bg-yellow-400 text-black hover:bg-yellow-500 border border-yellow-500 font-semibold flex items-center gap-1 shadow"
+  onClick={() => setShowInfo(true)}
+  type="button"
+  aria-label="Show text options info"
+>
+  <span role="img" aria-label="info">ℹ️</span> Click for Details
+</button>
+      </div>
       <div className="flex justify-center mb-2">
         <input
           type="text"
@@ -64,6 +66,27 @@ export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, set
           </div>
         </div>
       </label>
+      {showInfo && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-lg relative">
+            <h3 className="text-lg font-bold mb-2 text-emerald-600">Text Options Info</h3>
+            <ul className="list-disc ml-5 text-gray-800 text-sm">
+              <li>Add your desired text in the input box.</li>
+              <li>Pick a font color below if you want something other than white.</li>
+              <li>Drag the textbox on the image to position your text.</li>
+              <li>Resize the textbox by dragging the small handle in the bottom right corner.</li>
+              <li>Your changes will be reflected in the final output.</li>
+            </ul>
+            <button
+              className="mt-6 px-4 py-2 rounded bg-emerald-500 text-white hover:bg-emerald-600 font-semibold w-full"
+              onClick={() => setShowInfo(false)}
+              aria-label="Close info modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
