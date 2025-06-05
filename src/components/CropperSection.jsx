@@ -206,7 +206,9 @@ const getBackgroundStyle = () => {
       maxWidth: 300,
       maxHeight: 200,
       overflow: 'hidden',
-      background: 'rgba(0,0,0,0.1)',
+      background: 'rgba(0,0,0,0.5)',
+      border: '2px solid #fff',
+      borderRadius: '8px',
       padding: 4,
       boxSizing: 'border-box',
     }}
@@ -220,6 +222,7 @@ const getBackgroundStyle = () => {
         wordBreak: 'break-word',
         whiteSpace: 'pre-wrap',
         overflow: 'hidden',
+        textAlign: 'center',
       }}
     >
       {emojiText}
@@ -228,14 +231,20 @@ const getBackgroundStyle = () => {
     <div
       ref={resizeHandleRef}
       style={{
-        position: 'absolute',
-        right: 0,
-        bottom: 0,
-        width: 16,
-        height: 16,
-        background: 'rgba(0,0,0,0.3)',
-        cursor: 'nwse-resize',
-        zIndex: 10,
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
+    width: 20, // larger size
+    height: 20,
+    background: 'rgba(255,255,255,0.85)', // brighter background
+    border: '2px solid #007aff', // blue border for visibility
+    borderRadius: '4px',
+    boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+    cursor: 'nwse-resize',
+    zIndex: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
       }}
         onMouseDown={(e) => {
     e.stopPropagation(); // Prevent drag from starting
