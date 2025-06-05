@@ -35,6 +35,10 @@ export default function OptionsTabs(props) {
             setEmojiText={props.setEmojiText}
             fontColor={props.fontColor}
             setFontColor={props.setFontColor}
+            fontSize={props.fontSize}
+            setFontSize={props.setFontSize}
+            isBold={props.isBold}
+            setIsBold={props.setIsBold}
             presetTextColors={props.presetTextColors}
           />
         )}

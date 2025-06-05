@@ -41,6 +41,8 @@ export default function App() {
   const [showAboutModal, setShowAboutModal] = useState(false);
   const [emojiText, setEmojiText] = useState('');
   const [fontColor, setFontColor] = useState('#ffffff'); // Default to white
+  const [fontSize, setFontSize] = useState(24); // default size
+  const [isBold, setIsBold] = useState(true);   // default bold  
   const cropperDiameter = 256; // or whatever your cropper's pixel size is
   const previewCanvas = document.createElement('canvas');
   const previewCtx = previewCanvas.getContext('2d');
@@ -226,8 +228,9 @@ export default function App() {
       const offsetY = croppedAreaPixels?.y ? croppedAreaPixels.y * scaleY : 0;
 
       if (emojiText) {
-        const overlayFontSize = 24; // match overlay
-        ctx.font = `bold ${overlayFontSize * scaleY}px sans-serif`;
+        const overlayFontSize = fontSize; // use the user's selected font size
+        const fontWeight = isBold ? 'bold' : 'normal';
+        ctx.font = `${fontWeight} ${overlayFontSize * scaleY}px sans-serif`;
         ctx.fillStyle = fontColor;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
@@ -294,7 +297,7 @@ export default function App() {
       } finally {
             setLoading(false);
     }
-  }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor, keepOriginalBg, backgroundType, textBoxSize, textPosition]);
+  }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor, fontSize, isBold, keepOriginalBg, backgroundType, textBoxSize, textPosition]);
 
   //Reset handler to clear all states
   const handleReset = () => {
@@ -360,6 +363,10 @@ export default function App() {
               patternTypes={patternTypes}
               emojiText={emojiText}
               fontColor={fontColor}
+              fontSize={fontSize}
+              setFontSize={setFontSize}
+              isBold={isBold}
+              setIsBold={setIsBold}
               textPosition={textPosition}
               setTextPosition={setTextPosition}
               textBoxSize={textBoxSize}
@@ -389,6 +396,10 @@ export default function App() {
             setEmojiText={setEmojiText}
             fontColor={fontColor}
             setFontColor={setFontColor}
+            fontSize={fontSize}
+            setFontSize={setFontSize}
+            isBold={isBold}
+            setIsBold={setIsBold}
             presetTextColors={[
               "#ffffff", "#000000", "#ff0000", "#00ff00", "#0000ff",
               "#ffa500", "#800080", "#00ffff", "#ff69b4", "#ffd700", "#87ceeb"
