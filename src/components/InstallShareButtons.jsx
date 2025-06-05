@@ -94,8 +94,12 @@ export default function InstallShareButtons({ showInstall, handleInstallClick })
                       </ul>
                     <li>If you want to add text, click the "Text" tab</li>
                       <ul style={{ margin: '1em 0', paddingLeft: '1.2em' }}>
-                        <li>Add whatever text you want in the "Add Text?" input</li>
+                        <li>Add whatever text you want in the input box</li>
+                        <li>Change the font size if desired (default is 24)</li>
+                        <li>Unselect Bold if you don't want the text to be bold</li>
                         <li>Choose a color from the palette if you don't want white text</li>
+                        <li>Drag the textbox on the image to where you want it placed</li>
+                        <li>Resize the textbox by clicking the handle in the bottom right corner of the textbox</li>
                       </ul>
                   </ul>
               </ul>
