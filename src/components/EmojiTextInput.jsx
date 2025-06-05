@@ -9,7 +9,15 @@ export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, set
       <h2 className="text-center block text-emerald-400 font-semibold drop-shadow-md mb-2 underline mt-0">
         Text Options
       </h2>
-      <p className="text-emerald-400 font-semibold drop-shadow-md mb-2 text-center">Add Text?</p>
+        <ul className="ml-4 mt-0">
+        <li className="text-emerald-400 font-semibold drop-shadow-md mb-0 text-left">Add text in the box below</li>
+        <li className="text-emerald-400 font-semibold drop-shadow-md mb-0 text-left mt-0">Choose a font color if desired</li>
+        <li className="text-emerald-400 font-semibold drop-shadow-md mb-0 text-left mt-0">Up above, drag the textbox where</li>
+        <p className="text-emerald-400 font-semibold drop-shadow-md mb-0 text-left mt-0">you want it</p>
+        <li className="text-emerald-400 font-semibold drop-shadow-md mb-0 text-left mt-0">Resize the box by dragging the</li>
+        <p className="text-emerald-400 font-semibold drop-shadow-md mb-0 text-left mt-0">little box in the bottom righthand</p>
+        <p className="text-emerald-400 font-semibold drop-shadow-md mb-2 text-left mt-0">corner</p>
+      </ul>
       <div className="flex justify-center mb-2">
         <input
           type="text"

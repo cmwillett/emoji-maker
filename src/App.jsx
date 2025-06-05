@@ -57,27 +57,27 @@ export default function App() {
     fetchEmojiCount(setEmojiCount);
   }, []);
 
-useEffect(() => {
-  if (!imageSrc) return;
+  useEffect(() => {
+    if (!imageSrc) return;
 
-  const img = new window.Image();
-  img.src = imageSrc;
-  img.onload = () => {
-    const imgAspect = img.width / img.height;
-    const cropperAspect = 1; // square
+    const img = new window.Image();
+    img.src = imageSrc;
+    img.onload = () => {
+      const imgAspect = img.width / img.height;
+      const cropperAspect = 1; // square
 
-    let newZoom = 1;
-    if (imgAspect > cropperAspect) {
-      // Image is wider than cropper, fit height
-      newZoom = 320 / img.height;
-    } else {
-      // Image is taller or square, fit width
-      newZoom = 320 / img.width;
-    }
-    setZoom(newZoom);
-    setCrop({ x: 0, y: 0 });
-  };
-}, [imageSrc]);  
+      let newZoom = 1;
+      if (imgAspect > cropperAspect) {
+        // Image is wider than cropper, fit height
+        newZoom = 320 / img.height;
+      } else {
+        // Image is taller or square, fit width
+        newZoom = 320 / img.width;
+      }
+      setZoom(newZoom);
+      setCrop({ x: 0, y: 0 });
+    };
+  }, [imageSrc]);  
 
   //Window event listener for PWA install prompt
   useEffect(() => {
@@ -108,19 +108,19 @@ useEffect(() => {
   }
 
   //Crop complete handler
-const onCropComplete = useCallback(async (_, areaPixels) => {
-  setCroppedAreaPixels(areaPixels);
+  const onCropComplete = useCallback(async (_, areaPixels) => {
+    setCroppedAreaPixels(areaPixels);
 
-  // Only remove background if needed
-  /*if (!keepOriginalBg && imageSrc && areaPixels) {
-    console.log("I'm here");
-    const blob = await getCroppedImg(imageSrc, areaPixels, 'image/png', true);
-    const bgRemoved = await removeBackgroundLocal(blob);
-    setBgRemovedPreview(URL.createObjectURL(bgRemoved));
-  } else {
-    setBgRemovedPreview(null);
-  }*/
-}, [imageSrc, keepOriginalBg]);
+    // Only remove background if needed
+    /*if (!keepOriginalBg && imageSrc && areaPixels) {
+      console.log("I'm here");
+      const blob = await getCroppedImg(imageSrc, areaPixels, 'image/png', true);
+      const bgRemoved = await removeBackgroundLocal(blob);
+      setBgRemovedPreview(URL.createObjectURL(bgRemoved));
+    } else {
+      setBgRemovedPreview(null);
+    }*/
+  }, [imageSrc, keepOriginalBg]);
 
   //Function to show cropped image and process it
   const showCroppedImage = useCallback(async () => {
@@ -208,45 +208,45 @@ const onCropComplete = useCallback(async (_, areaPixels) => {
       ctx.drawImage(img, 0, 0);
 
       //Step 7: Draw text (customize font, color, position as needed)
-const previewWidth = 320;  // width of your overlay
-const previewHeight = 320; // height of your overlay
+      const previewWidth = 320;  // width of your overlay
+      const previewHeight = 320; // height of your overlay
 
-const scaleX = canvas.width / previewWidth;
-const scaleY = canvas.height / previewHeight;
+      const scaleX = canvas.width / previewWidth;
+      const scaleY = canvas.height / previewHeight;
 
-const scaledTextBoxWidth = textBoxSize.width * scaleX;
-const scaledTextBoxHeight = textBoxSize.height * scaleY;
-const scaledTextPosition = {
-  x: textPosition.x * scaleX,
-  y: textPosition.y * scaleY,
-};
+      const scaledTextBoxWidth = textBoxSize.width * scaleX;
+      const scaledTextBoxHeight = textBoxSize.height * scaleY;
+      const scaledTextPosition = {
+        x: textPosition.x * scaleX,
+        y: textPosition.y * scaleY,
+      };
 
-const offsetX = croppedAreaPixels?.x ? croppedAreaPixels.x * scaleX : 0;
-const offsetY = croppedAreaPixels?.y ? croppedAreaPixels.y * scaleY : 0;
+      const offsetX = croppedAreaPixels?.x ? croppedAreaPixels.x * scaleX : 0;
+      const offsetY = croppedAreaPixels?.y ? croppedAreaPixels.y * scaleY : 0;
 
-if (emojiText) {
-  const overlayFontSize = 24; // match overlay
-  ctx.font = `bold ${overlayFontSize * scaleY}px sans-serif`;
-  ctx.fillStyle = fontColor;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'top';
-  ctx.strokeStyle = 'black';
-  ctx.lineWidth = 4;
+      if (emojiText) {
+        const overlayFontSize = 24; // match overlay
+        ctx.font = `bold ${overlayFontSize * scaleY}px sans-serif`;
+        ctx.fillStyle = fontColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
 
-  const maxWidth = textBoxSize.width * scaleX;
-  const lines = getWrappedLines(ctx, emojiText, maxWidth);
-  const lineHeight = overlayFontSize * scaleY * 1.2;
-  const padding = 4 * scaleY;
+        const maxWidth = textBoxSize.width * scaleX;
+        const lines = getWrappedLines(ctx, emojiText, maxWidth);
+        const lineHeight = overlayFontSize * scaleY * 1.2;
+        const padding = 4 * scaleY;
 
-  // Scale the text position directly from overlay to canvas
-  // Center X of the text box
-  const drawX = (textPosition.x + textBoxSize.width / 2) * scaleX;
-  const drawY = textPosition.y * scaleY;
+        // Scale the text position directly from overlay to canvas
+        // Center X of the text box
+        const drawX = (textPosition.x + textBoxSize.width / 2) * scaleX;
+        const drawY = textPosition.y * scaleY;
 
-  lines.forEach((line, i) => {
-    ctx.strokeText(line, drawX, drawY + padding + i * lineHeight);
-    ctx.fillText(line, drawX, drawY + padding + i * lineHeight);
-  });
+        lines.forEach((line, i) => {
+          ctx.strokeText(line, drawX, drawY + padding + i * lineHeight);
+          ctx.fillText(line, drawX, drawY + padding + i * lineHeight);
+        });
 
         // Use a diameter-based maxWidth for circular output
         /*const circleDiameter = Math.min(canvas.width, canvas.height);

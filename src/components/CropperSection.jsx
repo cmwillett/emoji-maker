@@ -33,93 +33,93 @@ export default function CropperSection({
   const isResizing = useRef(false);
   const initialBoxSize = useRef({ width: 0, height: 0 });
 
-const handleResizeTouchStart = (e) => {
-  e.stopPropagation();
-  e.preventDefault(); // <-- Add this
-  isResizing.current = true;
-  const touch = e.touches[0];
-  startX.current = touch.clientX;
-  startY.current = touch.clientY;
-  initialBoxSize.current = { ...textBoxSize };
-  document.addEventListener('touchmove', handleResizeTouchMove, { passive: false }); // <-- passive: false
-  document.addEventListener('touchend', handleResizeTouchEnd);
-};
+  const handleResizeTouchStart = (e) => {
+    e.stopPropagation();
+    e.preventDefault(); // <-- Add this
+    isResizing.current = true;
+    const touch = e.touches[0];
+    startX.current = touch.clientX;
+    startY.current = touch.clientY;
+    initialBoxSize.current = { ...textBoxSize };
+    document.addEventListener('touchmove', handleResizeTouchMove, { passive: false }); // <-- passive: false
+    document.addEventListener('touchend', handleResizeTouchEnd);
+  };
 
-const handleResizeTouchMove = (e) => {
-  e.preventDefault(); // <-- Add this
-  if (!isResizing.current) return;
-  const touch = e.touches[0];
-  const deltaX = touch.clientX - startX.current;
-  const deltaY = touch.clientY - startY.current;
-  setTextBoxSize(prev => {
-    const newWidth = Math.max(60, Math.min(initialBoxSize.current.width + deltaX, 300));
-    const newHeight = Math.max(24, Math.min(initialBoxSize.current.height + deltaY, 200));
-    return { width: newWidth, height: newHeight };
-  });
-};
+  const handleResizeTouchMove = (e) => {
+    e.preventDefault(); // <-- Add this
+    if (!isResizing.current) return;
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - startX.current;
+    const deltaY = touch.clientY - startY.current;
+    setTextBoxSize(prev => {
+      const newWidth = Math.max(60, Math.min(initialBoxSize.current.width + deltaX, 300));
+      const newHeight = Math.max(24, Math.min(initialBoxSize.current.height + deltaY, 200));
+      return { width: newWidth, height: newHeight };
+    });
+  };
 
-const handleResizeTouchEnd = () => {
-  isResizing.current = false;
-  document.removeEventListener('touchmove', handleResizeTouchMove);
-  document.removeEventListener('touchend', handleResizeTouchEnd);
-};
+  const handleResizeTouchEnd = () => {
+    isResizing.current = false;
+    document.removeEventListener('touchmove', handleResizeTouchMove);
+    document.removeEventListener('touchend', handleResizeTouchEnd);
+  };
 
-const handleTouchStart = (e) => {
-  e.stopPropagation();
-  e.preventDefault(); // <-- Add this
-  isDragging.current = true;
-  const touch = e.touches[0];
-  startX.current = touch.clientX - textPosition.x;
-  startY.current = touch.clientY - textPosition.y;
-  document.addEventListener('touchmove', handleTouchMove, { passive: false }); // <-- passive: false
-  document.addEventListener('touchend', handleTouchEnd);
-};
+  const handleTouchStart = (e) => {
+    e.stopPropagation();
+    e.preventDefault(); // <-- Add this
+    isDragging.current = true;
+    const touch = e.touches[0];
+    startX.current = touch.clientX - textPosition.x;
+    startY.current = touch.clientY - textPosition.y;
+    document.addEventListener('touchmove', handleTouchMove, { passive: false }); // <-- passive: false
+    document.addEventListener('touchend', handleTouchEnd);
+  };
 
-const handleTouchMove = (e) => {
-  e.preventDefault(); // <-- Add this
-  if (isResizing.current) return;
-  if (!isDragging.current) return;
-  const touch = e.touches[0];
-  const newX = touch.clientX - startX.current;
-  const newY = touch.clientY - startY.current;
-  setTextPosition({
-    x: Math.max(0, Math.min(newX, 320 - textBoxSize.width)),
-    y: Math.max(0, Math.min(newY, 320 - textBoxSize.height)),
-  });
-};
+  const handleTouchMove = (e) => {
+    e.preventDefault(); // <-- Add this
+    if (isResizing.current) return;
+    if (!isDragging.current) return;
+    const touch = e.touches[0];
+    const newX = touch.clientX - startX.current;
+    const newY = touch.clientY - startY.current;
+    setTextPosition({
+      x: Math.max(0, Math.min(newX, 320 - textBoxSize.width)),
+      y: Math.max(0, Math.min(newY, 320 - textBoxSize.height)),
+    });
+  };
 
-const handleTouchEnd = () => {
-  isDragging.current = false;
-  document.removeEventListener('touchmove', handleTouchMove);
-  document.removeEventListener('touchend', handleTouchEnd);
-};
+  const handleTouchEnd = () => {
+    isDragging.current = false;
+    document.removeEventListener('touchmove', handleTouchMove);
+    document.removeEventListener('touchend', handleTouchEnd);
+  };
 
-  const handleResizeMouseDown = (e) => {
-  e.stopPropagation();
-  isResizing.current = true;
-  startX.current = e.clientX;
-  startY.current = e.clientY;
-  initialBoxSize.current = { ...textBoxSize };
-  document.addEventListener('mousemove', handleResizeMouseMove);
-  document.addEventListener('mouseup', handleResizeMouseUp);
-};
+    const handleResizeMouseDown = (e) => {
+    e.stopPropagation();
+    isResizing.current = true;
+    startX.current = e.clientX;
+    startY.current = e.clientY;
+    initialBoxSize.current = { ...textBoxSize };
+    document.addEventListener('mousemove', handleResizeMouseMove);
+    document.addEventListener('mouseup', handleResizeMouseUp);
+  };
 
-const handleResizeMouseMove = (e) => {
-  if (!isResizing.current) return;
-  const deltaX = e.clientX - startX.current;
-  const deltaY = e.clientY - startY.current;
-  setTextBoxSize(prev => {
-    const newWidth = Math.max(60, Math.min(initialBoxSize.current.width + deltaX, 300));
-    const newHeight = Math.max(24, Math.min(initialBoxSize.current.height + deltaY, 200));
-    return { width: newWidth, height: newHeight };
-  });
-};
+  const handleResizeMouseMove = (e) => {
+    if (!isResizing.current) return;
+    const deltaX = e.clientX - startX.current;
+    const deltaY = e.clientY - startY.current;
+    setTextBoxSize(prev => {
+      const newWidth = Math.max(60, Math.min(initialBoxSize.current.width + deltaX, 300));
+      const newHeight = Math.max(24, Math.min(initialBoxSize.current.height + deltaY, 200));
+      return { width: newWidth, height: newHeight };
+    });
+  };
 
-const handleResizeMouseUp = () => {
-  isResizing.current = false;
-  document.removeEventListener('mousemove', handleResizeMouseMove);
-  document.removeEventListener('mouseup', handleResizeMouseUp);
-};
+  const handleResizeMouseUp = () => {
+    isResizing.current = false;
+    document.removeEventListener('mousemove', handleResizeMouseMove);
+    document.removeEventListener('mouseup', handleResizeMouseUp);
+  };
 
   const handleMouseDown = (e) => {
     e.stopPropagation(); // Prevent Cropper from handling the drag
@@ -130,16 +130,16 @@ const handleResizeMouseUp = () => {
     document.addEventListener('mouseup', handleMouseUp);
   };
 
-const handleMouseMove = (e) => {
-  if (isResizing.current) return;
-  if (!isDragging.current) return;
-  const newX = e.clientX - startX.current;
-  const newY = e.clientY - startY.current;
-  setTextPosition({
-    x: Math.max(0, Math.min(newX, 320 - textBoxSize.width)), // 320 = overlay width
-    y: Math.max(0, Math.min(newY, 320 - textBoxSize.height)), // 320 = overlay height
-  });
-};
+  const handleMouseMove = (e) => {
+    if (isResizing.current) return;
+    if (!isDragging.current) return;
+    const newX = e.clientX - startX.current;
+    const newY = e.clientY - startY.current;
+    setTextPosition({
+      x: Math.max(0, Math.min(newX, 320 - textBoxSize.width)), // 320 = overlay width
+      y: Math.max(0, Math.min(newY, 320 - textBoxSize.height)), // 320 = overlay height
+    });
+  };
 
   const handleMouseUp = () => {
     isDragging.current = false;
@@ -151,109 +151,107 @@ const handleMouseMove = (e) => {
   //console.log('Background Type:', backgroundType);
   //console.log('Background Color:', backgroundColor);
   //console.log('Pattern Types:', patternTypes);
-const getBackgroundStyle = () => {
-  if (backgroundColor) {
-    return { background: backgroundColor };
-  } else if (patternTypes && patternTypes.includes(backgroundType)) {
-    const imgUrl = patternMap[backgroundType];
-    if (imgUrl) {
-      return {
-        backgroundImage: `url(${imgUrl})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      };
+  const getBackgroundStyle = () => {
+    if (backgroundColor) {
+      return { background: backgroundColor };
+    } else if (patternTypes && patternTypes.includes(backgroundType)) {
+      const imgUrl = patternMap[backgroundType];
+      if (imgUrl) {
+        return {
+          backgroundImage: `url(${imgUrl})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        };
+      }
     }
-  }
-  return { background: backgroundType === 'remove' ? 'transparent' : '#fff' };
-};
+    return { background: backgroundType === 'remove' ? 'transparent' : '#fff' };
+  };
   return (
     <>
       <div className="relative w-80 h-80 mt-6"
       style={{cropContainerStyle, ...getBackgroundStyle(), border: '2px solid red'}}
     >
-<Cropper
-  image={imageSrc}
-  crop={crop}
-  zoom={zoom}
-  aspect={1}
-  onCropChange={setCrop}
-  onZoomChange={setZoom}
-  onCropComplete={onCropComplete}
-  cropShape="rect"
-  showGrid={false}
-  restrictPosition={false}
-  //style={{ width: '100%', height: '100%', border: '2px solid blue' }}
-  objectFit="contain"
-/>
-{emojiText && (
-  <div
-    ref={textRef}
-    style={{
-      position: 'absolute',
-      left: textPosition.x,
-      top: textPosition.y,
-      color: fontColor,
-      cursor: 'move',
-      userSelect: 'none',
-      fontWeight: 'bold',
-      fontSize: 24,
-      fontFamily: 'sans-serif',
-      lineHeight: 1.2,
-      padding: 4,
-      textShadow: '0 0 4px #000',
-      width: textBoxSize.width,
-      height: textBoxSize.height,
-      maxWidth: 300,
-      maxHeight: 200,
-      overflow: 'hidden',
-      background: 'rgba(0,0,0,0.5)',
-      border: '2px solid #fff',
-      borderRadius: '8px',
-      padding: 4,
-      boxSizing: 'border-box',
-    }}
-    onMouseDown={handleMouseDown}
-    onTouchStart={handleTouchStart}
-  >
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        wordBreak: 'break-word',
-        whiteSpace: 'pre-wrap',
-        overflow: 'hidden',
-        textAlign: 'center',
-      }}
-    >
-      {emojiText}
-    </div>
-    {/* Resize handle */}
-    <div
-      ref={resizeHandleRef}
-      style={{
-    position: 'absolute',
-    right: 0,
-    bottom: 0,
-    width: 20, // larger size
-    height: 20,
-    background: 'rgba(255,255,255,0.85)', // brighter background
-    border: '2px solid #007aff', // blue border for visibility
-    borderRadius: '4px',
-    boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
-    cursor: 'nwse-resize',
-    zIndex: 10,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-      }}
-        onMouseDown={(e) => {
-    e.stopPropagation(); // Prevent drag from starting
-    handleResizeMouseDown(e);
-  }}
-  onTouchStart={handleResizeTouchStart}
-    />
-  </div>
-)}     
+      <Cropper
+        image={imageSrc}
+        crop={crop}
+        zoom={zoom}
+        aspect={1}
+        onCropChange={setCrop}
+        onZoomChange={setZoom}
+        onCropComplete={onCropComplete}
+        cropShape="rect"
+        showGrid={false}
+        restrictPosition={false}
+        objectFit="contain"
+      />
+      {emojiText && (
+        <div
+          ref={textRef}
+          style={{
+            position: 'absolute',
+            left: textPosition.x,
+            top: textPosition.y,
+            color: fontColor,
+            cursor: 'move',
+            userSelect: 'none',
+            fontWeight: 'bold',
+            fontSize: 24,
+            fontFamily: 'sans-serif',
+            lineHeight: 1.2,
+            textShadow: '0 0 4px #000',
+            width: textBoxSize.width,
+            height: textBoxSize.height,
+            maxWidth: 300,
+            maxHeight: 200,
+            overflow: 'hidden',
+            background: 'rgba(0,0,0,0.5)',
+            border: '2px solid #fff',
+            borderRadius: '8px',
+            padding: 4,
+            boxSizing: 'border-box',
+          }}
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+        >
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              wordBreak: 'break-word',
+              whiteSpace: 'pre-wrap',
+              overflow: 'hidden',
+              textAlign: 'center',
+            }}
+          >
+            {emojiText}
+          </div>
+          {/* Resize handle */}
+          <div
+            ref={resizeHandleRef}
+            style={{
+          position: 'absolute',
+          right: 0,
+          bottom: 0,
+          width: 20, // larger size
+          height: 20,
+          background: 'rgba(255,255,255,0.85)', // brighter background
+          border: '2px solid #007aff', // blue border for visibility
+          borderRadius: '4px',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+          cursor: 'nwse-resize',
+          zIndex: 10,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+            }}
+              onMouseDown={(e) => {
+          e.stopPropagation(); // Prevent drag from starting
+          handleResizeMouseDown(e);
+        }}
+        onTouchStart={handleResizeTouchStart}
+          />
+        </div>
+      )}     
       </div>
       <div className="w-80 mt-4">
         <p className="text-center text-emerald-400 font-semibold drop-shadow-md mb-2">Zoom Slider</p>
