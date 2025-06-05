@@ -500,6 +500,17 @@ export default function App() {
         onAbout={() => setShowAboutModal(true)}
         onContact={() => setShowContactModal(true)}
       />
+      {imageSrc && (
+        <button
+          onClick={handleReset}
+          className="fixed bottom-8 right-8 z-50 bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-all duration-200"
+          style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.25)' }}
+          aria-label="Start Over"
+          title="Reset all options and upload a new image!"
+        >
+          Start Over
+        </button>
+      )}
     </div>
   )
 }

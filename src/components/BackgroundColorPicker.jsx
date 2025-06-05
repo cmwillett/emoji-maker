@@ -39,14 +39,14 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
           Background Options
         </h2>
       <div className="flex justify-center mb-2">
-<button
-  className="text-xs px-2 py-1 rounded bg-yellow-400 text-black hover:bg-yellow-500 border border-yellow-500 font-semibold flex items-center gap-1 shadow"
-  onClick={() => setShowInfo(true)}
-  type="button"
-  aria-label="Show text options info"
->
-  <span role="img" aria-label="info">ℹ️</span> Click for Details
-</button>
+        <button
+          className="text-xs px-2 py-1 rounded bg-yellow-400 text-black hover:bg-yellow-500 border border-yellow-500 font-semibold flex items-center gap-1 shadow"
+          onClick={() => setShowInfo(true)}
+          type="button"
+          aria-label="Show text options info"
+        >
+          <span role="img" aria-label="info">ℹ️</span> Click for Details
+        </button>
       </div>
         <div className="flex items-center justify-center gap-2 mb-2">
           <span className="text-emerald-400 font-semibold drop-shadow-md mb-0">Current Choice =</span>

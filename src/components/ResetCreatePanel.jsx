@@ -13,11 +13,11 @@ export default function ResetCreatePanel({ onReset, onCreate }) {
       <p className="block text-emerald-400 font-semibold drop-shadow-md mb-0 text-center mt-1">
         Create your emoji/meme
       </p>
-      <p className="block text-emerald-400 font-semibold drop-shadow-md mb-2 mt-1 text-center">
+      {/*<p className="block text-emerald-400 font-semibold drop-shadow-md mb-2 mt-1 text-center">
         Or reset and start over
-      </p>
+      </p>*/}
       </Stack>
-        <Tooltip title="Reset all options and choose a new image!" placement="right">
+        {/*<Tooltip title="Reset all options and choose a new image!" placement="right">
           <span>
             <EmojiButton
               icon={<img src="/reset.png" alt="Reset" className="w-6 h-6" />}
@@ -25,7 +25,7 @@ export default function ResetCreatePanel({ onReset, onCreate }) {
               onClick={onReset}
             />
           </span>
-        </Tooltip>    
+        </Tooltip>*/}
         <Tooltip title="Create the emoji/meme and display it below!" placement="right">
           <span>
             <EmojiButton

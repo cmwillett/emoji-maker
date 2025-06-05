@@ -169,7 +169,7 @@ export default function CropperSection({
   return (
     <>
       <div className="relative w-80 h-80 mt-6"
-      style={{cropContainerStyle, ...getBackgroundStyle(), border: '2px solid red'}}
+      style={{cropContainerStyle, ...getBackgroundStyle()}}
     >
       <Cropper
         image={imageSrc}
