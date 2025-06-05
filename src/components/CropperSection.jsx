@@ -182,8 +182,8 @@ const getBackgroundStyle = () => {
   cropShape="rect"
   showGrid={false}
   restrictPosition={false}
-  style={{ width: '100%', height: '100%', border: '2px solid blue' }}
-  //objectFit="cover"
+  //style={{ width: '100%', height: '100%', border: '2px solid blue' }}
+  objectFit="contain"
 />
 {emojiText && (
   <div

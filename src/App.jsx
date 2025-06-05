@@ -57,6 +57,28 @@ export default function App() {
     fetchEmojiCount(setEmojiCount);
   }, []);
 
+useEffect(() => {
+  if (!imageSrc) return;
+
+  const img = new window.Image();
+  img.src = imageSrc;
+  img.onload = () => {
+    const imgAspect = img.width / img.height;
+    const cropperAspect = 1; // square
+
+    let newZoom = 1;
+    if (imgAspect > cropperAspect) {
+      // Image is wider than cropper, fit height
+      newZoom = 320 / img.height;
+    } else {
+      // Image is taller or square, fit width
+      newZoom = 320 / img.width;
+    }
+    setZoom(newZoom);
+    setCrop({ x: 0, y: 0 });
+  };
+}, [imageSrc]);  
+
   //Window event listener for PWA install prompt
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -206,7 +228,7 @@ if (emojiText) {
   const overlayFontSize = 24; // match overlay
   ctx.font = `bold ${overlayFontSize * scaleY}px sans-serif`;
   ctx.fillStyle = fontColor;
-  ctx.textAlign = 'left';
+  ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
   ctx.strokeStyle = 'black';
   ctx.lineWidth = 4;
@@ -217,12 +239,13 @@ if (emojiText) {
   const padding = 4 * scaleY;
 
   // Scale the text position directly from overlay to canvas
-  const drawX = textPosition.x * scaleX;
+  // Center X of the text box
+  const drawX = (textPosition.x + textBoxSize.width / 2) * scaleX;
   const drawY = textPosition.y * scaleY;
 
   lines.forEach((line, i) => {
-    ctx.strokeText(line, drawX + padding, drawY + padding + i * lineHeight);
-    ctx.fillText(line, drawX + padding, drawY + padding + i * lineHeight);
+    ctx.strokeText(line, drawX, drawY + padding + i * lineHeight);
+    ctx.fillText(line, drawX, drawY + padding + i * lineHeight);
   });
 
         // Use a diameter-based maxWidth for circular output
@@ -270,7 +293,7 @@ if (emojiText) {
       } finally {
             setLoading(false);
     }
-  }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor, keepOriginalBg, backgroundType]);
+  }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor, keepOriginalBg, backgroundType, textBoxSize, textPosition]);
 
   //Reset handler to clear all states
   const handleReset = () => {
@@ -286,6 +309,8 @@ if (emojiText) {
     setIsRound(false)
     setFontColor('#ffffff') // Reset to default white
     setBgRemovedPreview(null);
+    textBoxSize({ width: 180, height: 60 });
+    setTextPosition({ x: 0, y: 0 });
   }
 
   //Style for the crop container
