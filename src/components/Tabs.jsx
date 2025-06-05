@@ -13,7 +13,7 @@ export default function Tabs({ tabs, activeTab, setActiveTab }) {
       </p>
       <p className="text-center text-emerald-400 font-semibold drop-shadow-md mb-4 mt-1">
         And/or choose options below
-      </p>
+      </p>            
       </Stack>
       <div className="flex justify-center">
         {tabs.map((tab) => (
