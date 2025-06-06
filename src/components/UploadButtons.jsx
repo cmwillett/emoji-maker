@@ -7,9 +7,10 @@ import heic2any from 'heic2any';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import { galleryImages } from '../constants/galleryImages'; // Assuming you have a list of common images
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function UploadButtons({ onImageSelect }) {
-  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [showGallery, setShowGallery] = useState(false);
   const handleFileInput = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -47,7 +48,6 @@ export default function UploadButtons({ onImageSelect }) {
   };
 
   const handleGallerySelect = (imgPath) => {
-    // Convert image to data URL
     fetch(imgPath)
       .then(res => res.blob())
       .then(blob => {
@@ -55,12 +55,12 @@ export default function UploadButtons({ onImageSelect }) {
         reader.onload = () => {
           if (reader.result) {
             onImageSelect(reader.result);
-            setGalleryOpen(false);
+            setShowGallery(false);
           }
         };
         reader.readAsDataURL(blob);
       });
-  };  
+  };
 
   return (
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-2 mb-2">
@@ -111,47 +111,62 @@ export default function UploadButtons({ onImageSelect }) {
             />
           </div>
         </Tooltip>
-        <Tooltip title="Choose from some common memes..." placement="right">
+        <Tooltip title="Click to select a common image from our gallery" placement="right">
           <div>
             <EmojiButton
-              icon={<PhotoLibraryIcon />}
-              label="Choose from Common Memes"
-              onClick={() => setGalleryOpen(true)}
-            />
-          </div>
-        </Tooltip>       
-      </Stack>
-      <Modal open={galleryOpen} onClose={() => setGalleryOpen(false)}>
-        <Box sx={{
-          position: 'absolute', top: '50%', left: '50%',
-          transform: 'translate(-50%, -50%)',
-          bgcolor: 'background.paper', p: 4, borderRadius: 2, boxShadow: 24,
-          maxHeight: '90vh',
-          overflowY: 'auto',
-        }}>
-          <h3>Choose an Image</h3>
-          <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-            {galleryImages.map((img, idx) => (
-              <img
-                key={idx}
-                src={img}
-                alt={`Gallery ${idx}`}
-                style={{ width: 100, height: 100, objectFit: 'cover', cursor: 'pointer', borderRadius: 8 }}
-                onClick={() => handleGallerySelect(img)}
-              />
-            ))}
-          </div>
-          <div className="flex justify-center">
-            <button
-              className="mt-4 rounded px-4 py-2 bg-emerald-400 text-black font-semibold hover:bg-emerald-500"
-              onClick={() => setGalleryOpen(false)}
+              icon={
+                <ExpandMoreIcon
+                  style={{
+                    transition: 'transform 0.2s',
+                    transform: showGallery ? 'rotate(180deg)' : 'rotate(0deg)'
+                  }}
+                />
+              }
+              label="Choose From Common Memes"
+              onClick={() => setShowGallery((prev) => !prev)}
               type="button"
+            />     
+          </div>
+        </Tooltip>  
+      </Stack>
+      {showGallery && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+          {galleryImages.map((img, idx) => (
+            <Tooltip 
+            key={img.src + idx} 
+            title={img.label} 
+            arrow
+            placement="bottom"
+            componentsProps={{
+              tooltip: {
+                sx: {
+                  fontSize: '1.1rem',
+                  padding: '10px 16px',
+                  backgroundColor: '#34d399', // emerald-400
+                  color: '#1e293b',           // slate-800 for contrast
+                  fontWeight: 600,
+                  letterSpacing: '0.01em',
+                  boxShadow: 3,
+                },
+              },
+              arrow: {
+                sx: {
+                  color: '#34d399', // emerald-400
+                }
+              }
+            }}       
             >
-              Cancel
-            </button>     
-          </div>     
-        </Box>
-      </Modal>      
+              <img
+                src={img.src.startsWith('/') ? img.src : '/' + img.src}
+                alt={img.label}
+                className="w-full h-48 object-contain bg-gray-900 rounded shadow cursor-pointer hover:scale-105 transition"
+                onClick={() => handleGallerySelect(img.src)}
+                style={{ display: 'block' }}
+              />
+            </Tooltip>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
