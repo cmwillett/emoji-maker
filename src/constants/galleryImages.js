@@ -11,6 +11,7 @@ export const galleryImages = [
   'gallery/goodfellaslaugh.jpg',
   'gallery/jokerdancing.jpg',
   'gallery/michaeljacksonpopcorn.png',
+  'gallery/obama.png',
   'gallery/sideeye.png',
   'gallery/piratesrunningfrom.png',
   'gallery/spidermanpointing.jpg',
