@@ -511,7 +511,11 @@ export default function App() {
       {/* Footer with about and contact links */}
       <Footer
         onAbout={() => setShowAboutModal(true)}
-        onContact={() => setShowContactModal(true)}
+        onContact={() => {
+          setContactSubmitted(false); // Reset submitted state
+          setContactForm({ name: '', email: '', message: '' }); // Optionally clear form fields
+          setShowContactModal(true);
+        }}
       />
       {/* Reset button to clear all options and upload a new image */}
       {imageSrc && (
