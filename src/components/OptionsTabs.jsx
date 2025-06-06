@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Tabs from './Tabs';
 import BackgroundColorPicker from './BackgroundColorPicker';
-import StyleOptions from './StyleOptions';
 import EmojiTextInput from './EmojiTextInput';
 
 export default function OptionsTabs(props) {
@@ -22,13 +21,6 @@ export default function OptionsTabs(props) {
             setBackgroundType={props.setBackgroundType}
           />
         )}
-        {/*{activeTab === 'Style' && (
-          <StyleOptions
-            isRound={props.isRound}
-            setIsRound={props.setIsRound}
-            // ...other style props if needed
-          />
-        )}*/}
         {activeTab === 'Text' && (
           <EmojiTextInput
             emojiText={props.emojiText}

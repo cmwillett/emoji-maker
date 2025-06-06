@@ -1,7 +1,6 @@
 // src/ImageCropper.jsx
-import React, { useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import Cropper from 'react-easy-crop'
-import getCroppedImg from './utils/cropImage'
 import { Slider } from '@mui/material' // Optional: for zoom control
 
 export default function ImageCropper({ imageSrc, onCropComplete }) {

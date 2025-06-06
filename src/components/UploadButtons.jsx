@@ -1,11 +1,9 @@
-import { React, useState } from 'react';
+import { useState } from 'react';
 import { Stack, Tooltip } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import { EmojiButton } from './EmojiButton';
 import heic2any from 'heic2any';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
 import { galleryImages } from '../constants/galleryImages'; // Assuming you have a list of common images
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -91,7 +89,6 @@ export default function UploadButtons({ onImageSelect }) {
             />
           </div>
         </Tooltip>
-
         <Tooltip title="Choose an image from your gallery or file system..." placement="right">
           <div>
             <EmojiButton

@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function LoadingIndicator() {
   return (
     <div className="mt-2 flex flex-col items-center space-y-2">

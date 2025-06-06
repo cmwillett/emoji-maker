@@ -1,4 +1,3 @@
-import React from 'react';
 import Cropper from 'react-easy-crop';
 import customBackgrounds from '../constants/customBackgrounds';
 import { useRef } from 'react';
@@ -152,10 +151,7 @@ export default function CropperSection({
   };
 
   if (!imageSrc) return null;
-  //console.log('Background Type:', backgroundType);
-  //console.log('Background Color:', backgroundColor);
-  //console.log('Pattern Types:', patternTypes);
-  const getBackgroundStyle = () => {
+    const getBackgroundStyle = () => {
     if (backgroundColor) {
       return { background: backgroundColor };
     } else if (patternTypes && patternTypes.includes(backgroundType)) {

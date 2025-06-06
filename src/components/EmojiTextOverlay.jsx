@@ -1,4 +1,3 @@
-import React from 'react';
 import { getWrappedLines } from '../utils/utils';
 
 export default function EmojiTextOverlay({ emojiText, previewCtx, cropperDiameter, fontColor }) {

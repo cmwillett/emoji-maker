@@ -1,4 +1,3 @@
-import React from 'react';
 import { Tooltip } from '@mui/material';
 import { EmojiButton } from './EmojiButton';
 import { Stack } from '@mui/material';

@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function Header({ emojiCount }) {
   return (
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-2 mb-4">
