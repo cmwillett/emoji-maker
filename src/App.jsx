@@ -52,6 +52,7 @@ export default function App() {
   const patternTypes = customBackgrounds.map(bg => bg.type);
   const [textPosition, setTextPosition] = useState({ x: 0, y: 0 });
   const [textBoxSize, setTextBoxSize] = useState({ width: 180, height: 60 });
+  const [isQuoteBubble, setIsQuoteBubble] = useState(false);
 
   //Fetch initial emoji count
   const [emojiCount, setEmojiCount] = useState(null);
@@ -227,31 +228,78 @@ export default function App() {
       const offsetX = croppedAreaPixels?.x ? croppedAreaPixels.x * scaleX : 0;
       const offsetY = croppedAreaPixels?.y ? croppedAreaPixels.y * scaleY : 0;
 
-      if (emojiText) {
-        const overlayFontSize = fontSize; // use the user's selected font size
-        const fontWeight = isBold ? 'bold' : 'normal';
-        ctx.font = `${fontWeight} ${overlayFontSize * scaleY}px sans-serif`;
-        ctx.fillStyle = fontColor;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'top';
-        ctx.strokeStyle = 'black';
-        ctx.lineWidth = 4;
+if (isQuoteBubble) {
+  ctx.save();
+  ctx.fillStyle = 'white'; // or your bubble color
+  ctx.strokeStyle = '#333'; // outline color
+  ctx.lineWidth = 3;
 
-        const maxWidth = textBoxSize.width * scaleX;
-        const lines = getWrappedLines(ctx, emojiText, maxWidth);
-        const lineHeight = overlayFontSize * scaleY * 1.2;
-        const padding = 4 * scaleY;
+  // Draw rounded rectangle for bubble
+  const bubbleX = textPosition.x * scaleX;
+  const bubbleY = textPosition.y * scaleY;
+  const bubbleW = textBoxSize.width * scaleX;
+  const bubbleH = textBoxSize.height * scaleY;
+  const radius = 18 * scaleX;
 
-        // Scale the text position directly from overlay to canvas
-        // Center X of the text box
+  // Rounded rect
+  ctx.beginPath();
+  ctx.moveTo(bubbleX + radius, bubbleY);
+  ctx.lineTo(bubbleX + bubbleW - radius, bubbleY);
+  ctx.quadraticCurveTo(bubbleX + bubbleW, bubbleY, bubbleX + bubbleW, bubbleY + radius);
+  ctx.lineTo(bubbleX + bubbleW, bubbleY + bubbleH - radius);
+  ctx.quadraticCurveTo(bubbleX + bubbleW, bubbleY + bubbleH, bubbleX + bubbleW - radius, bubbleY + bubbleH);
+  ctx.lineTo(bubbleX + radius, bubbleY + bubbleH);
+  ctx.quadraticCurveTo(bubbleX, bubbleY + bubbleH, bubbleX, bubbleY + bubbleH - radius);
+  ctx.lineTo(bubbleX, bubbleY + radius);
+  ctx.quadraticCurveTo(bubbleX, bubbleY, bubbleX + radius, bubbleY);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
 
-        const drawX = (textPosition.x + textBoxSize.width / 2) * scaleX;
-        const drawY = textPosition.y * scaleY;
+  // Draw a small "tail" for the bubble
+  ctx.beginPath();
+  ctx.moveTo(bubbleX + bubbleW * 0.2, bubbleY + bubbleH);
+  ctx.lineTo(bubbleX + bubbleW * 0.2 + 12 * scaleX, bubbleY + bubbleH + 18 * scaleY);
+  ctx.lineTo(bubbleX + bubbleW * 0.2 + 24 * scaleX, bubbleY + bubbleH);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
 
-        lines.forEach((line, i) => {
-          ctx.strokeText(line, drawX, drawY + padding + i * lineHeight);
-          ctx.fillText(line, drawX, drawY + padding + i * lineHeight);
-        });
+  ctx.restore();
+}      
+
+if (emojiText) {
+  const overlayFontSize = fontSize;
+  const fontWeight = isBold ? 'bold' : 'normal';
+  ctx.font = `${fontWeight} ${overlayFontSize * scaleY}px sans-serif`;
+  ctx.fillStyle = fontColor;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.strokeStyle = 'black';
+  ctx.lineWidth = 4;
+
+  const maxWidth = textBoxSize.width * scaleX;
+  const lines = getWrappedLines(ctx, emojiText, maxWidth);
+  const lineHeight = overlayFontSize * scaleY * 1.2;
+  const padding = 4 * scaleY;
+
+  const drawX = (textPosition.x + textBoxSize.width / 2) * scaleX;
+
+  let drawY;
+  if (isQuoteBubble) {
+    // Center vertically in the bubble
+    const totalTextHeight = lines.length * lineHeight;
+    drawY = (textPosition.y * scaleY) + ((textBoxSize.height * scaleY - totalTextHeight) / 2);
+  } else {
+    // Original logic (top of box + padding)
+    drawY = textPosition.y * scaleY + padding;
+  }
+
+  lines.forEach((line, i) => {
+    ctx.strokeText(line, drawX, drawY + i * lineHeight);
+    ctx.fillText(line, drawX, drawY + i * lineHeight);
+  });
+
 
         // Use a diameter-based maxWidth for circular output
         /*const circleDiameter = Math.min(canvas.width, canvas.height);
@@ -298,7 +346,7 @@ export default function App() {
       } finally {
             setLoading(false);
     }
-  }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor, fontSize, isBold, keepOriginalBg, backgroundType, textBoxSize, textPosition]);
+  }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor, fontSize, isBold, isQuoteBubble, keepOriginalBg, backgroundType, textBoxSize, textPosition]);
 
   //Reset handler to clear all states
   const handleReset = () => {
@@ -368,6 +416,8 @@ export default function App() {
               setFontSize={setFontSize}
               isBold={isBold}
               setIsBold={setIsBold}
+              isQuoteBubble={isQuoteBubble}
+              setIsQuoteBubble={setIsQuoteBubble}
               textPosition={textPosition}
               setTextPosition={setTextPosition}
               textBoxSize={textBoxSize}
@@ -401,6 +451,8 @@ export default function App() {
             setFontSize={setFontSize}
             isBold={isBold}
             setIsBold={setIsBold}
+            isQuoteBubble={isQuoteBubble}
+            setIsQuoteBubble={setIsQuoteBubble}
             presetTextColors={[
               "#ffffff", "#000000", "#ff0000", "#00ff00", "#0000ff",
               "#ffa500", "#800080", "#00ffff", "#ff69b4", "#ffd700", "#87ceeb"

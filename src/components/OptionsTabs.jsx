@@ -39,6 +39,8 @@ export default function OptionsTabs(props) {
             setFontSize={props.setFontSize}
             isBold={props.isBold}
             setIsBold={props.setIsBold}
+            isQuoteBubble={props.isQuoteBubble}
+            setIsQuoteBubble={props.setIsQuoteBubble}
             presetTextColors={props.presetTextColors}
           />
         )}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, setFontColor, fontSize, setFontSize, isBold, setIsBold, presetTextColors }) {
+export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, setFontColor, fontSize, setFontSize, isBold, setIsBold, isQuoteBubble, setIsQuoteBubble, presetTextColors }) {
   const row1 = presetTextColors.slice(0, Math.ceil(presetTextColors.length / 2));
   const row2 = presetTextColors.slice(Math.ceil(presetTextColors.length / 2));
   const [showInfo, setShowInfo] = React.useState(false);  
@@ -19,7 +19,7 @@ export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, set
         >
           <span role="img" aria-label="info">ℹ️</span> Click for Details
         </button>
-      </div>
+      </div>     
       <div className="flex justify-center mb-2">
         <input
           type="text"
@@ -65,7 +65,9 @@ export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, set
           />
           <span className="ml-1">px</span>
         </label>
-        <label className="flex items-center gap-1 text-emerald-400 text-sm">
+      </div>
+      <div className="flex justify-center gap-8 mb-2">
+        <label className="text-emerald-400 font-semibold drop-shadow-md mb-2">
           <input
             type="checkbox"
             checked={isBold}
@@ -74,7 +76,15 @@ export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, set
           />
           Bold
         </label>
-      </div>
+        <label className="text-emerald-400 font-semibold drop-shadow-md mb-2">
+          <input
+            type="checkbox"
+            checked={isQuoteBubble}
+            onChange={e => setIsQuoteBubble(e.target.checked)}
+          />
+          Quote Bubble
+        </label>
+      </div>           
       {/* Text Color Picker */}
       <label className="flex flex-col items-center mb-2">
         <span className="text-emerald-400 font-semibold drop-shadow-md mb-2">
@@ -120,6 +130,7 @@ export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, set
               <li>Pick a font color below if you want something other than white.</li>
               <li>Change the font size if you want <u><b>(must be between 12 - 64)</b></u></li>
               <li>Unselect Bold if you don't want bold text</li>
+              <li>Select Quote Bubble if you'd like the text to appear as a quote</li>
               <li>Drag the textbox on the image to position your text.</li>
               <li>Resize the textbox by dragging the small handle in the bottom right corner.</li>
               <li>Your changes will be reflected in the final output.</li>

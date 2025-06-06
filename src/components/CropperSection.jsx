@@ -22,6 +22,8 @@ export default function CropperSection({
   fontColor,
   fontSize,
   isBold,
+  isQuoteBubble,
+  setIsQuoteBubble,
   textPosition,
   setTextPosition,
   textBoxSize,
@@ -186,47 +188,86 @@ export default function CropperSection({
         restrictPosition={false}
         objectFit="contain"
       />
-      {emojiText && (
-        <div
-          ref={textRef}
+    {emojiText && (
+      <div
+        ref={textRef}
+        style={{
+          position: 'absolute',
+          left: textPosition.x,
+          top: textPosition.y,
+          width: textBoxSize.width,
+          height: textBoxSize.height,
+          // ...other styles...
+          background: isQuoteBubble ? 'transparent' : 'rgba(0,0,0,0.5)',
+          border: isQuoteBubble ? 'none' : '2px solid #fff',
+          // ...other styles...
+        }}
+        onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+        // ...handlers...
+      >
+      {isQuoteBubble && (
+        <svg
+          width={textBoxSize.width}
+          height={textBoxSize.height + 20}
           style={{
             position: 'absolute',
-            left: textPosition.x,
-            top: textPosition.y,
-            color: fontColor,
-            cursor: 'move',
-            userSelect: 'none',
-            fontWeight: isBold ? 'bold' : 'normal',
-            fontSize: fontSize,
-            fontFamily: 'sans-serif',
-            lineHeight: 1.2,
-            textShadow: '0 0 4px #000',
-            width: textBoxSize.width,
-            height: textBoxSize.height,
-            maxWidth: 300,
-            maxHeight: 200,
-            overflow: 'hidden',
-            background: 'rgba(0,0,0,0.5)',
-            border: '2px solid #fff',
-            borderRadius: '8px',
-            padding: 4,
-            boxSizing: 'border-box',
+            left: 0,
+            top: 0,
+            zIndex: 0,
+            pointerEvents: 'none',
           }}
-          onMouseDown={handleMouseDown}
-          onTouchStart={handleTouchStart}
         >
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              wordBreak: 'break-word',
-              whiteSpace: 'pre-wrap',
-              overflow: 'hidden',
-              textAlign: 'center',
-            }}
-          >
-            {emojiText}
-          </div>
+          {/* Rounded rectangle */}
+          <rect
+            x="0"
+            y="0"
+            width={textBoxSize.width}
+            height={textBoxSize.height}
+            rx="18"
+            ry="18"
+            fill="white"
+            stroke="#333"
+            strokeWidth="3"
+          />
+          {/* Bubble tail */}
+          <polygon
+            points={`
+              ${textBoxSize.width * 0.2},${textBoxSize.height}
+              ${textBoxSize.width * 0.2 + 12},${textBoxSize.height + 18}
+              ${textBoxSize.width * 0.2 + 24},${textBoxSize.height}
+            `}
+            fill="white"
+            stroke="#333"
+            strokeWidth="3"
+          />
+        </svg>
+      )}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 1,
+          width: '100%',
+          height: '100%',
+          color: fontColor,
+          fontWeight: isBold ? 'bold' : 'normal',
+          fontSize: fontSize,
+          fontFamily: 'sans-serif',
+          lineHeight: 1.2,
+          textShadow: '0 0 4px #000',
+          wordBreak: 'break-word',
+          whiteSpace: 'pre-wrap',
+          overflow: 'hidden',
+          textAlign: 'center',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          userSelect: 'none',
+          cursor: 'move',
+        }}
+      >
+      {emojiText}
+    </div>
           {/* Resize handle */}
           <div
             ref={resizeHandleRef}
