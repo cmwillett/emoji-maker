@@ -226,7 +226,7 @@ export default function CropperSection({
             height={textBoxSize.height}
             rx="18"
             ry="18"
-            fill="white"
+            fill="lightgray"
             stroke="#333"
             strokeWidth="3"
           />
