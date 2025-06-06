@@ -13,9 +13,6 @@ import Footer from './components/Footer';
 import { applyBackgroundColor, incrementEmojiCount, fetchEmojiCount } from './utils/utils';
 import { removeBackgroundLocal } from './lib/removeBackground';
 import { getWrappedLines } from './utils/utils';
-import Draggable from 'react-draggable';
-import EmojiTextOverlay from './components/EmojiTextOverlay';
-import EmojiActions from './components/EmojiActions';
 import OptionsTabs from './components/OptionsTabs';
 import ResetCreatePanel from './components/ResetCreatePanel';
 import customBackgrounds from './constants/customBackgrounds';
@@ -218,106 +215,77 @@ export default function App() {
       const scaleX = canvas.width / previewWidth;
       const scaleY = canvas.height / previewHeight;
 
-      const scaledTextBoxWidth = textBoxSize.width * scaleX;
-      const scaledTextBoxHeight = textBoxSize.height * scaleY;
-      const scaledTextPosition = {
-        x: textPosition.x * scaleX,
-        y: textPosition.y * scaleY,
-      };
+      if (isQuoteBubble && emojiText) {
+        ctx.save();
+        ctx.fillStyle = 'white'; // or your bubble color
+        ctx.strokeStyle = '#333'; // outline color
+        ctx.lineWidth = 3;
 
-      const offsetX = croppedAreaPixels?.x ? croppedAreaPixels.x * scaleX : 0;
-      const offsetY = croppedAreaPixels?.y ? croppedAreaPixels.y * scaleY : 0;
+        // Draw rounded rectangle for bubble
+        const bubbleX = textPosition.x * scaleX;
+        const bubbleY = textPosition.y * scaleY;
+        const bubbleW = textBoxSize.width * scaleX;
+        const bubbleH = textBoxSize.height * scaleY;
+        const radius = 18 * scaleX;
 
-if (isQuoteBubble && emojiText) {
-  ctx.save();
-  ctx.fillStyle = 'white'; // or your bubble color
-  ctx.strokeStyle = '#333'; // outline color
-  ctx.lineWidth = 3;
+        // Rounded rect
+        ctx.beginPath();
+        ctx.moveTo(bubbleX + radius, bubbleY);
+        ctx.lineTo(bubbleX + bubbleW - radius, bubbleY);
+        ctx.quadraticCurveTo(bubbleX + bubbleW, bubbleY, bubbleX + bubbleW, bubbleY + radius);
+        ctx.lineTo(bubbleX + bubbleW, bubbleY + bubbleH - radius);
+        ctx.quadraticCurveTo(bubbleX + bubbleW, bubbleY + bubbleH, bubbleX + bubbleW - radius, bubbleY + bubbleH);
+        ctx.lineTo(bubbleX + radius, bubbleY + bubbleH);
+        ctx.quadraticCurveTo(bubbleX, bubbleY + bubbleH, bubbleX, bubbleY + bubbleH - radius);
+        ctx.lineTo(bubbleX, bubbleY + radius);
+        ctx.quadraticCurveTo(bubbleX, bubbleY, bubbleX + radius, bubbleY);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
 
-  // Draw rounded rectangle for bubble
-  const bubbleX = textPosition.x * scaleX;
-  const bubbleY = textPosition.y * scaleY;
-  const bubbleW = textBoxSize.width * scaleX;
-  const bubbleH = textBoxSize.height * scaleY;
-  const radius = 18 * scaleX;
+        // Draw a small "tail" for the bubble
+        ctx.beginPath();
+        ctx.moveTo(bubbleX + bubbleW * 0.2, bubbleY + bubbleH);
+        ctx.lineTo(bubbleX + bubbleW * 0.2 + 12 * scaleX, bubbleY + bubbleH + 18 * scaleY);
+        ctx.lineTo(bubbleX + bubbleW * 0.2 + 24 * scaleX, bubbleY + bubbleH);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
 
-  // Rounded rect
-  ctx.beginPath();
-  ctx.moveTo(bubbleX + radius, bubbleY);
-  ctx.lineTo(bubbleX + bubbleW - radius, bubbleY);
-  ctx.quadraticCurveTo(bubbleX + bubbleW, bubbleY, bubbleX + bubbleW, bubbleY + radius);
-  ctx.lineTo(bubbleX + bubbleW, bubbleY + bubbleH - radius);
-  ctx.quadraticCurveTo(bubbleX + bubbleW, bubbleY + bubbleH, bubbleX + bubbleW - radius, bubbleY + bubbleH);
-  ctx.lineTo(bubbleX + radius, bubbleY + bubbleH);
-  ctx.quadraticCurveTo(bubbleX, bubbleY + bubbleH, bubbleX, bubbleY + bubbleH - radius);
-  ctx.lineTo(bubbleX, bubbleY + radius);
-  ctx.quadraticCurveTo(bubbleX, bubbleY, bubbleX + radius, bubbleY);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
+        ctx.restore();
+      }      
 
-  // Draw a small "tail" for the bubble
-  ctx.beginPath();
-  ctx.moveTo(bubbleX + bubbleW * 0.2, bubbleY + bubbleH);
-  ctx.lineTo(bubbleX + bubbleW * 0.2 + 12 * scaleX, bubbleY + bubbleH + 18 * scaleY);
-  ctx.lineTo(bubbleX + bubbleW * 0.2 + 24 * scaleX, bubbleY + bubbleH);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
+      if (emojiText) {
+        const overlayFontSize = fontSize;
+        const fontWeight = isBold ? 'bold' : 'normal';
+        ctx.font = `${fontWeight} ${overlayFontSize * scaleY}px sans-serif`;
+        ctx.fillStyle = fontColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 4;
 
-  ctx.restore();
-}      
-
-if (emojiText) {
-  const overlayFontSize = fontSize;
-  const fontWeight = isBold ? 'bold' : 'normal';
-  ctx.font = `${fontWeight} ${overlayFontSize * scaleY}px sans-serif`;
-  ctx.fillStyle = fontColor;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'top';
-  ctx.strokeStyle = 'black';
-  ctx.lineWidth = 4;
-
-  const maxWidth = textBoxSize.width * scaleX;
-  const lines = getWrappedLines(ctx, emojiText, maxWidth);
-  const lineHeight = overlayFontSize * scaleY * 1.2;
-  const padding = 4 * scaleY;
-
-  const drawX = (textPosition.x + textBoxSize.width / 2) * scaleX;
-
-  let drawY;
-  if (isQuoteBubble) {
-    // Center vertically in the bubble
-    const totalTextHeight = lines.length * lineHeight;
-    drawY = (textPosition.y * scaleY) + ((textBoxSize.height * scaleY - totalTextHeight) / 2);
-  } else {
-    // Original logic (top of box + padding)
-    drawY = textPosition.y * scaleY + padding;
-  }
-
-  lines.forEach((line, i) => {
-    ctx.strokeText(line, drawX, drawY + i * lineHeight);
-    ctx.fillText(line, drawX, drawY + i * lineHeight);
-  });
-
-
-        // Use a diameter-based maxWidth for circular output
-        /*const circleDiameter = Math.min(canvas.width, canvas.height);
-        const maxWidth = circleDiameter * 0.65; // 65% for extra padding
-        const lineHeight = Math.floor(canvas.height / 8) * 1.2;
-
-        // Get wrapped lines using your imported getWrappedLines
+        const maxWidth = textBoxSize.width * scaleX;
         const lines = getWrappedLines(ctx, emojiText, maxWidth);
+        const lineHeight = overlayFontSize * scaleY * 1.2;
+        const padding = 4 * scaleY;
 
-        // Center the block vertically in the circle
-        // Bottom-align the block in the circle
-        const startY = canvas.height - (lines.length * lineHeight) + lineHeight / 5;
+        const drawX = (textPosition.x + textBoxSize.width / 2) * scaleX;
 
-        // Draw each line upward from the bottom
+        let drawY;
+        if (isQuoteBubble) {
+          // Center vertically in the bubble
+          const totalTextHeight = lines.length * lineHeight;
+          drawY = (textPosition.y * scaleY) + ((textBoxSize.height * scaleY - totalTextHeight) / 2);
+        } else {
+          // Original logic (top of box + padding)
+          drawY = textPosition.y * scaleY + padding;
+        }
+
         lines.forEach((line, i) => {
-          ctx.strokeText(line.trim(), canvas.width / 2, startY + i * lineHeight);
-          ctx.fillText(line.trim(), canvas.width / 2, startY + i * lineHeight);
-        });*/
+          ctx.strokeText(line, drawX, drawY + i * lineHeight);
+          ctx.fillText(line, drawX, drawY + i * lineHeight);
+        });
       }
 
       //Step 8: Restore context if using round crop
@@ -423,15 +391,6 @@ if (emojiText) {
               textBoxSize={textBoxSize}
               setTextBoxSize={setTextBoxSize}
             />
-            {/* Show the emoji text overlay if emojiText is set */}
-            {/*{emojiText && (
-              <EmojiTextOverlay
-                emojiText={emojiText}
-                previewCtx={previewCtx}
-                cropperDiameter={cropperDiameter}
-                fontColor={fontColor}
-              />
-            )}*/}
           </div>
 
           <OptionsTabs
@@ -462,21 +421,6 @@ if (emojiText) {
             onReset={handleReset}
             onCreate={showCroppedImage}
           />
-          {/* Show the emoji actions for customization 
-          <EmojiActions
-            backgroundColor={backgroundColor}
-            setBackgroundColor={setBackgroundColor}
-            isRound={isRound}
-            setIsRound={setIsRound}
-            emojiText={emojiText}
-            setEmojiText={setEmojiText}
-            fontColor={fontColor}
-            setFontColor={setFontColor}
-            onCrop={showCroppedImage}
-            onReset={handleReset}
-            keepOriginalBg={keepOriginalBg}
-            setKeepOriginalBg={setKeepOriginalBg}
-          /> */}
         </>
       )}
 
@@ -529,6 +473,7 @@ if (emojiText) {
           const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
           const tempName = `${defaultName}-${timestamp}`;
           const userInput = prompt("Enter filename (without extension):", tempName);
+
           if (userInput === null) return;
 
           const finalName = `${userInput || defaultName}.png`;
@@ -539,12 +484,14 @@ if (emojiText) {
         }}
       />
       <InstallShareButtons showInstall={showInstall} handleInstallClick={handleInstallClick} />
+
       {/* Show the error modal if there's an error */}
       <ErrorModal
         open={showErrorModal}
         errorMessage={errorMessage}
         onClose={() => setShowErrorModal(false)}
       />
+
       {/* Show the contact modal if contact is clicked */}
       <ContactModal
         open={showContactModal}
@@ -554,16 +501,19 @@ if (emojiText) {
         contactSubmitted={contactSubmitted}
         setContactSubmitted={setContactSubmitted}
       />
+
       {/* Show the about modal if about is clicked */}
       <AboutModal
         open={showAboutModal}
         onClose={() => setShowAboutModal(false)}
       />
+
       {/* Footer with about and contact links */}
       <Footer
         onAbout={() => setShowAboutModal(true)}
         onContact={() => setShowContactModal(true)}
       />
+      {/* Reset button to clear all options and upload a new image */}
       {imageSrc && (
         <button
           onClick={handleReset}

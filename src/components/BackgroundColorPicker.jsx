@@ -1,9 +1,13 @@
 import React from 'react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import customBackgrounds from '../constants/customBackgrounds';
 import { EmojiButton } from './EmojiButton';
 import { Tooltip } from '@mui/material';
+import { useState } from 'react';
 
 export default function BackgroundColorPicker({ backgroundColor, setBackgroundColor, keepOriginalBg, setKeepOriginalBg, backgroundType, setBackgroundType }) {
+  const [showBackgrounds, setShowBackgrounds] = useState(false);
+  
   const presetColors = [
     "#ffffff", "#000000", "#ff0000", "#00ff00", "#0000ff",
     "#ffa500", "#800080", "#00ffff", "#ff69b4", "#ffd700", "#87ceeb"
@@ -15,22 +19,6 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
   const backgroundTypeMap = Object.fromEntries(
     customBackgrounds.map(bg => [bg.type, bg.title])
   );
-
-  const handleBackgroundTypeChange = (type) => {
-  setBackgroundType(type);
-  if (type !== 'color') {
-    setBackgroundColor(''); // Reset color if switching away from solid color
-  }
-  // Optionally reset other background-related state here
-};
-
-  function chunkArray(arr, size) {
-    const result = [];
-    for (let i = 0; i < arr.length; i += size) {
-      result.push(arr.slice(i, i + size));
-    }
-    return result;
-  }
 
   return (
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-2">
@@ -112,7 +100,7 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
                 onClick={() => {
                   setBackgroundColor(color);
                   setKeepOriginalBg(false);
-                  setBackgroundType('color'); // Set type to 'color' when selecting a color
+                  setBackgroundType('color');
                 }}
               ></button>
             ))}
@@ -126,36 +114,70 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
                 onClick={() => {
                   setBackgroundColor(color);
                   setKeepOriginalBg(false);
-                  setBackgroundType('color'); // Set type to 'color' when selecting a color
+                  setBackgroundType('color');
                 }}
               ></button>
             ))}
           </div>
-          {chunkArray(customBackgrounds, 5).map((row, rowIndex) => (
-            <div key={rowIndex} className="flex items-center justify-center mb-1 gap-2">
-              {row.map(bg => (
-                <div key={bg.type} className="flex flex-col items-center"> {/* Container for button and label, flex-col arranges vertically */}
-                  <button
-                    className="w-15 h-10 text-xs rounded px-2 border cursor-pointer bg-white text-black border-white hover:bg-gray-200"
-                    style={{
-                      backgroundImage: `url('${bg.img}')`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                    }}
-                    onClick={() => {
-                      setBackgroundType(bg.type);
-                      setKeepOriginalBg(false);
-                      setBackgroundColor(''); // Reset color when selecting a background type
-                    }}
-                    title={bg.title}
-                  />
-                  <div className="mt-1 text-xs text-emerald-400">{bg.title}</div> {/* Label using bg.title */}
-                </div>
-              ))}
-            </div>
+        </div>
+        <EmojiButton
+          icon={
+            <ExpandMoreIcon
+              style={{
+                transition: 'transform 0.2s',
+                transform: showBackgrounds ? 'rotate(180deg)' : 'rotate(0deg)'
+              }}
+            />
+          }
+          label="Choose From Custom Backgrounds"
+          onClick={() => setShowBackgrounds((prev) => !prev)}
+          type="button"
+        />
+      </div>
+      {showBackgrounds && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 my-4">
+          {customBackgrounds.map((bg, idx) => (
+            <Tooltip
+              key={bg.img + idx}
+              title={bg.title}
+              arrow
+              placement="bottom"
+              componentsProps={{
+                tooltip: {
+                  sx: {
+                    fontSize: '1.1rem',
+                    padding: '10px 16px',
+                    backgroundColor: '#34d399',
+                    color: '#1e293b',
+                    fontWeight: 600,
+                    letterSpacing: '0.01em',
+                    boxShadow: 3,
+                  },
+                },
+                arrow: {
+                  sx: {
+                    color: '#34d399',
+                  }
+                }
+              }}
+            >
+              <div
+                className="cursor-pointer rounded shadow hover:scale-105 transition"
+                onClick={() => {
+                  setBackgroundType(bg.type);
+                  setBackgroundColor('');
+                  setKeepOriginalBg(false);
+                }}
+                style={{
+                  background: `url(${bg.img}) center/cover no-repeat`,
+                  height: 80,
+                  border: '2px solid #34d399'
+                }}
+              />
+            </Tooltip>
           ))}
         </div>
-      </div>
+      )}     
       {showInfo && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-lg relative">
