@@ -81,6 +81,7 @@ export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, set
             type="checkbox"
             checked={isQuoteBubble}
             onChange={e => setIsQuoteBubble(e.target.checked)}
+            className="accent-emerald-500" // <-- add this!
           />
           Quote Bubble
         </label>

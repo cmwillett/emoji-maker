@@ -228,7 +228,7 @@ export default function App() {
       const offsetX = croppedAreaPixels?.x ? croppedAreaPixels.x * scaleX : 0;
       const offsetY = croppedAreaPixels?.y ? croppedAreaPixels.y * scaleY : 0;
 
-if (isQuoteBubble) {
+if (isQuoteBubble && emojiText) {
   ctx.save();
   ctx.fillStyle = 'white'; // or your bubble color
   ctx.strokeStyle = '#333'; // outline color

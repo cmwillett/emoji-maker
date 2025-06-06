@@ -206,7 +206,7 @@ export default function CropperSection({
         onTouchStart={handleTouchStart}
         // ...handlers...
       >
-      {isQuoteBubble && (
+      {isQuoteBubble && emojiText &&(
         <svg
           width={textBoxSize.width}
           height={textBoxSize.height + 20}
