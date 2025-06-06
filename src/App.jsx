@@ -440,7 +440,7 @@ export default function App() {
             if (navigator.share && navigator.canShare?.({ files: [file] })) {
               await navigator.share({
                 title: "My Custom Emoji",
-                text: "Check out this emoji I made!",
+                //text: "Check out this emoji I made!",
                 files: [file],
               });
             } else {
