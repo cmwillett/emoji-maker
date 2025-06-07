@@ -50,6 +50,9 @@ export default function App() {
   const [textPosition, setTextPosition] = useState({ x: 0, y: 0 });
   const [textBoxSize, setTextBoxSize] = useState({ width: 180, height: 60 });
   const [isQuoteBubble, setIsQuoteBubble] = useState(false);
+  const [tailBase, setTailBase] = useState({ x: textBoxSize.width / 2, y: textBoxSize.height });
+  const [arrowTip, setArrowTip] = useState({ x: textBoxSize.width / 2, y: textBoxSize.height + 24 });
+
 
   //Fetch initial emoji count
   const [emojiCount, setEmojiCount] = useState(null);
@@ -96,6 +99,13 @@ export default function App() {
       }
     }
   }, [])
+
+  const handleResizeTextBox = (newSize) => {
+    setTextBoxSize(newSize);
+    // Move tail to center bottom of new box
+    setTailBase({ x: newSize.width / 2, y: newSize.height });
+    setArrowTip({ x: newSize.width / 2, y: newSize.height + 24 });
+  };  
 
   //Install PWA handler
   const handleInstallClick = () => {
@@ -243,11 +253,44 @@ export default function App() {
         ctx.fill();
         ctx.stroke();
 
-        // Draw a small "tail" for the bubble
+        // Draw the bubble tail using current tailBase and arrowTip
+        const offset = 12 * scaleX;
+
+        // Calculate the scaled base and tip positions
+        const scaledTailBase = {
+          x: (textPosition.x + tailBase.x) * scaleX,
+          y: (textPosition.y + tailBase.y) * scaleY
+        };
+        const scaledArrowTip = {
+          x: (textPosition.x + arrowTip.x) * scaleX,
+          y: (textPosition.y + arrowTip.y) * scaleY
+        };
+
+        // Calculate the two base points for the polygon (same as your SVG logic)
+        let base1, base2;
+        if (tailBase.y === 0) { // top
+          base1 = { x: scaledTailBase.x - offset, y: scaledTailBase.y };
+          base2 = { x: scaledTailBase.x + offset, y: scaledTailBase.y };
+        } else if (tailBase.y === textBoxSize.height) { // bottom
+          base1 = { x: scaledTailBase.x - offset, y: scaledTailBase.y };
+          base2 = { x: scaledTailBase.x + offset, y: scaledTailBase.y };
+        } else if (tailBase.x === 0) { // left
+          base1 = { x: scaledTailBase.x, y: scaledTailBase.y - offset };
+          base2 = { x: scaledTailBase.x, y: scaledTailBase.y + offset };
+        } else if (tailBase.x === textBoxSize.width) { // right
+          base1 = { x: scaledTailBase.x, y: scaledTailBase.y - offset };
+          base2 = { x: scaledTailBase.x, y: scaledTailBase.y + offset };
+        } else {
+          // fallback to bottom
+          base1 = { x: scaledTailBase.x - offset, y: scaledTailBase.y };
+          base2 = { x: scaledTailBase.x + offset, y: scaledTailBase.y };
+        }
+
+        // Draw the polygon
         ctx.beginPath();
-        ctx.moveTo(bubbleX + bubbleW * 0.2, bubbleY + bubbleH);
-        ctx.lineTo(bubbleX + bubbleW * 0.2 + 12 * scaleX, bubbleY + bubbleH + 18 * scaleY);
-        ctx.lineTo(bubbleX + bubbleW * 0.2 + 24 * scaleX, bubbleY + bubbleH);
+        ctx.moveTo(base1.x, base1.y);
+        ctx.lineTo(base2.x, base2.y);
+        ctx.lineTo(scaledArrowTip.x, scaledArrowTip.y);
         ctx.closePath();
         ctx.fill();
         ctx.stroke();
@@ -314,25 +357,28 @@ export default function App() {
       } finally {
             setLoading(false);
     }
-  }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor, fontSize, isBold, isQuoteBubble, keepOriginalBg, backgroundType, textBoxSize, textPosition]);
+  }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor, fontSize, isBold, isQuoteBubble, arrowTip, tailBase, keepOriginalBg, backgroundType, textBoxSize, textPosition]);
 
   //Reset handler to clear all states
-  const handleReset = () => {
-    setImageSrc(null)
-    setCrop({ x: 0, y: 0 })
-    setZoom(1)
-    setCroppedAreaPixels(null)
-    setCroppedImage(null)
-    setEmojiText('')
-    setBackgroundColor('')
-    setBackgroundType('original')
-    setKeepOriginalBg(true)
-    setIsRound(false)
-    setFontColor('#ffffff') // Reset to default white
-    setBgRemovedPreview(null);
-    setTextBoxSize({ width: 180, height: 60 });
-    setTextPosition({ x: 0, y: 0 });
-  }
+const handleReset = () => {
+  setImageSrc(null)
+  setCrop({ x: 0, y: 0 })
+  setZoom(1)
+  setCroppedAreaPixels(null)
+  setCroppedImage(null)
+  setEmojiText('')
+  setBackgroundColor('')
+  setBackgroundType('original')
+  setKeepOriginalBg(true)
+  setIsRound(false)
+  setFontColor('#ffffff') // Reset to default white
+  setBgRemovedPreview(null);
+  handleResizeTextBox({ width: 180, height: 60 });
+  setTextPosition({ x: 0, y: 0 });
+  setIsQuoteBubble(false); // <-- Reset quote bubble checkbox
+  setTailBase({ x: 90, y: 60 }); // <-- Reset tailBase to default (center bottom of default box)
+  setArrowTip({ x: 90, y: 84 }); // <-- Reset arrowTip to default (below the box)
+}
 
   //Style for the crop container
   const cropContainerStyle = {
@@ -390,6 +436,11 @@ export default function App() {
               setTextPosition={setTextPosition}
               textBoxSize={textBoxSize}
               setTextBoxSize={setTextBoxSize}
+              tailBase={tailBase}
+              setTailBase={setTailBase}
+              arrowTip={arrowTip}
+              setArrowTip={setArrowTip} 
+              handleResizeTextBox={handleResizeTextBox}
             />
           </div>
 

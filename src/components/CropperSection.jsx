@@ -26,7 +26,12 @@ export default function CropperSection({
   textPosition,
   setTextPosition,
   textBoxSize,
-  setTextBoxSize
+  setTextBoxSize,
+  tailBase,
+  setTailBase,
+  arrowTip,
+  setArrowTip,
+  handleResizeTextBox
 }) {
   const textRef = useRef(null);
   const isDragging = useRef(false);
@@ -35,6 +40,17 @@ export default function CropperSection({
   const resizeHandleRef = useRef(null);
   const isResizing = useRef(false);
   const initialBoxSize = useRef({ width: 0, height: 0 });
+
+  /*const [arrowTip, setArrowTip] = useState({
+    x: textBoxSize.width * 0.2 + 12, // initial X (matches your current arrow)
+    y: textBoxSize.height + 18       // initial Y (matches your current arrow)
+  });*/
+  const arrowTipRef = useRef(null);
+
+  /*const [tailBase, setTailBase] = useState({
+    x: textBoxSize.width / 2, // start at center bottom
+    y: textBoxSize.height     // start at bottom edge
+  });*/
 
   const handleResizeTouchStart = (e) => {
     e.stopPropagation();
@@ -54,10 +70,9 @@ export default function CropperSection({
     const touch = e.touches[0];
     const deltaX = touch.clientX - startX.current;
     const deltaY = touch.clientY - startY.current;
-    setTextBoxSize(prev => {
-      const newWidth = Math.max(60, Math.min(initialBoxSize.current.width + deltaX, 300));
-      const newHeight = Math.max(24, Math.min(initialBoxSize.current.height + deltaY, 200));
-      return { width: newWidth, height: newHeight };
+    handleResizeTextBox({
+      width: Math.max(60, Math.min(initialBoxSize.current.width + deltaX, 300)),
+      height: Math.max(24, Math.min(initialBoxSize.current.height + deltaY, 200))
     });
   };
 
@@ -111,10 +126,9 @@ export default function CropperSection({
     if (!isResizing.current) return;
     const deltaX = e.clientX - startX.current;
     const deltaY = e.clientY - startY.current;
-    setTextBoxSize(prev => {
-      const newWidth = Math.max(60, Math.min(initialBoxSize.current.width + deltaX, 300));
-      const newHeight = Math.max(24, Math.min(initialBoxSize.current.height + deltaY, 200));
-      return { width: newWidth, height: newHeight };
+    handleResizeTextBox({
+      width: Math.max(60, Math.min(initialBoxSize.current.width + deltaX, 300)),
+      height: Math.max(24, Math.min(initialBoxSize.current.height + deltaY, 200))
     });
   };
 
@@ -204,20 +218,19 @@ export default function CropperSection({
       >
       {isQuoteBubble && emojiText &&(
         <svg
-          width={textBoxSize.width}
-          height={textBoxSize.height + 20}
+          width={textBoxSize.width + 48}
+          height={textBoxSize.height + 48}
           style={{
             position: 'absolute',
-            left: 0,
-            top: 0,
+            left: -24,
+            top: -24,
             zIndex: 0,
             pointerEvents: 'none',
           }}
         >
-          {/* Rounded rectangle */}
           <rect
-            x="0"
-            y="0"
+            x={24}
+            y={24}
             width={textBoxSize.width}
             height={textBoxSize.height}
             rx="18"
@@ -226,19 +239,99 @@ export default function CropperSection({
             stroke="#333"
             strokeWidth="3"
           />
-          {/* Bubble tail */}
-          <polygon
-            points={`
-              ${textBoxSize.width * 0.2},${textBoxSize.height}
-              ${textBoxSize.width * 0.2 + 12},${textBoxSize.height + 18}
-              ${textBoxSize.width * 0.2 + 24},${textBoxSize.height}
-            `}
-            fill="white"
-            stroke="#333"
-            strokeWidth="3"
-          />
-        </svg>
+        <polygon
+          points={(() => {
+            // Find which edge the base is on
+            let base1, base2;
+            const offset = 12;
+            if (tailBase.y === 0) { // top
+              base1 = [tailBase.x - offset + 24, tailBase.y + 24];
+              base2 = [tailBase.x + offset + 24, tailBase.y + 24];
+            } else if (tailBase.y === textBoxSize.height) { // bottom
+              base1 = [tailBase.x - offset + 24, tailBase.y + 24];
+              base2 = [tailBase.x + offset + 24, tailBase.y + 24];
+            } else if (tailBase.x === 0) { // left
+              base1 = [tailBase.x + 24, tailBase.y - offset + 24];
+              base2 = [tailBase.x + 24, tailBase.y + offset + 24];
+            } else if (tailBase.x === textBoxSize.width) { // right
+              base1 = [tailBase.x + 24, tailBase.y - offset + 24];
+              base2 = [tailBase.x + 24, tailBase.y + offset + 24];
+            } else {
+              // fallback to bottom
+              base1 = [tailBase.x - offset + 24, tailBase.y + 24];
+              base2 = [tailBase.x + offset + 24, tailBase.y + 24];
+            }
+            return `
+              ${base1[0]},${base1[1]}
+              ${base2[0]},${base2[1]}
+              ${arrowTip.x + 24},${arrowTip.y + 24}
+            `;
+          })()}
+          fill="white"
+          stroke="#333"
+          strokeWidth="3"
+        />
+        </svg>        
       )}
+      <div
+        style={{
+          position: 'absolute',
+          left: tailBase.x - 20,
+          top: tailBase.y - 20,
+          width: 40,
+          height: 40,
+          background: 'transparent',
+          cursor: 'pointer',
+          zIndex: 30,
+        }}
+        onMouseDown={e => {
+          e.stopPropagation();
+          const startX = e.clientX;
+          const startY = e.clientY;
+          const origX = tailBase.x;
+          const origY = tailBase.y;
+          const onMouseMove = moveEvent => {
+            let newX = origX + (moveEvent.clientX - startX);
+            let newY = origY + (moveEvent.clientY - startY);
+
+            // Clamp to bubble border
+            if (newY < 0) newY = 0;
+            if (newY > textBoxSize.height) newY = textBoxSize.height;
+            if (newX < 0) newX = 0;
+            if (newX > textBoxSize.width) newX = textBoxSize.width;
+
+            // Snap to closest edge
+            const distances = [
+              { edge: 'top', dist: Math.abs(newY) },
+              { edge: 'bottom', dist: Math.abs(newY - textBoxSize.height) },
+              { edge: 'left', dist: Math.abs(newX) },
+              { edge: 'right', dist: Math.abs(newX - textBoxSize.width) }
+            ];
+            const closest = distances.reduce((a, b) => (a.dist < b.dist ? a : b));
+            if (closest.edge === 'top') newY = 0;
+            if (closest.edge === 'bottom') newY = textBoxSize.height;
+            if (closest.edge === 'left') newX = 0;
+            if (closest.edge === 'right') newX = textBoxSize.width;
+
+            // Calculate direction for the tip (outward from the bubble)
+            let tipOffset = 24;
+            let tipX = newX, tipY = newY;
+            if (closest.edge === 'top') tipY = newY - tipOffset;
+            if (closest.edge === 'bottom') tipY = newY + tipOffset;
+            if (closest.edge === 'left') tipX = newX - tipOffset;
+            if (closest.edge === 'right') tipX = newX + tipOffset;
+
+            setTailBase({ x: newX, y: newY });
+            setArrowTip({ x: tipX, y: tipY });
+          };
+          const onMouseUp = () => {
+            window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('mouseup', onMouseUp);
+          };
+          window.addEventListener('mousemove', onMouseMove);
+          window.addEventListener('mouseup', onMouseUp);
+        }}
+      />
       <div
         style={{
           position: 'relative',
