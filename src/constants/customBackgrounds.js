@@ -17,6 +17,7 @@ const customBackgrounds = [
   { type: 'ufo', img: '/backgrounds/ufo.jpg', title: 'UFO' },
   { type: 'alien', img: '/backgrounds/alien.jpg', title: 'Alien' },
   { type: 'dancestudio', img: '/backgrounds/dancestudio.jpeg', title: 'Dance' },
+  { type: 'bubbles-in-blue-water', img: '/backgrounds/bubbles-in-blue-water.jpg', title: 'Bubbles in Water' },
   // Add more as needed
 ];
 export default customBackgrounds;
