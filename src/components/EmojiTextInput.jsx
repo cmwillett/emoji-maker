@@ -132,6 +132,10 @@ export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, set
               <li>Change the font size if you want <u><b>(must be between 12 - 64)</b></u></li>
               <li>Unselect Bold if you don't want bold text</li>
               <li>Select Quote Bubble if you'd like the text to appear as a quote</li>
+              <ul>
+                <li>The arrow on the quote bubble is draggable.</li>
+                <li>Drag the arrow to position it around the speech bubble.</li>
+              </ul>
               <li>Drag the textbox on the image to position your text.</li>
               <li>Resize the textbox by dragging the small handle in the bottom right corner.</li>
               <li>Your changes will be reflected in the final output.</li>

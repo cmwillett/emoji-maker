@@ -98,6 +98,10 @@ export default function InstallShareButtons({ showInstall, handleInstallClick })
                         <li>Change the font size if desired (default is 24)</li>
                         <li>Unselect Bold if you don't want the text to be bold</li>
                         <li>Select Quote Bubble if you want the text to appear as a quote</li>
+                          <ul>
+                            <li>The arrow on the quote bubble is draggable</li>
+                            <li>So drag that wherever you want it to be around the speech bubble</li>
+                          </ul>
                         <li>Choose a color from the palette if you don't want white text</li>
                         <li>Drag the textbox on the image to where you want it placed</li>
                         <li>Resize the textbox by clicking the handle in the bottom right corner of the textbox</li>
