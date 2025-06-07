@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 export default function InstallShareButtons({ showInstall, handleInstallClick }) {
   const [howToOpen, setHowToOpen] = React.useState(false);
   const howToContentRef = React.useRef(null);
+  const [featuresOpen, setFeaturesOpen] = React.useState(false);
   return (
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
       <div>
@@ -59,7 +60,16 @@ export default function InstallShareButtons({ showInstall, handleInstallClick })
                 onClick={() => setHowToOpen(true)}
               />
             </span>
-          </Tooltip>        
+          </Tooltip>    
+<Tooltip title="See what's new!" placement="right">
+  <span>
+    <EmojiButton
+      icon={<img src="/features.png" alt="Features" className="w-6 h-6" />}
+      label="Latest Features"
+      onClick={() => setFeaturesOpen(true)}
+    />
+  </span>
+</Tooltip>              
       </Stack>
       <Modal open={howToOpen} onClose={() => setHowToOpen(false)}>
         <Box
@@ -147,7 +157,49 @@ export default function InstallShareButtons({ showInstall, handleInstallClick })
             </button>
           </div>
         </Box>
-      </Modal>           
+      </Modal>       
+      <Modal open={featuresOpen} onClose={() => setFeaturesOpen(false)}>
+        <Box
+          sx={{
+            position: 'absolute', top: '50%', left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper', p: 4, borderRadius: 2, boxShadow: 24,
+            minWidth: 300, maxWidth: 500,
+            maxHeight: '90vh',
+            overflowY: 'auto',
+          }}>
+          <h2>Latest Features</h2>
+          <ul style={{ margin: '1em 0', paddingLeft: '1.2em' }}>
+            <li>6/6/2025</li>
+              <ul>
+                <li>Resizable and draggable quote bubbles</li>
+                <li>Draggable bubble tail/arrow</li>
+              </ul>
+            <li>Prior</li>
+              <ul>
+                <li>Added the ability to use custom backgrounds</li>
+                <li>Added the ability to use a solid color as a background</li>
+                <li>Added the ability to upload a photo from gallery/file system, common memes, or take a photo</li>
+                <li>Added the ability to resize and move the photo</li>
+                <li>Added the ability to keep the original background</li>                
+                <li>Background removal</li>
+                <li>Uploading a photo from gallery/file system, common memes, or taking a photo</li>
+                <li>Ability to resize and move the photo</li>
+                <li>Ability to keep the original background</li>
+                <li>Ability to bold and resize text</li>
+                <li>Ability to change text color</li>
+                <li>Ability to add and resize a textbox</li>
+                <li>And more!</li>
+              </ul>
+          </ul>
+          <button
+            className="rounded px-4 py-2 bg-emerald-400 text-black font-semibold hover:bg-emerald-500"
+            onClick={() => setFeaturesOpen(false)}
+          >
+            Close
+          </button>
+        </Box>
+      </Modal>          
     </div>
   ); 
 }
