@@ -13,9 +13,9 @@ export default defineConfig({
     react(),
     UnoCSS(),
     VitePWA({
-      /*workbox: {
+      workbox: {
         maximumFileSizeToCacheInBytes: 30 * 1024 * 1024 // 30 MB
-      },*/
+      },
       workbox: {
         globIgnores: ['**/*.wasm']
       },
