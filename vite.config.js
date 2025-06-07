@@ -3,7 +3,6 @@ import react from '@vitejs/plugin-react'
 import UnoCSS from 'unocss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// https://vite.dev/config/
 export default defineConfig({
   base: '/',
   build: {
@@ -14,10 +13,8 @@ export default defineConfig({
     UnoCSS(),
     VitePWA({
       workbox: {
-        maximumFileSizeToCacheInBytes: 50 * 1024 * 1024 // 30 MB
-      },
-      workbox: {
-        globIgnores: ['**/*.wasm']
+        maximumFileSizeToCacheInBytes: 50 * 1024 * 1024, // 50 MB
+        globIgnores: ['**/*.wasm'],
       },
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'favicon.ico', 'apple-touch-icon.png'],
