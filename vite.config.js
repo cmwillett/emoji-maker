@@ -14,7 +14,7 @@ export default defineConfig({
     UnoCSS(),
     VitePWA({
       workbox: {
-        maximumFileSizeToCacheInBytes: 30 * 1024 * 1024 // 30 MB
+        maximumFileSizeToCacheInBytes: 50 * 1024 * 1024 // 30 MB
       },
       workbox: {
         globIgnores: ['**/*.wasm']
