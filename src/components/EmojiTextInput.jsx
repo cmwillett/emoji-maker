@@ -1,9 +1,20 @@
 import React from 'react';
+import { useState } from 'react';
+import Picker from '@emoji-mart/react';
+import data from '@emoji-mart/data';
 
 export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, setFontColor, fontSize, setFontSize, isBold, setIsBold, isQuoteBubble, setIsQuoteBubble, presetTextColors }) {
   const row1 = presetTextColors.slice(0, Math.ceil(presetTextColors.length / 2));
   const row2 = presetTextColors.slice(Math.ceil(presetTextColors.length / 2));
   const [showInfo, setShowInfo] = React.useState(false);  
+// Add a state to control picker visibility
+const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+// Add a handler to insert emoji into your emojiText
+const handleEmojiSelect = (emoji) => {
+  setEmojiText(emojiText + emoji.native);
+  setShowEmojiPicker(false);
+};
 
   return (
     <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
@@ -66,26 +77,78 @@ export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, set
           <span className="ml-1">px</span>
         </label>
       </div>
-      <div className="flex justify-center gap-8 mb-2">
-        <label className="text-emerald-400 font-semibold drop-shadow-md mb-2">
-          <input
-            type="checkbox"
-            checked={isBold}
-            onChange={e => setIsBold(e.target.checked)}
-            className="accent-emerald-500"
-          />
-          Bold
-        </label>
-        <label className="text-emerald-400 font-semibold drop-shadow-md mb-2">
-          <input
-            type="checkbox"
-            checked={isQuoteBubble}
-            onChange={e => setIsQuoteBubble(e.target.checked)}
-            className="accent-emerald-500" // <-- add this!
-          />
-          Quote Bubble
-        </label>
-      </div>           
+      <div className="flex justify-center items-start gap-4 mb-2">
+        <div className="flex flex-col gap-2">
+          <label className="text-emerald-400 font-semibold drop-shadow-md">
+            <input
+              type="checkbox"
+              checked={isBold}
+              onChange={e => setIsBold(e.target.checked)}
+              className="accent-emerald-500"
+            />
+            Bold
+          </label>
+          <label className="text-emerald-400 font-semibold drop-shadow-md">
+            <input
+              type="checkbox"
+              checked={isQuoteBubble}
+              onChange={e => setIsQuoteBubble(e.target.checked)}
+              className="accent-emerald-500"
+            />
+            Quote Bubble
+          </label>
+        </div>
+        <div style={{ position: 'relative', display: 'inline-block' }}>
+          <button
+            type="button"
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            className="rounded px-2 py-1 bg-emerald-400 text-black font-semibold hover:bg-emerald-500"
+          >
+            😊 Emoji
+          </button>
+          {showEmojiPicker && (
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '110%',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: 100,
+                background: 'white',
+                borderRadius: '0.5rem',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                minWidth: 320,
+                paddingTop: '0.5rem',
+              }}
+            >
+              <button
+                onClick={() => setShowEmojiPicker(false)}
+                style={{
+                  position: 'absolute',
+                  top: '-1.2rem',
+                  right: '-1.2rem',
+                  background: 'white',
+                  border: '1px solid #ccc',
+                  borderRadius: '50%',
+                  fontSize: '1.5rem',
+                  width: '2.2rem',
+                  height: '2.2rem',
+                  cursor: 'pointer',
+                  color: '#888',
+                  zIndex: 101,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+                }}
+                aria-label="Close emoji picker"
+              >
+                ×
+              </button>
+              <div style={{ position: 'relative' }}>
+                <Picker data={data} onEmojiSelect={handleEmojiSelect} />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>          
       {/* Text Color Picker */}
       <label className="flex flex-col items-center mb-2">
         <span className="text-emerald-400 font-semibold drop-shadow-md mb-2">
@@ -121,7 +184,7 @@ export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, set
             ))}
           </div>
         </div>
-      </label>
+      </label>   
       {showInfo && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-lg relative">
