@@ -53,6 +53,7 @@ export default function CropperSection({
   // --- Touch handler for dragging the quote bubble tail ---
   const handleTailTouchStart = (e) => {
     e.stopPropagation();
+    e.preventDefault();
     const touch = e.touches[0];
     const startX = touch.clientX;
     const startY = touch.clientY;
@@ -60,6 +61,7 @@ export default function CropperSection({
     const origY = tailBase.y;
 
     const onTouchMove = (moveEvent) => {
+      moveEvent.preventDefault();
       const moveTouch = moveEvent.touches[0];
       let newX = origX + (moveTouch.clientX - startX);
       let newY = origY + (moveTouch.clientY - startY);
