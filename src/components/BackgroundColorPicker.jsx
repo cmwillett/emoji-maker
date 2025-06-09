@@ -38,6 +38,13 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
     customBackgrounds.map(bg => [bg.type, bg.title])
   );
 
+  // Group backgrounds by type
+  const groupedBackgrounds = customBackgrounds.reduce((acc, bg) => {
+    if (!acc[bg.type]) acc[bg.type] = [];
+    acc[bg.type].push(bg);
+    return acc;
+  }, {});  
+
   return (
     <div className={`${panelBase} p-4 mb-2`}>
       {/* Section title and info button */}
@@ -57,22 +64,22 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
           </button>
         </div>
         {/* Display the current background choice */}
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <span className="text-emerald-400 font-semibold drop-shadow-md mb-0">Current Choice =</span>
-          {keepOriginalBg ? (
-            <span className="text-sm text-white">Use Original</span>
-          ) : backgroundType && backgroundTypeMap[backgroundType] ? (
-            <span className="text-sm text-white">{backgroundTypeMap[backgroundType]}</span>
-          ) : backgroundColor ? (
-            <span
-              className="inline-block w-8 h-8 rounded border"
-              style={{ backgroundColor: backgroundColor, borderColor: 'gray' }}
-              title={backgroundColor}
-            ></span>
-          ) : (
-            <span className="text-sm text-white">Remove</span>
-          )}
-        </div>
+<div className="flex items-center justify-center gap-2 mb-2">
+  <span className="text-emerald-400 font-semibold drop-shadow-md mb-0">Current Choice =</span>
+  {keepOriginalBg ? (
+    <span className="text-sm text-white">Use Original</span>
+  ) : backgroundType && backgroundType !== 'color' ? (
+    <span className="text-sm text-white">{backgroundType}</span>
+  ) : backgroundColor ? (
+    <span
+      className="inline-block w-8 h-8 rounded border"
+      style={{ backgroundColor: backgroundColor, borderColor: 'gray' }}
+      title={backgroundColor}
+    ></span>
+  ) : (
+    <span className="text-sm text-white">Remove</span>
+  )}
+</div>
         {/* Buttons for keeping original or removing background */}
         <div className="flex flex-col items-center justify-center mb-4 gap-2">
           <Tooltip title="Click to keep the original background from the photo" placement="right">
@@ -160,49 +167,52 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
       </div>
       {/* Custom background image selection grid */}
       {showBackgrounds && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 my-4">
-          {customBackgrounds.map((bg, idx) => (
-            <Tooltip
-              key={bg.img + idx}
-              title={bg.title}
-              arrow
-              placement="bottom"
-              componentsProps={{
-                tooltip: {
-                  sx: {
-                    fontSize: '1.1rem',
-                    padding: '10px 16px',
-                    backgroundColor: '#34d399',
-                    color: '#1e293b',
-                    fontWeight: 600,
-                    letterSpacing: '0.01em',
-                    boxShadow: 3,
-                  },
-                },
-                arrow: {
-                  sx: {
-                    color: '#34d399',
-                  }
-                }
-              }}
-            >
-              <div
-                className="cursor-pointer rounded shadow hover:scale-105 transition"
-                onClick={() => {
-                  setBackgroundType(bg.type);
-                  setBackgroundColor('');
-                  setKeepOriginalBg(false);
-                }}
-                style={{
-                  background: `url(${bg.img}) center/cover no-repeat`,
-                  height: 80,
-                  border: '2px solid #34d399'
-                }}
-              />
-            </Tooltip>
-          ))}
+        <div className="my-4">
+          {Object.entries(groupedBackgrounds)
+            .sort(([typeA], [typeB]) => typeA.localeCompare(typeB)) // 1. Sort sections alphabetically
+            .map(([type, backgrounds]) => {
+              const sortedBackgrounds = backgrounds.slice().sort((a, b) => a.title.localeCompare(b.title)); // 2. Sort images by title
+              const colCount = Math.min(4, sortedBackgrounds.length);
+              const gridColsClass = {
+                1: 'grid-cols-1',
+                2: 'grid-cols-2',
+                3: 'grid-cols-3',
+                4: 'grid-cols-4',
+              }[colCount];
+              return (
+                <div key={type} className="mb-6 w-full">
+                  <h3 className="text-emerald-400 font-bold text-lg mb-2 capitalize text-center">{type}</h3>
+                  <div className="flex justify-center w-full">
+                    <div className={`grid ${gridColsClass} gap-4 justify-items-center`}>
+                      {sortedBackgrounds.map((bg, idx) => (
+                        <div
+                          key={bg.img + idx}
+                          className="flex flex-col items-center w-32"
+                        >
+                          <div
+                            className="cursor-pointer rounded shadow hover:scale-105 transition w-full"
+                            onClick={() => {
+                              setBackgroundType(bg.title);
+                              setBackgroundColor('');
+                              setKeepOriginalBg(false);
+                            }}
+                            style={{
+                              background: `url(${bg.img}) center/cover no-repeat`,
+                              height: 80,
+                              width: '100%',
+                              border: '2px solid #34d399'
+                            }}
+                          />
+                          <span className="mt-1 text-xs text-center text-white break-words w-full">{bg.title}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
         </div>
-      )}     
+      )}
       {/* Info modal explaining background options */}
       {showInfo && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">

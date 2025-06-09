@@ -4,7 +4,7 @@ import { useRef } from 'react';
 
 // Map background type to image URL for custom backgrounds
 const patternMap = Object.fromEntries(
-  customBackgrounds.map(bg => [bg.type, bg.img])
+  customBackgrounds.map(bg => [bg.title, bg.img])
 );
 
 /**
@@ -219,15 +219,15 @@ export default function CropperSection({
   const getBackgroundStyle = () => {
     if (backgroundColor) {
       return { background: backgroundColor };
-    } else if (patternTypes && patternTypes.includes(backgroundType)) {
-      const imgUrl = patternMap[backgroundType];
-      if (imgUrl) {
-        return {
-          backgroundImage: `url(${imgUrl})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        };
-      }
+    }
+    // Check if backgroundType matches a custom background title
+    const imgUrl = patternMap[backgroundType];
+    if (imgUrl) {
+      return {
+        backgroundImage: `url(${imgUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      };
     }
     return { background: backgroundType === 'remove' ? 'transparent' : '#fff' };
   };

@@ -33,7 +33,7 @@ export async function processBackground(blob, {
   }
 
   // If a pattern background is selected, draw the pattern behind the subject
-  const patternTypes = customBackgrounds.map(bg => bg.type);
+  const patternTypes = customBackgrounds.map(bg => bg.title);
   if (patternTypes.includes(backgroundType)) {
     // Create a canvas and draw the pattern and subject
     const img = await createImageBitmap(bgRemoved);
@@ -44,7 +44,7 @@ export async function processBackground(blob, {
 
     // Prepare the pattern image
     const patternImg = new window.Image();
-    const patternMap = Object.fromEntries(customBackgrounds.map(bg => [bg.type, bg.img]));
+    const patternMap = Object.fromEntries(customBackgrounds.map(bg => [bg.title, bg.img]));
     patternImg.src = patternMap[backgroundType];
     await new Promise((res) => { patternImg.onload = res; });
 
