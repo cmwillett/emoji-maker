@@ -10,6 +10,7 @@ import { handleFileInput } from '../lib/imageUtils';
 import GalleryGrid from './GalleryGrid';
 import { readBlobAsDataURL } from '../lib/imageUtils';
 import { panelBase } from '../lib/classNames';
+import GalleryMemes from './GalleryMemes'; // <-- Add this import
 /**
  * UploadButtons provides UI for uploading, taking, or selecting a photo.
  *
@@ -100,7 +101,7 @@ export default function UploadButtons({ onImageSelect }) {
       </Stack>
       {/* Gallery grid */}
       {showGallery && (
-        <GalleryGrid images={galleryImages} onSelect={handleGallerySelect} />
+        <GalleryMemes onSelect={img => handleGallerySelect(img.src)} />
       )}
     </div>
   );
