@@ -183,7 +183,8 @@ const handleEmojiSelect = (emoji) => {
             {row1.map((color) => (
               <button
                 key={color + '-1'}
-                className="w-6 h-6 rounded-full border cursor-pointer"
+                className={`w-6 h-6 rounded-full border cursor-pointer transition
+                  ${color === fontColor ? 'ring-4 ring-lime-400 border-lime-400 scale-110' : ''}`}
                 style={{
                   backgroundColor: color,
                   borderColor: color === fontColor ? 'lime' : 'white'
@@ -197,7 +198,8 @@ const handleEmojiSelect = (emoji) => {
             {row2.map((color) => (
               <button
                 key={color + '-2'}
-                className="w-6 h-6 rounded-full border cursor-pointer"
+                className={`w-6 h-6 rounded-full border cursor-pointer transition
+                  ${color === fontColor ? 'ring-4 ring-lime-400 border-lime-400 scale-110' : ''}`}
                 style={{
                   backgroundColor: color,
                   borderColor: color === fontColor ? 'lime' : 'white'

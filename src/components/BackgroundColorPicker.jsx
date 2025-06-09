@@ -125,7 +125,8 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
             {row1.map((color) => (
               <button
                 key={color + '-1'}
-                className="w-6 h-6 rounded-full border cursor-pointer"
+                className={`w-6 h-6 rounded-full border cursor-pointer transition
+                  ${backgroundColor === color && backgroundType === 'color' ? 'ring-4 ring-lime-400 border-lime-400 scale-110' : ''}`}
                 style={{ backgroundColor: color, borderColor: color === backgroundColor ? 'lime' : 'white' }}
                 onClick={() => {
                   setBackgroundColor(color);
@@ -139,7 +140,8 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
             {row2.map((color) => (
               <button
                 key={color + '-2'}
-                className="w-6 h-6 rounded-full border cursor-pointer"
+                className={`w-6 h-6 rounded-full border cursor-pointer transition
+                  ${backgroundColor === color && backgroundType === 'color' ? 'ring-4 ring-lime-400 border-lime-400 scale-110' : ''}`}
                 style={{ backgroundColor: color, borderColor: color === backgroundColor ? 'lime' : 'white' }}
                 onClick={() => {
                   setBackgroundColor(color);
@@ -189,7 +191,8 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
                         className="flex flex-col items-center w-full max-w-[110px]"
                       >
                         <div
-                          className="cursor-pointer rounded shadow hover:scale-105 transition w-full"
+                            className={`cursor-pointer rounded shadow hover:scale-105 transition w-full
+                              ${backgroundType === bg.title ? 'ring-4 ring-lime-400 border-lime-400' : ''}`}
                           onClick={() => {
                             setBackgroundType(bg.title);
                             setBackgroundColor('');
