@@ -13,8 +13,7 @@ import { panelBase } from '../lib/classNames';
  * @param {boolean} showInstall - Whether to show the install button.
  * @param {function} handleInstallClick - Handler for install button click.
  */
-export default function InstallShareButtons({ showInstall, handleInstallClick }) {
-  const [howToOpen, setHowToOpen] = React.useState(false);
+export default function InstallShareButtons({ showInstall, handleInstallClick, howToOpen, setHowToOpen }) {
   const howToContentRef = React.useRef(null);
   const [featuresOpen, setFeaturesOpen] = React.useState(false);
 
@@ -114,10 +113,7 @@ export default function InstallShareButtons({ showInstall, handleInstallClick })
                   <li>Click "Remove Background" if you want the background removed entirely</li>
                   <li>Choose a color from the palette if you want the background to be a solid color</li>
                   <li>Choose one of the custom backgrounds if you want an image as a background (bubbles, fire, etc)</li>
-                  <li>If you want to update any styles, click the "Style" tab</li>
-                  <ul style={{ margin: '1em 0', paddingLeft: '1.2em' }}>
-                    <li>Select "Circular Emoji" if you want it to be in a circle instead of a square</li>
-                  </ul>
+                </ul>
                   <li>If you want to add text, click the "Text" tab</li>
                   <ul style={{ margin: '1em 0', paddingLeft: '1.2em' }}>
                     <li>Add whatever text you want in the input box</li>
@@ -133,7 +129,6 @@ export default function InstallShareButtons({ showInstall, handleInstallClick })
                     <li>Resize the textbox by clicking the handle in the bottom right corner of the textbox</li>
                   </ul>
                 </ul>
-              </ul>
               <li>Click "Start Over" if you want to reset everything and start from scratch</li>
               <li>Click "Create Emoji/Meme" to create the image you desire...</li>
               <ul style={{ margin: '1em 0', paddingLeft: '1.2em' }}>

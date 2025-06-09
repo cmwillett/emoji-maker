@@ -56,6 +56,7 @@ export default function App() {
   const [isQuoteBubble, setIsQuoteBubble] = useState(false);
   const [tailBase, setTailBase] = useState({ x: textBoxSize.width / 2, y: textBoxSize.height });
   const [arrowTip, setArrowTip] = useState({ x: textBoxSize.width / 2, y: textBoxSize.height + 24 });
+  const [howToOpen, setHowToOpen] = useState(false);
 
   // --- Emoji counter state and fetch on mount ---
   const [emojiCount, setEmojiCount] = useState(null);
@@ -382,7 +383,7 @@ export default function App() {
         }}
       />
       {/* Install PWA/share buttons */}
-      <InstallShareButtons showInstall={showInstall} handleInstallClick={handleInstallClick} />
+      <InstallShareButtons showInstall={showInstall} handleInstallClick={handleInstallClick} howToOpen={howToOpen} setHowToOpen={setHowToOpen} />
 
       {/* Error modal for user feedback */}
       <ErrorModal
@@ -428,6 +429,15 @@ export default function App() {
           Start Over
         </button>
       )}
+      {/* Floating How To Button */}
+      <button
+        className="fixed bottom-6 left-6 z-50 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-5 rounded-full shadow-lg transition"
+        onClick={() => setHowToOpen(true)}
+        aria-label="Show How To"
+      >
+        <img src="/howto.png" alt="How To" className="inline w-6 h-6 mr-2 align-middle" />
+        How To
+      </button>      
     </div>
   )
 }
