@@ -188,6 +188,11 @@ export default function InstallShareButtons({ showInstall, handleInstallClick })
           }}>
           <h2>Latest Features</h2>
           <ul style={{ margin: '1em 0', paddingLeft: '1.2em' }}>
+            <li>6/9/2025</li>
+              <ul>
+                <li>Made the custom backgrounds organized by "type" and sorted alphabetically</li>
+                <li>Made the "common memes" organized by "type" and sorted alphabetically</li>
+              </ul>
             <li>6/6/2025</li>
             <ul>
               <li>Resizable and draggable quote bubbles</li>
