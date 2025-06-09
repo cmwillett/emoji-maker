@@ -11,6 +11,7 @@ import GalleryGrid from './GalleryGrid';
 import { readBlobAsDataURL } from '../lib/imageUtils';
 import { panelBase } from '../lib/classNames';
 import GalleryMemes from './GalleryMemes'; // <-- Add this import
+import customBackgrounds from '../constants/customBackgrounds';
 /**
  * UploadButtons provides UI for uploading, taking, or selecting a photo.
  *
@@ -18,6 +19,7 @@ import GalleryMemes from './GalleryMemes'; // <-- Add this import
  */
 export default function UploadButtons({ onImageSelect }) {
   const [showGallery, setShowGallery] = useState(false);
+  const [showBackgrounds, setShowBackgrounds] = useState(false);
 
   const onFileInput= (e) => handleFileInput(e, onImageSelect);
 
@@ -99,11 +101,61 @@ export default function UploadButtons({ onImageSelect }) {
             />
           </div>
         </Tooltip>
+        <Tooltip title="Pick a background image (no photo needed)" placement="right">
+          <div>
+            <EmojiButton
+              icon={
+                <ExpandMoreIcon
+                  style={{
+                    transition: 'transform 0.2s',
+                    transform: showBackgrounds ? 'rotate(180deg)' : 'rotate(0deg)'
+                  }}
+                />
+              }
+              label="JUST A BACKGROUND"
+              onClick={() => setShowBackgrounds((prev) => !prev)}
+              type="button"
+            />
+          </div>
+        </Tooltip>        
       </Stack>
       {/* Gallery grid */}
       {showGallery && (
         <GalleryMemes onSelect={img => handleGallerySelect(img.src)} />
       )}
+      {showBackgrounds && (
+        <div className="my-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 justify-items-center w-full max-w-lg mx-auto">
+            {customBackgrounds.map((bg, idx) => (
+              <div
+                key={bg.img + idx}
+                className="flex flex-col items-center w-full max-w-[110px]"
+              >
+                <div
+                  className="cursor-pointer rounded shadow hover:scale-105 transition w-full"
+                  onClick={async () => {
+                    // Fetch the image and convert to data URL for onImageSelect
+                    const res = await fetch(bg.img);
+                    const blob = await res.blob();
+                    const dataUrl = await readBlobAsDataURL(blob);
+                    onImageSelect(dataUrl);
+                    setShowBackgrounds(false);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  style={{
+                    background: `url(${bg.img}) center/cover no-repeat`,
+                    height: 80,
+                    width: '100%',
+                    border: '2px solid #34d399'
+                  }}
+                  title={bg.title}
+                />
+                <span className="mt-1 text-xs text-center text-white break-words w-full">{bg.title}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}      
     </div>
   );
 }
