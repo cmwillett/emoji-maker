@@ -1,5 +1,14 @@
 import { getWrappedLines } from '../utils/utils';
 
+/**
+ * EmojiTextOverlay renders the emoji/meme text over the preview image.
+ * Handles line wrapping and styling for the overlay text.
+ *
+ * @param {string} emojiText - The text to display.
+ * @param {CanvasRenderingContext2D} previewCtx - The canvas context for measuring text width.
+ * @param {number} cropperDiameter - The diameter/width of the cropper area.
+ * @param {string} fontColor - The color of the overlay text.
+ */
 export default function EmojiTextOverlay({ emojiText, previewCtx, cropperDiameter, fontColor }) {
   if (!emojiText) return null;
   return (
@@ -26,6 +35,7 @@ export default function EmojiTextOverlay({ emojiText, previewCtx, cropperDiamete
         justifyContent: 'center',
       }}
     >
+      {/* Render each wrapped line as a separate span */}
       {getWrappedLines(
         previewCtx,
         emojiText,

@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
+// Utility and helper imports
 import getCroppedImg from './utils/utils'
 import Header from './components/Header';
 import InstallShareButtons from './components/InstallShareButtons';
@@ -10,15 +11,17 @@ import UploadButtons from './components/UploadButtons';
 import ContactModal from './components/ContactModal';
 import AboutModal from './components/AboutModal';
 import Footer from './components/Footer';
-import { applyBackgroundColor, incrementEmojiCount, fetchEmojiCount } from './utils/utils';
-import { removeBackgroundLocal } from './lib/removeBackground';
-import { getWrappedLines } from './utils/utils';
+import { incrementEmojiCount, fetchEmojiCount } from './utils/utils';
 import OptionsTabs from './components/OptionsTabs';
 import ResetCreatePanel from './components/ResetCreatePanel';
 import customBackgrounds from './constants/customBackgrounds';
+import { processBackground } from './utils/imageProcessing';
+import { drawTextAndDecorations } from './utils/imageProcessing';
+import { buttonBase } from './lib/classNames';
 
-//Main App component
+// Main App component
 export default function App() {
+  // --- State variables for all app logic and UI ---
   const [loading, setLoading] = useState(false)
   const [imageSrc, setImageSrc] = useState(null)
   const [crop, setCrop] = useState({ x: 0, y: 0 })
@@ -40,7 +43,8 @@ export default function App() {
   const [fontColor, setFontColor] = useState('#ffffff'); // Default to white
   const [fontSize, setFontSize] = useState(24); // default size
   const [isBold, setIsBold] = useState(true);   // default bold  
-  const cropperDiameter = 256; // or whatever your cropper's pixel size is
+  const cropperDiameter = 256; // Used for preview font sizing
+  // Preview canvas for internal calculations (not shown in UI)
   const previewCanvas = document.createElement('canvas');
   const previewCtx = previewCanvas.getContext('2d');
   previewCtx.font = `bold ${Math.floor(cropperDiameter / 8)}px sans-serif`;
@@ -53,14 +57,13 @@ export default function App() {
   const [tailBase, setTailBase] = useState({ x: textBoxSize.width / 2, y: textBoxSize.height });
   const [arrowTip, setArrowTip] = useState({ x: textBoxSize.width / 2, y: textBoxSize.height + 24 });
 
-
-  //Fetch initial emoji count
+  // --- Emoji counter state and fetch on mount ---
   const [emojiCount, setEmojiCount] = useState(null);
   useEffect(() => {
     fetchEmojiCount(setEmojiCount);
   }, []);
 
-  //initial image upload handler
+  // --- Adjust zoom and crop when a new image is uploaded ---
   useEffect(() => {
     if (!imageSrc) return;
 
@@ -83,7 +86,7 @@ export default function App() {
     };
   }, [imageSrc]);  
 
-  //Window event listener for PWA install prompt
+  // --- Listen for PWA install prompt and show install button ---
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const handler = (e) => {
@@ -100,6 +103,7 @@ export default function App() {
     }
   }, [])
 
+  // --- Handler for resizing the text box and repositioning the quote bubble tail ---
   const handleResizeTextBox = (newSize) => {
     setTextBoxSize(newSize);
     // Move tail to center bottom of new box
@@ -107,7 +111,7 @@ export default function App() {
     setArrowTip({ x: newSize.width / 2, y: newSize.height + 24 });
   };  
 
-  //Install PWA handler
+  // --- Handler for PWA install button ---
   const handleInstallClick = () => {
     if (deferredPrompt) {
       deferredPrompt.prompt()
@@ -118,269 +122,109 @@ export default function App() {
     }
   }
 
-  //Crop complete handler
+  // --- Handler for crop completion from the cropper ---
   const onCropComplete = useCallback(async (_, areaPixels) => {
     setCroppedAreaPixels(areaPixels);
-
-    // Only remove background if needed
-    /*if (!keepOriginalBg && imageSrc && areaPixels) {
-      console.log("I'm here");
-      const blob = await getCroppedImg(imageSrc, areaPixels, 'image/png', true);
-      const bgRemoved = await removeBackgroundLocal(blob);
-      setBgRemovedPreview(URL.createObjectURL(bgRemoved));
-    } else {
-      setBgRemovedPreview(null);
-    }*/
   }, [imageSrc, keepOriginalBg]);
 
-  //Function to show cropped image and process it
+  // --- Main function: crop, process, decorate, and export the emoji/meme image ---
   const showCroppedImage = useCallback(async () => {
     setCroppedImage(null); // Hide preview and buttons immediately
     try {
-      setLoading(true);
+      setLoading(true); // Show loading indicator
 
-      // Step 1: Crop the image
+      // Step 1: Crop the image to the selected area
       const blob = await getCroppedImg(imageSrc, croppedAreaPixels, 'image/png', true);
       console.log("Cropped blob:", blob);
 
-      // Step 2: Handle background logic
-      let finalBlob;
-      console.log("Keep original background:", keepOriginalBg);
-      if (keepOriginalBg) {
-        // Skip background removal and coloring, use original cropped blob
-        finalBlob = blob;
-      } else {
-        // Remove the background
-        const bgRemoved = await removeBackgroundLocal(blob);
-        console.log("Background removed:", bgRemoved);
+      // Step 2: Handle background logic (removal, color, pattern)
+      let finalBlob = await processBackground(blob, {
+        keepOriginalBg,
+        backgroundColor,
+        backgroundType,
+        customBackgrounds
+      });
 
-        // Handle specific error conditions
-        if (!bgRemoved || bgRemoved instanceof Error || (typeof bgRemoved === 'object' && bgRemoved.error)) {
-          if (bgRemoved?.error === 'no_foreground') {
-            setErrorMessage("We couldn't detect a clear subject in the image. Try cropping closer or using a photo with more contrast.");
-          } else {
-            setErrorMessage("Something went wrong while removing the background. Please try again with a different image.");
-          }
-          setShowErrorModal(true);
-          return;
-        }
-
-        // Apply background color if selected
-        if (backgroundColor) {
-          finalBlob = await applyBackgroundColor(bgRemoved, backgroundColor);
-        } else {
-          finalBlob = bgRemoved;
-        }
-
-        const patternTypes = customBackgrounds.map(bg => bg.type);
-
-        if (patternTypes.includes(backgroundType)) {
-            const img = await createImageBitmap(bgRemoved);
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            // Draw pattern
-            const patternImg = new window.Image();
-            const patternMap = Object.fromEntries(customBackgrounds.map(bg => [bg.type, bg.img]));
-            patternImg.src = patternMap[backgroundType];
-            await new Promise((res) => { patternImg.onload = res; });
-            ctx.drawImage(patternImg, 0, 0, canvas.width, canvas.height);
-            // Draw subject on top
-            ctx.drawImage(img, 0, 0);
-            // Convert to blob
-            finalBlob = await new Promise((resolve) =>
-              canvas.toBlob(resolve, 'image/png')
-            );
-        }
-      }
-
-      //Step 5: Convert blob to image
+      // Step 3: Prepare canvas for drawing
+      // Create a canvas and draw the processed image onto it
       const img = await createImageBitmap(finalBlob);
       const canvas = document.createElement('canvas');
       canvas.width = img.width;
       canvas.height = img.height;
       const ctx = canvas.getContext('2d');
-      if (isRound) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(
-          canvas.width / 2,
-          canvas.height / 2,
-          Math.min(canvas.width, canvas.height) / 2,
-          0,
-          Math.PI * 2
-        );
-        ctx.closePath();
-        ctx.clip();
-      }
-
-      //Step 6: Draw the image onto the canvas
       ctx.drawImage(img, 0, 0);
 
-      //Step 7: Draw text (customize font, color, position as needed)
-      const previewWidth = 320;  // width of your overlay
-      const previewHeight = 320; // height of your overlay
-
+      // Calculate scaling for decorations/text
+      const previewWidth = 320;
+      const previewHeight = 320;
       const scaleX = canvas.width / previewWidth;
       const scaleY = canvas.height / previewHeight;
 
-      if (isQuoteBubble && emojiText) {
-        ctx.save();
-        ctx.fillStyle = 'white'; // or your bubble color
-        ctx.strokeStyle = '#333'; // outline color
-        ctx.lineWidth = 3;
+      // Step 4: Draw text, quote bubble, and decorations
+      drawTextAndDecorations(ctx, {
+        emojiText,
+        fontSize,
+        fontColor,
+        isBold,
+        isQuoteBubble,
+        textPosition,
+        textBoxSize,
+        tailBase,
+        arrowTip,
+        scaleX,
+        scaleY,
+      });
 
-        // Draw rounded rectangle for bubble
-        const bubbleX = textPosition.x * scaleX;
-        const bubbleY = textPosition.y * scaleY;
-        const bubbleW = textBoxSize.width * scaleX;
-        const bubbleH = textBoxSize.height * scaleY;
-        const radius = 18 * scaleX;
-
-        // Rounded rect
-        ctx.beginPath();
-        ctx.moveTo(bubbleX + radius, bubbleY);
-        ctx.lineTo(bubbleX + bubbleW - radius, bubbleY);
-        ctx.quadraticCurveTo(bubbleX + bubbleW, bubbleY, bubbleX + bubbleW, bubbleY + radius);
-        ctx.lineTo(bubbleX + bubbleW, bubbleY + bubbleH - radius);
-        ctx.quadraticCurveTo(bubbleX + bubbleW, bubbleY + bubbleH, bubbleX + bubbleW - radius, bubbleY + bubbleH);
-        ctx.lineTo(bubbleX + radius, bubbleY + bubbleH);
-        ctx.quadraticCurveTo(bubbleX, bubbleY + bubbleH, bubbleX, bubbleY + bubbleH - radius);
-        ctx.lineTo(bubbleX, bubbleY + radius);
-        ctx.quadraticCurveTo(bubbleX, bubbleY, bubbleX + radius, bubbleY);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-
-        // Draw the bubble tail using current tailBase and arrowTip
-        const offset = 12 * scaleX;
-
-        // Calculate the scaled base and tip positions
-        const scaledTailBase = {
-          x: (textPosition.x + tailBase.x) * scaleX,
-          y: (textPosition.y + tailBase.y) * scaleY
-        };
-        const scaledArrowTip = {
-          x: (textPosition.x + arrowTip.x) * scaleX,
-          y: (textPosition.y + arrowTip.y) * scaleY
-        };
-
-        // Calculate the two base points for the polygon (same as your SVG logic)
-        let base1, base2;
-        if (tailBase.y === 0) { // top
-          base1 = { x: scaledTailBase.x - offset, y: scaledTailBase.y };
-          base2 = { x: scaledTailBase.x + offset, y: scaledTailBase.y };
-        } else if (tailBase.y === textBoxSize.height) { // bottom
-          base1 = { x: scaledTailBase.x - offset, y: scaledTailBase.y };
-          base2 = { x: scaledTailBase.x + offset, y: scaledTailBase.y };
-        } else if (tailBase.x === 0) { // left
-          base1 = { x: scaledTailBase.x, y: scaledTailBase.y - offset };
-          base2 = { x: scaledTailBase.x, y: scaledTailBase.y + offset };
-        } else if (tailBase.x === textBoxSize.width) { // right
-          base1 = { x: scaledTailBase.x, y: scaledTailBase.y - offset };
-          base2 = { x: scaledTailBase.x, y: scaledTailBase.y + offset };
-        } else {
-          // fallback to bottom
-          base1 = { x: scaledTailBase.x - offset, y: scaledTailBase.y };
-          base2 = { x: scaledTailBase.x + offset, y: scaledTailBase.y };
-        }
-
-        // Draw the polygon
-        ctx.beginPath();
-        ctx.moveTo(base1.x, base1.y);
-        ctx.lineTo(base2.x, base2.y);
-        ctx.lineTo(scaledArrowTip.x, scaledArrowTip.y);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.restore();
-      }      
-
-      if (emojiText) {
-        const overlayFontSize = fontSize;
-        const fontWeight = isBold ? 'bold' : 'normal';
-        ctx.font = `${fontWeight} ${overlayFontSize * scaleY}px sans-serif`;
-        ctx.fillStyle = fontColor;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'top';
-        ctx.strokeStyle = 'black';
-        ctx.lineWidth = 4;
-
-        const maxWidth = textBoxSize.width * scaleX;
-        const lines = getWrappedLines(ctx, emojiText, maxWidth);
-        const lineHeight = overlayFontSize * scaleY * 1.2;
-        const padding = 4 * scaleY;
-
-        const drawX = (textPosition.x + textBoxSize.width / 2) * scaleX;
-
-        let drawY;
-        if (isQuoteBubble) {
-          // Center vertically in the bubble
-          const totalTextHeight = lines.length * lineHeight;
-          drawY = (textPosition.y * scaleY) + ((textBoxSize.height * scaleY - totalTextHeight) / 2);
-        } else {
-          // Original logic (top of box + padding)
-          drawY = textPosition.y * scaleY + padding;
-        }
-
-        lines.forEach((line, i) => {
-          ctx.strokeText(line, drawX, drawY + i * lineHeight);
-          ctx.fillText(line, drawX, drawY + i * lineHeight);
-        });
-      }
-
-      //Step 8: Restore context if using round crop
-      if (isRound) {
-        ctx.restore();
-      }
-
-      //Step 9: Convert canvas back to blob
+      // Step 5: Convert canvas to blob for export/preview
       const withTextBlob = await new Promise((resolve) =>
         canvas.toBlob(resolve, 'image/png')
       );
 
       console.log("Final blob:", finalBlob);
 
-      // Step 10: Generate final image preview
+      // Step 6: Show the final image in the UI
       const finalUrl = URL.createObjectURL(withTextBlob);
       console.log("Final image URL:", finalUrl);
       setCroppedImage(finalUrl);
 
-      // Step 11: Increment the emoji counter
+      // Step 7: Increment emoji/meme counter
       await incrementEmojiCount(setEmojiCount);
+
     } catch (e) {
-        console.error(e);
-        setErrorMessage(e.message || 'Something went wrong while processing the image.');
-        setShowErrorModal(true);
-      } finally {
-            setLoading(false);
+      // Error handling for any step above
+      console.error(e);
+      setErrorMessage(e.message || 'Something went wrong while processing the image.');
+      setShowErrorModal(true);
+    } finally {
+      setLoading(false); // Hide loading indicator
     }
-  }, [imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor, fontSize, isBold, isQuoteBubble, arrowTip, tailBase, keepOriginalBg, backgroundType, textBoxSize, textPosition]);
+  }, [
+    imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor, fontSize, isBold,
+    isQuoteBubble, arrowTip, tailBase, keepOriginalBg, backgroundType, textBoxSize, textPosition
+  ]); // End of showCroppedImage
 
-  //Reset handler to clear all states
-const handleReset = () => {
-  setImageSrc(null)
-  setCrop({ x: 0, y: 0 })
-  setZoom(1)
-  setCroppedAreaPixels(null)
-  setCroppedImage(null)
-  setEmojiText('')
-  setBackgroundColor('')
-  setBackgroundType('original')
-  setKeepOriginalBg(true)
-  setIsRound(false)
-  setFontColor('#ffffff') // Reset to default white
-  setBgRemovedPreview(null);
-  handleResizeTextBox({ width: 180, height: 60 });
-  setTextPosition({ x: 0, y: 0 });
-  setIsQuoteBubble(false); // <-- Reset quote bubble checkbox
-  setTailBase({ x: 90, y: 60 }); // <-- Reset tailBase to default (center bottom of default box)
-  setArrowTip({ x: 90, y: 84 }); // <-- Reset arrowTip to default (below the box)
-}
+  // --- Handler to reset all states and UI to initial values ---
+  const handleReset = () => {
+    setImageSrc(null)
+    setCrop({ x: 0, y: 0 })
+    setZoom(1)
+    setCroppedAreaPixels(null)
+    setCroppedImage(null)
+    setEmojiText('')
+    setBackgroundColor('')
+    setBackgroundType('original')
+    setKeepOriginalBg(true)
+    setIsRound(false)
+    setFontColor('#ffffff') // Reset to default white
+    setBgRemovedPreview(null);
+    handleResizeTextBox({ width: 180, height: 60 });
+    setTextPosition({ x: 0, y: 0 });
+    setIsQuoteBubble(false); // Reset quote bubble checkbox
+    setTailBase({ x: 90, y: 60 }); // Reset tailBase to default (center bottom of default box)
+    setArrowTip({ x: 90, y: 84 }); // Reset arrowTip to default (below the box)
+  }
 
-  //Style for the crop container
+  // --- Style for the crop container (round or square) ---
   const cropContainerStyle = {
     backgroundColor: '#fff',
     border: 'none',
@@ -391,7 +235,7 @@ const handleReset = () => {
     height: '100%',
   }
 
-  //Render the frontend UI
+  // --- Main render: UI layout and all components ---
   return (
     // Main app container with background image and styles
     <div className="relative z-10 flex flex-col items-center justify-center min-h-screen space-y-4 p-4"
@@ -401,17 +245,18 @@ const handleReset = () => {
         backgroundPosition: 'center',
       }}>
 
-      {/*Set the header, emoji count, and install/share buttons*/}
+      {/* Overlay for darkening background */}
       <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div> 
+      {/* Header and emoji count */}
       {!imageSrc && <Header emojiCount={emojiCount} />}
       
-      {/*Show the upload buttons if no image is selected*/}
+      {/* Upload buttons (shown if no image is selected) */}
       {!imageSrc && <UploadButtons onImageSelect={setImageSrc} />}
 
-      {/*Show the image cropper section if an image is selected*/}
+      {/* Image cropper and options (shown if image is selected) */}
       {imageSrc && (
         <>
-          {/* Show the cropper options, including emoji text and background */}
+          {/* Cropper section with all cropping and text controls */}
           <div className="relative w-fit mx-auto">
             <CropperSection
               imageSrc={bgRemovedPreview || imageSrc}
@@ -444,6 +289,7 @@ const handleReset = () => {
             />
           </div>
 
+          {/* Tabs for background, text, and style options */}
           <OptionsTabs
             backgroundColor={backgroundColor}
             setBackgroundColor={setBackgroundColor}
@@ -468,6 +314,7 @@ const handleReset = () => {
               "#ffa500", "#800080", "#00ffff", "#ff69b4", "#ffd700", "#87ceeb"
             ]}
           />
+          {/* Panel for reset and create actions */}
           <ResetCreatePanel
             onReset={handleReset}
             onCreate={showCroppedImage}
@@ -475,10 +322,10 @@ const handleReset = () => {
         </>
       )}
 
-      {/* Show the 'processing emoji line' if loading */}
+      {/* Loading indicator shown during processing */}
       {loading && <LoadingIndicator />}
 
-      {/* Set the cropped emoji preview, with the share and download buttons */}
+      {/* Cropped emoji preview with share/download actions */}
       <EmojiPreview
         croppedImage={croppedImage}
         isRound={isRound}
@@ -534,16 +381,17 @@ const handleReset = () => {
           link.click();
         }}
       />
+      {/* Install PWA/share buttons */}
       <InstallShareButtons showInstall={showInstall} handleInstallClick={handleInstallClick} />
 
-      {/* Show the error modal if there's an error */}
+      {/* Error modal for user feedback */}
       <ErrorModal
         open={showErrorModal}
         errorMessage={errorMessage}
         onClose={() => setShowErrorModal(false)}
       />
 
-      {/* Show the contact modal if contact is clicked */}
+      {/* Contact modal for user messages */}
       <ContactModal
         open={showContactModal}
         onClose={() => setShowContactModal(false)}
@@ -553,13 +401,13 @@ const handleReset = () => {
         setContactSubmitted={setContactSubmitted}
       />
 
-      {/* Show the about modal if about is clicked */}
+      {/* About modal for app info */}
       <AboutModal
         open={showAboutModal}
         onClose={() => setShowAboutModal(false)}
       />
 
-      {/* Footer with about and contact links */}
+      {/* Footer with About and Contact links */}
       <Footer
         onAbout={() => setShowAboutModal(true)}
         onContact={() => {
@@ -568,11 +416,11 @@ const handleReset = () => {
           setShowContactModal(true);
         }}
       />
-      {/* Reset button to clear all options and upload a new image */}
+      {/* Floating reset button (shown if image is loaded) */}
       {imageSrc && (
         <button
           onClick={handleReset}
-          className="fixed bottom-8 right-8 z-50 bg-red-500 hover:bg-red-600 text-white font-bold py-4 px-6 rounded-full shadow-lg transition-all duration-200"
+          className={`${buttonBase} fixed bottom-8 right-8 z-50 py-4 px-6 rounded-full shadow-lg transition-all duration-200 bg-red-500 hover:bg-red-600`}
           style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.25)' }}
           aria-label="Start Over"
           title="Reset all options and upload a new image!"

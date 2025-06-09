@@ -2,22 +2,45 @@ import React from 'react';
 import { useState } from 'react';
 import Picker from '@emoji-mart/react';
 import data from '@emoji-mart/data';
+import { useRef } from 'react';
+import { panelBase } from '../lib/classNames';
 
 export default function EmojiTextInput({ emojiText, setEmojiText, fontColor, setFontColor, fontSize, setFontSize, isBold, setIsBold, isQuoteBubble, setIsQuoteBubble, presetTextColors }) {
   const row1 = presetTextColors.slice(0, Math.ceil(presetTextColors.length / 2));
   const row2 = presetTextColors.slice(Math.ceil(presetTextColors.length / 2));
   const [showInfo, setShowInfo] = React.useState(false);  
-// Add a state to control picker visibility
-const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  // Add a state to control picker visibility
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const emojiTextRef = useRef(null);
 
 // Add a handler to insert emoji into your emojiText
 const handleEmojiSelect = (emoji) => {
-  setEmojiText(emojiText + emoji.native);
-  setShowEmojiPicker(false);
+  const input = emojiTextRef.current;
+  if (input) {
+    // Insert at cursor position
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    const newValue =
+      emojiText.slice(0, start) + emoji.native + emojiText.slice(end);
+    setEmojiText(newValue);
+
+    setShowEmojiPicker(false);
+
+    // Focus and move cursor after emoji
+    setTimeout(() => {
+      input.focus();
+      const pos = start + emoji.native.length;
+      input.setSelectionRange(pos, pos);
+    }, 0);
+  } else {
+    // fallback: just append
+    setEmojiText(emojiText + emoji.native);
+    setShowEmojiPicker(false);
+  }
 };
 
   return (
-    <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
+    <div className={`${panelBase} rounded-lg p-4 mb-4`}>
       <h2 className="text-center block text-emerald-400 font-semibold drop-shadow-md mb-2 underline mt-0">
         Text Options
       </h2>
@@ -33,6 +56,7 @@ const handleEmojiSelect = (emoji) => {
       </div>     
       <div className="flex justify-center mb-2">
         <input
+          ref={emojiTextRef}
           type="text"
           value={emojiText}
           onChange={(e) => setEmojiText(e.target.value)}

@@ -6,62 +6,31 @@ import { EmojiButton } from './EmojiButton';
 import heic2any from 'heic2any';
 import { galleryImages } from '../constants/galleryImages'; // Assuming you have a list of common images
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
+import { handleFileInput } from '../lib/imageUtils';
+import GalleryGrid from './GalleryGrid';
+import { readBlobAsDataURL } from '../lib/imageUtils';
+import { panelBase } from '../lib/classNames';
+/**
+ * UploadButtons provides UI for uploading, taking, or selecting a photo.
+ *
+ * @param {function} onImageSelect - Callback with the selected image as a data URL.
+ */
 export default function UploadButtons({ onImageSelect }) {
   const [showGallery, setShowGallery] = useState(false);
-  const handleFileInput = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
 
-    // Check if it's a HEIC image
-    if (file.type === "image/heic" || file.name.toLowerCase().endsWith(".heic")) {
-      try {
-        const convertedBlob = await heic2any({
-          blob: file,
-          toType: "image/png",
-        });
+  const onFileInput= (e) => handleFileInput(e, onImageSelect);
 
-        // Convert Blob to Data URL
-        const reader = new FileReader();
-        reader.onload = () => {
-          if (reader.result) {
-            onImageSelect(reader.result);
-          }
-        };
-        reader.readAsDataURL(convertedBlob);
-      } catch (error) {
-        console.error("HEIC conversion failed:", error);
-        alert("Failed to process HEIC image. Please try another format.");
-      }
-    } else {
-      // Regular image handling
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.result) {
-          onImageSelect(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleGallerySelect = (imgPath) => {
-    fetch(imgPath)
-      .then(res => res.blob())
-      .then(blob => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          if (reader.result) {
-            onImageSelect(reader.result);
-            setShowGallery(false);
-          }
-        };
-        reader.readAsDataURL(blob);
-      });
+  // Handle selecting a gallery image
+  const handleGallerySelect = async (imgPath) => {
+    const res = await fetch(imgPath);
+    const blob = await res.blob();
+    const dataUrl = await readBlobAsDataURL(blob);
+    onImageSelect(dataUrl);
+    setShowGallery(false);
   };
 
   return (
-    <div className="bg-black/40 border border-emerald-400 rounded-lg p-2 mb-2">
+    <div className={panelBase}>
       <Stack direction="column" spacing={1} className="mt-1 items-center mb-2">
         <h2 className="mt-0 block text-emerald-400 font-semibold drop-shadow-md mb-1 text-center underline">
           Step 1
@@ -69,6 +38,7 @@ export default function UploadButtons({ onImageSelect }) {
         <p className="block text-emerald-400 font-semibold drop-shadow-md mb-2 text-center mt-1">
           Take or choose a photo
         </p>
+        {/* Take Photo Button */}
         <Tooltip title="Use your device's camera to take a new photo..." placement="right">
           <div>
             <EmojiButton
@@ -80,7 +50,7 @@ export default function UploadButtons({ onImageSelect }) {
                     type="file"
                     accept="image/*"
                     capture="environment"
-                    onChange={handleFileInput}
+                    onChange={onFileInput}
                     className="hidden"
                   />
                 </>
@@ -89,6 +59,7 @@ export default function UploadButtons({ onImageSelect }) {
             />
           </div>
         </Tooltip>
+        {/* Choose from Gallery Button */}
         <Tooltip title="Choose an image from your gallery or file system..." placement="right">
           <div>
             <EmojiButton
@@ -99,7 +70,7 @@ export default function UploadButtons({ onImageSelect }) {
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={handleFileInput}
+                    onChange={onFileInput}
                     className="hidden"
                   />
                 </>
@@ -108,6 +79,7 @@ export default function UploadButtons({ onImageSelect }) {
             />
           </div>
         </Tooltip>
+        {/* Choose from Common Memes Button */}
         <Tooltip title="Click to select a common image from our gallery" placement="right">
           <div>
             <EmojiButton
@@ -122,47 +94,13 @@ export default function UploadButtons({ onImageSelect }) {
               label="Choose From Common Memes"
               onClick={() => setShowGallery((prev) => !prev)}
               type="button"
-            />     
+            />
           </div>
-        </Tooltip>  
+        </Tooltip>
       </Stack>
+      {/* Gallery grid */}
       {showGallery && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
-          {galleryImages.map((img, idx) => (
-            <Tooltip 
-            key={img.src + idx} 
-            title={img.label} 
-            arrow
-            placement="bottom"
-            componentsProps={{
-              tooltip: {
-                sx: {
-                  fontSize: '1.1rem',
-                  padding: '10px 16px',
-                  backgroundColor: '#34d399', // emerald-400
-                  color: '#1e293b',           // slate-800 for contrast
-                  fontWeight: 600,
-                  letterSpacing: '0.01em',
-                  boxShadow: 3,
-                },
-              },
-              arrow: {
-                sx: {
-                  color: '#34d399', // emerald-400
-                }
-              }
-            }}       
-            >
-              <img
-                src={img.src.startsWith('/') ? img.src : '/' + img.src}
-                alt={img.label}
-                className="w-full h-48 object-contain bg-gray-900 rounded shadow cursor-pointer hover:scale-105 transition"
-                onClick={() => handleGallerySelect(img.src)}
-                style={{ display: 'block' }}
-              />
-            </Tooltip>
-          ))}
-        </div>
+        <GalleryGrid images={galleryImages} onSelect={handleGallerySelect} />
       )}
     </div>
   );

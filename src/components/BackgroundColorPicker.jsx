@@ -4,38 +4,59 @@ import customBackgrounds from '../constants/customBackgrounds';
 import { EmojiButton } from './EmojiButton';
 import { Tooltip } from '@mui/material';
 import { useState } from 'react';
+import { panelBase } from '../lib/classNames';
 
+/**
+ * BackgroundColorPicker component allows users to select how the background of their emoji/meme will look.
+ * Users can keep the original, remove it, pick a solid color, or choose a custom image background.
+ * @param {string} backgroundColor - The currently selected background color.
+ * @param {function} setBackgroundColor - Setter for background color.
+ * @param {boolean} keepOriginalBg - Whether to keep the original background.
+ * @param {function} setKeepOriginalBg - Setter for keeping the original background.
+ * @param {string} backgroundType - The type of background ('original', 'remove', 'color', or a custom type).
+ * @param {function} setBackgroundType - Setter for background type.
+ */
 export default function BackgroundColorPicker({ backgroundColor, setBackgroundColor, keepOriginalBg, setKeepOriginalBg, backgroundType, setBackgroundType }) {
+  // State for showing/hiding the custom backgrounds grid
   const [showBackgrounds, setShowBackgrounds] = useState(false);
-  
+
+  // Preset color options for quick selection
   const presetColors = [
     "#ffffff", "#000000", "#ff0000", "#00ff00", "#0000ff",
     "#ffa500", "#800080", "#00ffff", "#ff69b4", "#ffd700", "#87ceeb"
   ];
 
+  // State for showing/hiding the info modal
   const [showInfo, setShowInfo] = React.useState(false);
+
+  // Split preset colors into two rows for display
   const row1 = presetColors.slice(0, Math.ceil(presetColors.length / 2));
   const row2 = presetColors.slice(Math.ceil(presetColors.length / 2));
+
+  // Map background type to its display title
   const backgroundTypeMap = Object.fromEntries(
     customBackgrounds.map(bg => [bg.type, bg.title])
   );
 
   return (
-    <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-2">
+    <div className={`${panelBase} p-4 mb-2`}>
+      {/* Section title and info button */}
       <div className="mt-1 text-center">
         <h2 className="block text-emerald-400 font-semibold drop-shadow-md mb-2 underline mt-0">
           Background Options
         </h2>
-      <div className="flex justify-center mb-2">
-        <button
-          className="text-xs px-2 py-1 rounded bg-yellow-400 text-black hover:bg-yellow-500 border border-yellow-500 font-semibold flex items-center gap-1 shadow"
-          onClick={() => setShowInfo(true)}
-          type="button"
-          aria-label="Show text options info"
-        >
-          <span role="img" aria-label="info">ℹ️</span> Click for Details
-        </button>
-      </div>
+        {/* Info button to show explanation modal */}
+        <div className="flex justify-center mb-2">
+          <button
+            className="text-xs px-2 py-1 rounded bg-yellow-400 text-black hover:bg-yellow-500 border border-yellow-500 font-semibold flex items-center gap-1 shadow"
+            onClick={() => setShowInfo(true)}
+            type="button"
+            aria-label="Show text options info"
+          >
+            <span role="img" aria-label="info">ℹ️</span> Click for Details
+          </button>
+        </div>
+        {/* Display the current background choice */}
         <div className="flex items-center justify-center gap-2 mb-2">
           <span className="text-emerald-400 font-semibold drop-shadow-md mb-0">Current Choice =</span>
           {keepOriginalBg ? (
@@ -52,6 +73,7 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
             <span className="text-sm text-white">Remove</span>
           )}
         </div>
+        {/* Buttons for keeping original or removing background */}
         <div className="flex flex-col items-center justify-center mb-4 gap-2">
           <Tooltip title="Click to keep the original background from the photo" placement="right">
             <span>
@@ -90,6 +112,7 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
             </span>
           </Tooltip>
         </div>
+        {/* Preset color selection buttons */}
         <div className="flex flex-col gap-1 mb-2">
           <div className="flex justify-center gap-2 mb-2">
             {row1.map((color) => (
@@ -120,6 +143,7 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
             ))}
           </div>
         </div>
+        {/* Button to expand/collapse custom backgrounds grid */}
         <EmojiButton
           icon={
             <ExpandMoreIcon
@@ -134,6 +158,7 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
           type="button"
         />
       </div>
+      {/* Custom background image selection grid */}
       {showBackgrounds && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 my-4">
           {customBackgrounds.map((bg, idx) => (
@@ -178,6 +203,7 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
           ))}
         </div>
       )}     
+      {/* Info modal explaining background options */}
       {showInfo && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full shadow-lg relative">

@@ -1,5 +1,12 @@
 import { Modal } from '@mui/material';
 
+/**
+ * ErrorModal displays an error message in a modal dialog.
+ *
+ * @param {boolean} open - Controls whether the modal is visible.
+ * @param {string} errorMessage - The error message to display.
+ * @param {function} onClose - Function to close the modal.
+ */
 export default function ErrorModal({ open, errorMessage, onClose }) {
   return (
     <Modal

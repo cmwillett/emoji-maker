@@ -1,3 +1,7 @@
+/**
+ * List of custom backgrounds available for emoji/meme creation.
+ * Each background has a type (key), image path, and display title.
+ */
 const customBackgrounds = [
   { type: 'bubbles', img: '/backgrounds/bubbles.png', title: 'Bubbles' },
   { type: 'fire', img: '/backgrounds/fire.jpg', title: 'Fire' },
@@ -20,4 +24,5 @@ const customBackgrounds = [
   { type: 'bubbles-in-blue-water', img: '/backgrounds/bubbles-in-blue-water.jpg', title: 'Bubbles in Water' },
   // Add more as needed
 ];
+
 export default customBackgrounds;

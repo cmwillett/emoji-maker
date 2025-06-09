@@ -3,6 +3,14 @@ import Tabs from './Tabs';
 import BackgroundColorPicker from './BackgroundColorPicker';
 import EmojiTextInput from './EmojiTextInput';
 
+/**
+ * OptionsTabs provides tabbed controls for background and text customization.
+ * 
+ * @param {object} props - All customization state and handlers from parent.
+ *   - backgroundColor, setBackgroundColor, keepOriginalBg, setKeepOriginalBg, backgroundType, setBackgroundType
+ *   - emojiText, setEmojiText, fontColor, setFontColor, fontSize, setFontSize, isBold, setIsBold
+ *   - isQuoteBubble, setIsQuoteBubble, presetTextColors
+ */
 export default function OptionsTabs(props) {
   const [activeTab, setActiveTab] = useState('Background');
   const tabs = ['Background', 'Text'];

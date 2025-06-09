@@ -1,9 +1,18 @@
+/**
+ * StyleOptions provides UI controls for selecting emoji/meme style.
+ *
+ * @param {boolean} isRound - Whether the emoji should be circular.
+ * @param {function} setIsRound - Handler to toggle circular style.
+ */
+
+import { panelBase } from "../lib/classNames";
+
 export default function StyleOptions({
   isRound,
   setIsRound,
 }) {
   return (
-    <div className="bg-black/40 border border-emerald-400 rounded-lg p-4 mb-4">
+    <div className={`${panelBase} rounded-lg p-4 mb-4`}>
       <div className="mt-0 text-center">
         <h2 className="block text-emerald-400 font-semibold drop-shadow-md mb-2 underline mt-0">
           Style Options

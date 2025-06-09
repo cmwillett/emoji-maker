@@ -1,3 +1,7 @@
+/**
+ * LoadingIndicator displays a spinning loader and status messages.
+ * Used to indicate background processing (e.g., image generation).
+ */
 export default function LoadingIndicator() {
   return (
     <div className="mt-2 flex flex-col items-center space-y-2">

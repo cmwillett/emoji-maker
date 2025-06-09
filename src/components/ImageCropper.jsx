@@ -1,15 +1,20 @@
-// src/ImageCropper.jsx
-import { useState, useCallback } from 'react'
-import Cropper from 'react-easy-crop'
-import { Slider } from '@mui/material' // Optional: for zoom control
+import { useState, useCallback } from 'react';
+import Cropper from 'react-easy-crop';
+import { Slider } from '@mui/material';
 
+/**
+ * ImageCropper provides a simple cropping UI for images.
+ * 
+ * @param {string} imageSrc - The source image to crop.
+ * @param {function} onCropComplete - Callback with cropped area pixels.
+ */
 export default function ImageCropper({ imageSrc, onCropComplete }) {
-  const [crop, setCrop] = useState({ x: 0, y: 0 })
-  const [zoom, setZoom] = useState(1)
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
 
   const handleCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
-    onCropComplete(croppedAreaPixels)
-  }, [onCropComplete])
+    onCropComplete(croppedAreaPixels);
+  }, [onCropComplete]);
 
   return (
     <div className="relative w-full h-[400px] bg-gray-900">
@@ -32,5 +37,5 @@ export default function ImageCropper({ imageSrc, onCropComplete }) {
         />
       </div>
     </div>
-  )
+  );
 }

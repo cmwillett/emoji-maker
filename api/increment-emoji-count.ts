@@ -1,20 +1,15 @@
+import { incrRedisValue } from '../src/lib/redisApi';
+
 export const config = {
   runtime: 'edge',
 };
 
+/**
+ * Edge API handler to increment the emoji creation count in Upstash Redis.
+ * Increments the "emoji-counter" key and returns the new value as JSON: { count: number }
+ */
 export default async function handler(request: Request) {
-  const redisUrl = process.env.UPSTASH_REDIS_REST_URL!;
-  const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN!;
-
-  const response = await fetch(`${redisUrl}/incr/emoji-counter`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${redisToken}`,
-    },
-  });
-
-  const data = await response.json();
-
+  const data = await incrRedisValue('emoji-counter');
   return new Response(JSON.stringify({ count: data.result }), {
     headers: {
       'Content-Type': 'application/json',

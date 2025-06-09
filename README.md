@@ -1,12 +1,42 @@
-# React + Vite
+# Emoji Creator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Emoji Creator** is a web app that lets you easily create custom emojis and memes from your own photos or popular images. Built with React and Vite, it provides a fast, interactive experience with modern features like background removal, text overlays, and style customization.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Upload or Take a Photo:** Use your device camera, upload from your gallery, or pick from a set of popular meme images.
+- **Edit and Customize:** 
+  - Crop, zoom, and position your image.
+  - Remove the background or choose from solid colors and fun backgrounds.
+  - Add and style text, including font size, color, bold, and quote bubbles.
+  - Choose between circular or square emoji styles.
+- **Preview and Export:** Instantly preview your creation, then download or share it.
+- **PWA Support:** Install the app to your device for quick access.
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. **Install dependencies:**
+   ```sh
+   npm install
+   ```
+2. **Run the development server:**
+   ```sh
+   npm run dev
+   ```
+3. Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+## Tech Stack
+
+- [React](https://react.dev/)
+- [Vite](https://vitejs.dev/)
+- [Material UI](https://mui.com/)
+- [Tailwind CSS](https://tailwindcss.com/) (via UnoCSS)
+- [@imgly/background-removal](https://github.com/imgly/background-removal-js) for background removal
+
+## License
+
+MIT
+
+---
+
+*Create your own emojis and memes in seconds!*
