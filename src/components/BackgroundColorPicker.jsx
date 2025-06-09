@@ -64,22 +64,22 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
           </button>
         </div>
         {/* Display the current background choice */}
-<div className="flex items-center justify-center gap-2 mb-2">
-  <span className="text-emerald-400 font-semibold drop-shadow-md mb-0">Current Choice =</span>
-  {keepOriginalBg ? (
-    <span className="text-sm text-white">Use Original</span>
-  ) : backgroundType && backgroundType !== 'color' ? (
-    <span className="text-sm text-white">{backgroundType}</span>
-  ) : backgroundColor ? (
-    <span
-      className="inline-block w-8 h-8 rounded border"
-      style={{ backgroundColor: backgroundColor, borderColor: 'gray' }}
-      title={backgroundColor}
-    ></span>
-  ) : (
-    <span className="text-sm text-white">Remove</span>
-  )}
-</div>
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <span className="text-emerald-400 font-semibold drop-shadow-md mb-0">Current Choice =</span>
+          {keepOriginalBg ? (
+            <span className="text-sm text-white">Use Original</span>
+          ) : backgroundType && backgroundType !== 'color' ? (
+            <span className="text-sm text-white">{backgroundType}</span>
+          ) : backgroundColor ? (
+            <span
+              className="inline-block w-8 h-8 rounded border"
+              style={{ backgroundColor: backgroundColor, borderColor: 'gray' }}
+              title={backgroundColor}
+            ></span>
+          ) : (
+            <span className="text-sm text-white">Remove</span>
+          )}
+        </div>
         {/* Buttons for keeping original or removing background */}
         <div className="flex flex-col items-center justify-center mb-4 gap-2">
           <Tooltip title="Click to keep the original background from the photo" placement="right">
@@ -169,47 +169,48 @@ export default function BackgroundColorPicker({ backgroundColor, setBackgroundCo
       {showBackgrounds && (
         <div className="my-4">
           {Object.entries(groupedBackgrounds)
-            .sort(([typeA], [typeB]) => typeA.localeCompare(typeB)) // 1. Sort sections alphabetically
+            .sort(([typeA], [typeB]) => typeA.localeCompare(typeB))
             .map(([type, backgrounds]) => {
-              const sortedBackgrounds = backgrounds.slice().sort((a, b) => a.title.localeCompare(b.title)); // 2. Sort images by title
-              const colCount = Math.min(4, sortedBackgrounds.length);
-              const gridColsClass = {
-                1: 'grid-cols-1',
-                2: 'grid-cols-2',
-                3: 'grid-cols-3',
-                4: 'grid-cols-4',
-              }[colCount];
-              return (
-                <div key={type} className="mb-6 w-full">
-                  <h3 className="text-emerald-400 font-bold text-lg mb-2 capitalize text-center">{type}</h3>
-                  <div className="flex justify-center w-full">
-                    <div className={`grid ${gridColsClass} gap-4 justify-items-center`}>
-                      {sortedBackgrounds.map((bg, idx) => (
+            const sortedBackgrounds = backgrounds.slice().sort((a, b) => a.title.localeCompare(b.title));
+            let gridColsClass = '';
+            if (sortedBackgrounds.length === 1) gridColsClass = 'grid-cols-1';
+            else if (sortedBackgrounds.length === 2) gridColsClass = 'grid-cols-2';
+            else if (sortedBackgrounds.length === 3) gridColsClass = 'grid-cols-3';
+            else gridColsClass = 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4';
+
+            return (
+              <div key={type} className="mb-6 w-full">
+                <h3 className="text-emerald-400 font-bold text-lg mb-2 capitalize text-center">{type}</h3>
+                <div className="flex justify-center w-full">
+                  <div className={`grid ${gridColsClass} gap-x-4 gap-y-4 justify-items-center w-full max-w-lg`}>
+                    {sortedBackgrounds.map((bg, idx) => (
+                      <div
+                        key={bg.img + idx}
+                        className="flex flex-col items-center w-full max-w-[110px]"
+                      >
                         <div
-                          key={bg.img + idx}
-                          className="flex flex-col items-center w-32"
-                        >
-                          <div
-                            className="cursor-pointer rounded shadow hover:scale-105 transition w-full"
-                            onClick={() => {
-                              setBackgroundType(bg.title);
-                              setBackgroundColor('');
-                              setKeepOriginalBg(false);
-                            }}
-                            style={{
-                              background: `url(${bg.img}) center/cover no-repeat`,
-                              height: 80,
-                              width: '100%',
-                              border: '2px solid #34d399'
-                            }}
-                          />
-                          <span className="mt-1 text-xs text-center text-white break-words w-full">{bg.title}</span>
-                        </div>
-                      ))}
-                    </div>
+                          className="cursor-pointer rounded shadow hover:scale-105 transition w-full"
+                          onClick={() => {
+                            setBackgroundType(bg.title);
+                            setBackgroundColor('');
+                            setKeepOriginalBg(false);
+                            setShowBackgrounds(false);
+                            window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top
+                          }}
+                          style={{
+                            background: `url(${bg.img}) center/cover no-repeat`,
+                            height: 80,
+                            width: '100%',
+                            border: '2px solid #34d399'
+                          }}
+                        />
+                        <span className="mt-1 text-xs text-center text-white break-words w-full">{bg.title}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              );
+              </div>
+            );
             })}
         </div>
       )}

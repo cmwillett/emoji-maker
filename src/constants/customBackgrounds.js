@@ -23,7 +23,7 @@ const customBackgrounds = [
   { type: 'sports', img: '/backgrounds/dancestudio.jpeg', title: 'Dance' },
   { type: 'miscellaneous', img: '/backgrounds/bubbles-in-blue-water.jpg', title: 'Bubbles in Water' },
   { type: 'weather', img: '/backgrounds/thunderstorm.jpg', title: 'Thunderstorm' },
-  { type: 'christmas', img: '/backgrounds/christmassnowandtree.jpg', title: 'Christmas Snow and Tree' },
+  { type: 'holiday', img: '/backgrounds/christmassnowandtree.jpg', title: 'Christmas Snow and Tree' },
   { type: 'weather', img: '/backgrounds/snow.jpg', title: 'Snow' },
   { type: 'weather', img: '/backgrounds/tornadoandlightning.jpg', title: 'Tornado and Lightning' },
   // Add more as needed

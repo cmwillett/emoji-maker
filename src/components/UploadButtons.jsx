@@ -28,6 +28,7 @@ export default function UploadButtons({ onImageSelect }) {
     const dataUrl = await readBlobAsDataURL(blob);
     onImageSelect(dataUrl);
     setShowGallery(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top
   };
 
   return (
