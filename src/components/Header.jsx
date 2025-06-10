@@ -5,9 +5,15 @@
  */
 import { panelBase } from "../lib/classNames";
 
-export default function Header({ emojiCount }) {
+export default function Header({ emojiCount, leftButton, rightButton }) {
   return (
     <div className={`${panelBase} rounded-lg p-2 mb-4`}>
+      {/* Button Row */}
+      <div className="flex items-center justify-between w-full mb-2">
+        <div>{leftButton}</div>
+        <div>{rightButton}</div>
+      </div>
+      {/* Main Header Content */}
       <div className="flex flex-col items-center space-y-1">
         <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg underline mt-0 mb-0">
           The Craig's

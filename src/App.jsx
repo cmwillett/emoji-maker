@@ -251,18 +251,33 @@ export default function App() {
       {/* Overlay for darkening background */}
       <div className="absolute inset-0 bg-black bg-opacity-30 z-0 pointer-events-none"></div> 
       {/* Header and emoji count */}
-      {!imageSrc && <Header emojiCount={emojiCount} />}
+      {<Header
+          emojiCount={emojiCount}
+          leftButton={
+            <button
+              className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-full shadow transition text-sm"
+              onClick={() => setHowToOpen(true)}
+              aria-label="Show How To"
+            >
+              <img src="/howto.png" alt="How To" className="inline w-5 h-5 mr-1 align-middle" />
+              How To
+            </button>
+          }
+          rightButton={
+            <button
+              className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-full shadow transition text-sm"
+              onClick={() => setWalkthroughOpen(true)}
+              aria-label="Show Walkthrough"
+            >
+              <span role="img" aria-label="Walkthrough" className="mr-1">🧭</span>
+              Walkthrough
+            </button>
+          }
+        />
+      }
       
       {/* Upload buttons (shown if no image is selected) */}
       {!imageSrc && <UploadButtons onImageSelect={setImageSrc} />}
-
-      <button
-  className="fixed top-6 right-6 z-50 bg-emerald-400 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded-full shadow-lg transition"
-  onClick={() => setWalkthroughOpen(true)}
-  aria-label="Show Walkthrough"
->
-  Walkthrough
-</button>
 
       {/* Image cropper and options (shown if image is selected) */}
       {imageSrc && (
@@ -438,17 +453,8 @@ export default function App() {
         >
           Start Over
         </button>
-      )}
-      {/* Floating How To Button */}
-      <button
-        className="fixed bottom-6 left-6 z-50 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-5 rounded-full shadow-lg transition"
-        onClick={() => setHowToOpen(true)}
-        aria-label="Show How To"
-      >
-        <img src="/howto.png" alt="How To" className="inline w-6 h-6 mr-2 align-middle" />
-        How To
-      </button>    
-<WalkthroughModal open={walkthroughOpen} onClose={() => setWalkthroughOpen(false)} />        
+      )}   
+      <WalkthroughModal open={walkthroughOpen} onClose={() => setWalkthroughOpen(false)} />        
     </div>
   )
 }
