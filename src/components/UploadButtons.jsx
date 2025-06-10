@@ -67,7 +67,7 @@ export default function UploadButtons({ onImageSelect }) {
               icon={<PhotoLibraryIcon />}
               label={
                 <>
-                  Choose from Gallery
+                  Gallery/File System
                   <input
                     type="file"
                     accept="image/*"
@@ -92,7 +92,7 @@ export default function UploadButtons({ onImageSelect }) {
                   }}
                 />
               }
-              label="Choose From Common Memes"
+              label="Start with a Common Meme"
               onClick={() => setShowGallery((prev) => !prev)}
               type="button"
             />
