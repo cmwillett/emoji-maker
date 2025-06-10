@@ -3,11 +3,8 @@ import { Stack, Tooltip } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import { EmojiButton } from './EmojiButton';
-import heic2any from 'heic2any';
-import { galleryImages } from '../constants/galleryImages'; // Assuming you have a list of common images
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { handleFileInput } from '../lib/imageUtils';
-import GalleryGrid from './GalleryGrid';
 import { readBlobAsDataURL } from '../lib/imageUtils';
 import { panelBase } from '../lib/classNames';
 import GalleryMemes from './GalleryMemes'; // <-- Add this import
