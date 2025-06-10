@@ -18,6 +18,7 @@ import customBackgrounds from './constants/customBackgrounds';
 import { processBackground } from './utils/imageProcessing';
 import { drawTextAndDecorations } from './utils/imageProcessing';
 import { buttonBase } from './lib/classNames';
+import WalkthroughModal from './components/WalkthroughModal';
 
 // Main App component
 export default function App() {
@@ -57,6 +58,7 @@ export default function App() {
   const [tailBase, setTailBase] = useState({ x: textBoxSize.width / 2, y: textBoxSize.height });
   const [arrowTip, setArrowTip] = useState({ x: textBoxSize.width / 2, y: textBoxSize.height + 24 });
   const [howToOpen, setHowToOpen] = useState(false);
+  const [walkthroughOpen, setWalkthroughOpen] = useState(false);
 
   // --- Emoji counter state and fetch on mount ---
   const [emojiCount, setEmojiCount] = useState(null);
@@ -254,6 +256,14 @@ export default function App() {
       {/* Upload buttons (shown if no image is selected) */}
       {!imageSrc && <UploadButtons onImageSelect={setImageSrc} />}
 
+      <button
+  className="fixed top-6 right-6 z-50 bg-emerald-400 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded-full shadow-lg transition"
+  onClick={() => setWalkthroughOpen(true)}
+  aria-label="Show Walkthrough"
+>
+  Walkthrough
+</button>
+
       {/* Image cropper and options (shown if image is selected) */}
       {imageSrc && (
         <>
@@ -437,7 +447,8 @@ export default function App() {
       >
         <img src="/howto.png" alt="How To" className="inline w-6 h-6 mr-2 align-middle" />
         How To
-      </button>      
+      </button>    
+<WalkthroughModal open={walkthroughOpen} onClose={() => setWalkthroughOpen(false)} />        
     </div>
   )
 }

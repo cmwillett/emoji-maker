@@ -16,20 +16,20 @@ export default function Tabs({ tabs, activeTab, setActiveTab }) {
           Step 2
         </h2>
         <p className="text-center text-emerald-400 font-semibold drop-shadow-md mb-0 mt-1">
-          Zoom or adjust the photo above
+          Adjust the position and/or size of the photo above
         </p>
         <p className="text-center text-emerald-400 font-semibold drop-shadow-md mb-4 mt-1">
-          And/or choose options below
+          Choose background or text options below
         </p>
       </Stack>
-      <div className="flex justify-center">
+      <div className="flex justify-center gap-2">
         {tabs.map((tab) => (
           <button
             key={tab}
-            className={`mt-2 px-4 py-2 font-semibold rounded border cursor-pointer mx-1
+            className={`mt-2 px-4 py-2 font-semibold rounded border cursor-pointer mx-1 transition
               ${
                 activeTab === tab
-                  ? 'bg-white text-emerald-400 border-white'
+                  ? 'bg-white text-emerald-400 border-emerald-400 border-4'
                   : 'bg-emerald-900 text-emerald-200 border-emerald-700 hover:bg-emerald-800'
               }
             `}

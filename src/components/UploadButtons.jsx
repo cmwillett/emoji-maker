@@ -37,8 +37,11 @@ export default function UploadButtons({ onImageSelect }) {
           Step 1
         </h2>
         <p className="block text-emerald-400 font-semibold drop-shadow-md mb-2 text-center mt-1">
-          Take or choose a photo
+          Start by taking a photo, choosing from your gallery,
         </p>
+        <p className="block text-emerald-400 font-semibold drop-shadow-md mb-2 text-center mt-1">
+          or selecting a common meme below!
+        </p>        
         {/* Take Photo Button */}
         <Tooltip title="Use your device's camera to take a new photo..." placement="right">
           <div>
@@ -98,7 +101,7 @@ export default function UploadButtons({ onImageSelect }) {
             />
           </div>
         </Tooltip>
-        <Tooltip title="Pick a background image (no photo needed)" placement="right">
+        {/*<Tooltip title="Pick a background image (no photo needed)" placement="right">
           <div>
             <EmojiButton
               icon={
@@ -114,7 +117,7 @@ export default function UploadButtons({ onImageSelect }) {
               type="button"
             />
           </div>
-        </Tooltip>        
+        </Tooltip>*/}        
       </Stack>
       {/* Gallery grid */}
       {showGallery && (
