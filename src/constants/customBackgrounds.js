@@ -17,6 +17,7 @@ const customBackgrounds = [
   { type: 'animals', img: '/backgrounds/lion.jpg', title: 'Lion' },
   { type: 'animals', img: '/backgrounds/giraffe.jpg', title: 'Giraffe' },
   { type: 'futuristic', img: '/backgrounds/futuristiccity.jpg', title: 'Futuristic' },
+  { type: 'home', img: '/backgrounds/shower.jpg', title: 'Shower' },
   { type: 'space', img: '/backgrounds/spaceship.webp', title: 'Spaceship' },
   { type: 'space', img: '/backgrounds/ufo.jpg', title: 'UFO' },
   { type: 'space', img: '/backgrounds/alien.jpg', title: 'Alien' },

@@ -255,7 +255,7 @@ export default function App() {
           emojiCount={emojiCount}
           leftButton={
             <button
-              className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-full shadow transition text-sm"
+              className="bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold py-2 px-4 rounded-full shadow transition text-sm"
               onClick={() => setHowToOpen(true)}
               aria-label="Show How To"
             >
@@ -265,7 +265,7 @@ export default function App() {
           }
           rightButton={
             <button
-              className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-full shadow transition text-sm"
+              className="bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold py-2 px-4 rounded-full shadow transition text-sm"
               onClick={() => setWalkthroughOpen(true)}
               aria-label="Show Walkthrough"
             >
