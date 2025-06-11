@@ -22,19 +22,19 @@ export default function Header({ emojiCount, leftButton, rightButton }) {
         <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg underline mt-0">
           Emoji/Meme Maker
         </h1>
-        {emojiCount !== null && (
-          <p className="text-sm text-emerald-400 mt-2 font-bold underline">
-            {emojiCount.toLocaleString()} created so far!
-          </p>
-        )}
         <a
           href="https://photos.app.goo.gl/fDPai7Yu1UEf6uTM8"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-emerald-500 underline text-sm mt-1 hover:text-emerald-700 transition"
+          className="text-xl text-emerald-400 mt-2 font-bold underline"
         >
-          View some that have been created so far!
+          View some creations!
         </a>        
+        {emojiCount !== null && (
+          <p className="text-sm text-emerald-400 mt-2 font-bold underline">
+            {emojiCount.toLocaleString()} created so far!
+          </p>
+        )}        
       </div>
     </div>
   );
