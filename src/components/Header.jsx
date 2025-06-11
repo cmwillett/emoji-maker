@@ -27,6 +27,14 @@ export default function Header({ emojiCount, leftButton, rightButton }) {
             {emojiCount.toLocaleString()} created so far!
           </p>
         )}
+        <a
+          href="https://photos.app.goo.gl/fDPai7Yu1UEf6uTM8"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-emerald-500 underline text-sm mt-1 hover:text-emerald-700 transition"
+        >
+          View some that have been created so far!
+        </a>        
       </div>
     </div>
   );
