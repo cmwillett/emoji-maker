@@ -143,7 +143,6 @@ export default function CropperSection({
   // --- Touch and mouse handlers for dragging the text box ---
   const handleTouchStart = (e, idx) => {
     e.stopPropagation();
-    e.preventDefault();
     isDragging.current = true;
     const touch = e.touches[0];
     // Use the position of the box being dragged
