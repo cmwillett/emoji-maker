@@ -45,6 +45,7 @@ const steps = [
         <ul className="list-disc ml-5 text-sm text-gray-700">
           <li>Pick a background color or image</li>
           <li>Add and style your text (color, size, bold, quote bubble)</li>
+          <li>You can click the "+ Add Text Box" button if you want multiple textboxes</li>
         </ul>
       </>
     ),

@@ -126,9 +126,13 @@ export default function InstallShareButtons({ showInstall, handleInstallClick, h
                     </ul>
                     <li>Choose a color from the palette if you don't want white text</li>
                     <li>Drag the textbox on the image to where you want it placed</li>
-                    <li>Resize the textbox by clicking the handle in the bottom right corner of the textbox</li>
+                    <li>Resize the textbox by clicking the handle in the bottom right corner of the textbox</li>                   
                   </ul>
                 </ul>
+              <li>Click the + Add Text Box button if you want to add another textbox</li>
+                <ul>
+                  <li>A new section will appear under the first text section</li>
+                </ul>                 
               <li>Click "Start Over" if you want to reset everything and start from scratch</li>
               <li>Click "Create Emoji/Meme" to create the image you desire...</li>
               <ul style={{ margin: '1em 0', paddingLeft: '1.2em' }}>
@@ -183,6 +187,10 @@ export default function InstallShareButtons({ showInstall, handleInstallClick, h
           }}>
           <h2>Latest Features</h2>
           <ul style={{ margin: '1em 0', paddingLeft: '1.2em' }}>
+            <li>6/11/2025</li>
+              <ul>
+                <li>Added the ability to add multiple text boxes/quote bubbles</li>
+              </ul>
             <li>6/9/2025</li>
               <ul>
                 <li>Made the custom backgrounds organized by "type" and sorted alphabetically</li>

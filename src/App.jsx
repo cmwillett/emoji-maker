@@ -19,6 +19,7 @@ import { processBackground } from './utils/imageProcessing';
 import { drawTextAndDecorations } from './utils/imageProcessing';
 import { buttonBase } from './lib/classNames';
 import WalkthroughModal from './components/WalkthroughModal';
+import EmojiTextInput from './components/EmojiTextInput';
 
 // Main App component
 export default function App() {
@@ -40,7 +41,6 @@ export default function App() {
   const [contactForm, setContactForm] = useState({ name: '', email: '', message: '' });
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
-  const [emojiText, setEmojiText] = useState('');
   const [fontColor, setFontColor] = useState('#ffffff'); // Default to white
   const [fontSize, setFontSize] = useState(24); // default size
   const [isBold, setIsBold] = useState(true);   // default bold  
@@ -52,13 +52,31 @@ export default function App() {
   const [keepOriginalBg, setKeepOriginalBg] = useState(true);
   const [bgRemovedPreview, setBgRemovedPreview] = useState(null);
   const patternTypes = customBackgrounds.map(bg => bg.type);
-  const [textPosition, setTextPosition] = useState({ x: 0, y: 0 });
-  const [textBoxSize, setTextBoxSize] = useState({ width: 180, height: 60 });
-  const [isQuoteBubble, setIsQuoteBubble] = useState(false);
-  const [tailBase, setTailBase] = useState({ x: textBoxSize.width / 2, y: textBoxSize.height });
-  const [arrowTip, setArrowTip] = useState({ x: textBoxSize.width / 2, y: textBoxSize.height + 24 });
+  //const [emojiText, setEmojiText] = useState('');
+  //const [textPosition, setTextPosition] = useState({ x: 0, y: 0 });
+  //const [textBoxSize, setTextBoxSize] = useState({ width: 180, height: 60 });
+  //const [isQuoteBubble, setIsQuoteBubble] = useState(false);
+  const defaultTextBoxSize = { width: 180, height: 60 };
+  const [tailBase, setTailBase] = useState({ x: defaultTextBoxSize.width / 2, y: defaultTextBoxSize.height });
+  const [arrowTip, setArrowTip] = useState({ x: defaultTextBoxSize.width / 2, y: defaultTextBoxSize.height + 24 });
   const [howToOpen, setHowToOpen] = useState(false);
   const [walkthroughOpen, setWalkthroughOpen] = useState(false);
+
+  const [textBoxes, setTextBoxes] = useState([
+    {
+      id: Date.now(),
+      text: '',
+      position: { x: 0, y: 0 },
+      size: { width: 180, height: 60 },
+      isQuoteBubble: false,
+      fontColor: '#ffffff',
+      fontSize: 24,
+      isBold: true,
+    tailBase: { x: 90, y: 60 }, // center bottom of box
+    arrowTip: { x: 90, y: 84 }, // below the box    
+      // add tailBase, arrowTip if needed
+    }
+  ]);  
 
   // --- Emoji counter state and fetch on mount ---
   const [emojiCount, setEmojiCount] = useState(null);
@@ -107,12 +125,69 @@ export default function App() {
   }, [])
 
   // --- Handler for resizing the text box and repositioning the quote bubble tail ---
-  const handleResizeTextBox = (newSize) => {
-    setTextBoxSize(newSize);
-    // Move tail to center bottom of new box
-    setTailBase({ x: newSize.width / 2, y: newSize.height });
-    setArrowTip({ x: newSize.width / 2, y: newSize.height + 24 });
-  };  
+  const handleResizeTextBox = (newSize, idx) => {
+    setTextBoxes(prev => {
+      const updated = [...prev];
+      const oldBox = updated[idx];
+      let newTailBase = oldBox.tailBase;
+      let newArrowTip = oldBox.arrowTip;
+
+      // If it's a quote bubble, update tail/arrow to stay on the same edge
+      if (oldBox.isQuoteBubble && oldBox.tailBase && oldBox.arrowTip) {
+        const epsilon = 2;
+        const oldW = oldBox.size.width;
+        const oldH = oldBox.size.height;
+        const newW = newSize.width;
+        const newH = newSize.height;
+        let edge = null;
+        let rel = 0;
+
+        if (Math.abs(oldBox.tailBase.y) < epsilon) {
+          edge = 'top';
+          rel = oldBox.tailBase.x / oldW;
+        } else if (Math.abs(oldBox.tailBase.y - oldH) < epsilon) {
+          edge = 'bottom';
+          rel = oldBox.tailBase.x / oldW;
+        } else if (Math.abs(oldBox.tailBase.x) < epsilon) {
+          edge = 'left';
+          rel = oldBox.tailBase.y / oldH;
+        } else if (Math.abs(oldBox.tailBase.x - oldW) < epsilon) {
+          edge = 'right';
+          rel = oldBox.tailBase.y / oldH;
+        } else {
+          edge = 'bottom';
+          rel = 0.5;
+        }
+
+        if (edge === 'top') {
+          newTailBase = { x: Math.round(rel * newW), y: 0 };
+        } else if (edge === 'bottom') {
+          newTailBase = { x: Math.round(rel * newW), y: newH };
+        } else if (edge === 'left') {
+          newTailBase = { x: 0, y: Math.round(rel * newH) };
+        } else if (edge === 'right') {
+          newTailBase = { x: newW, y: Math.round(rel * newH) };
+        }
+
+        const tipOffset = 24;
+        let tipX = newTailBase.x, tipY = newTailBase.y;
+        if (edge === 'top') tipY = newTailBase.y - tipOffset;
+        else if (edge === 'bottom') tipY = newTailBase.y + tipOffset;
+        else if (edge === 'left') tipX = newTailBase.x - tipOffset;
+        else if (edge === 'right') tipX = newTailBase.x + tipOffset;
+
+        newArrowTip = { x: tipX, y: tipY };
+      }
+
+      updated[idx] = {
+        ...oldBox,
+        size: newSize,
+        tailBase: newTailBase,
+        arrowTip: newArrowTip
+      };
+      return updated;
+    });
+  };
 
   // --- Handler for PWA install button ---
   const handleInstallClick = () => {
@@ -164,18 +239,20 @@ export default function App() {
       const scaleY = canvas.height / previewHeight;
 
       // Step 4: Draw text, quote bubble, and decorations
-      drawTextAndDecorations(ctx, {
-        emojiText,
-        fontSize,
-        fontColor,
-        isBold,
-        isQuoteBubble,
-        textPosition,
-        textBoxSize,
-        tailBase,
-        arrowTip,
-        scaleX,
-        scaleY,
+      textBoxes.forEach(box => {      
+        drawTextAndDecorations(ctx, {
+          emojiText: box.text,
+          fontSize: box.fontSize,
+          fontColor: box.fontColor,
+          isBold: box.isBold,
+          isQuoteBubble: box.isQuoteBubble,
+          textPosition: box.position,
+          textBoxSize: box.size,
+          tailBase: box.tailBase,
+          arrowTip: box.arrowTip,
+          scaleX,
+          scaleY,
+        });
       });
 
       // Step 5: Convert canvas to blob for export/preview
@@ -202,9 +279,9 @@ export default function App() {
       setLoading(false); // Hide loading indicator
     }
   }, [
-    imageSrc, croppedAreaPixels, backgroundColor, emojiText, fontColor, fontSize, isBold,
-    isQuoteBubble, arrowTip, tailBase, keepOriginalBg, backgroundType, textBoxSize, textPosition
-  ]); // End of showCroppedImage
+        imageSrc, croppedAreaPixels, backgroundColor, fontColor, isBold,
+        arrowTip, tailBase, keepOriginalBg, backgroundType, textBoxes
+      ]); // End of showCroppedImage
 
   // --- Handler to reset all states and UI to initial values ---
   const handleReset = () => {
@@ -213,16 +290,28 @@ export default function App() {
     setZoom(1)
     setCroppedAreaPixels(null)
     setCroppedImage(null)
-    setEmojiText('')
+    //setEmojiText('')
     setBackgroundColor('')
     setBackgroundType('original')
     setKeepOriginalBg(true)
     setIsRound(false)
     setFontColor('#ffffff') // Reset to default white
     setBgRemovedPreview(null);
-    handleResizeTextBox({ width: 180, height: 60 });
-    setTextPosition({ x: 0, y: 0 });
-    setIsQuoteBubble(false); // Reset quote bubble checkbox
+    //handleResizeTextBox({ width: 180, height: 60 });
+    //setTextPosition({ x: 0, y: 0 });
+    //setIsQuoteBubble(false); // Reset quote bubble checkbox
+    setTextBoxes([
+      {
+        id: Date.now(),
+        text: '',
+        position: { x: 0, y: 0 },
+        size: { width: 180, height: 60 },
+        isQuoteBubble: false,
+        fontColor: '#ffffff',
+        fontSize: 24,
+        isBold: true,
+      }
+    ]);    
     setTailBase({ x: 90, y: 60 }); // Reset tailBase to default (center bottom of default box)
     setArrowTip({ x: 90, y: 84 }); // Reset arrowTip to default (below the box)
   }
@@ -295,18 +384,20 @@ export default function App() {
               backgroundType={backgroundType}
               backgroundColor={backgroundColor}
               patternTypes={patternTypes}
-              emojiText={emojiText}
+              //emojiText={emojiText}
               fontColor={fontColor}
               fontSize={fontSize}
               setFontSize={setFontSize}
               isBold={isBold}
               setIsBold={setIsBold}
-              isQuoteBubble={isQuoteBubble}
-              setIsQuoteBubble={setIsQuoteBubble}
-              textPosition={textPosition}
-              setTextPosition={setTextPosition}
-              textBoxSize={textBoxSize}
-              setTextBoxSize={setTextBoxSize}
+              //isQuoteBubble={isQuoteBubble}
+              //setIsQuoteBubble={setIsQuoteBubble}
+              //textPosition={textPosition}
+              //setTextPosition={setTextPosition}
+              //textBoxSize={textBoxSize}
+              //setTextBoxSize={setTextBoxSize}
+              textBoxes={textBoxes}
+              setTextBoxes={setTextBoxes}
               tailBase={tailBase}
               setTailBase={setTailBase}
               arrowTip={arrowTip}
@@ -314,6 +405,92 @@ export default function App() {
               handleResizeTextBox={handleResizeTextBox}
             />
           </div>
+
+          <div className="w-full max-w-md mx-auto my-4">
+            <button
+              onClick={() =>
+                setTextBoxes([
+                  ...textBoxes,
+                  {
+                    id: Date.now(),
+                    text: '',
+                    position: { x: 0, y: 0 },
+                    size: { width: 180, height: 60 },
+                    isQuoteBubble: false,
+                    fontColor: '#ffffff',
+                    fontSize: 24,
+                    isBold: true,
+                            tailBase: { x: 90, y: 60 }, // <-- add this
+                  arrowTip: { x: 90, y: 84 }, // <-- and this
+                  }
+                ])
+              }
+              className="mb-2 px-3 py-1 bg-emerald-500 text-white rounded"
+            >
+              + Add Text Box
+            </button>
+            {textBoxes.map((box, idx) => (
+              <div key={box.id} className="mb-2 border p-2 rounded bg-gray-50">
+                <EmojiTextInput
+                  emojiText={box.text}
+                  setEmojiText={val => {
+                    const newBoxes = [...textBoxes];
+                    newBoxes[idx].text = val;
+                    setTextBoxes(newBoxes);
+                  }}
+                  fontColor={box.fontColor}
+                  setFontColor={val => {
+                    const newBoxes = [...textBoxes];
+                    newBoxes[idx].fontColor = val;
+                    setTextBoxes(newBoxes);
+                  }}
+                  fontSize={box.fontSize}
+                  setFontSize={val => {
+                    const newBoxes = [...textBoxes];
+                    newBoxes[idx].fontSize = val;
+                    setTextBoxes(newBoxes);
+                  }}
+                  isBold={box.isBold}
+                  setIsBold={val => {
+                    const newBoxes = [...textBoxes];
+                    newBoxes[idx].isBold = val;
+                    setTextBoxes(newBoxes);
+                  }}
+                  isQuoteBubble={box.isQuoteBubble}
+                  setIsQuoteBubble={val => {
+                    const newBoxes = [...textBoxes];
+                    const w = newBoxes[idx].size?.width ?? 180;
+                    const h = newBoxes[idx].size?.height ?? 60;
+                    if (val) {
+                      // Always reset tailBase and arrowTip to match current box size
+                      newBoxes[idx] = {
+                        ...newBoxes[idx],
+                        isQuoteBubble: true,
+                        tailBase: { x: w / 2, y: h },
+                        arrowTip: { x: w / 2, y: h + 24 }
+                      };
+                    } else {
+                      newBoxes[idx] = {
+                        ...newBoxes[idx],
+                        isQuoteBubble: false
+                      };
+                    }
+                    setTextBoxes(newBoxes);
+                  }}
+                  presetTextColors={[
+                    "#ffffff", "#000000", "#ff0000", "#00ff00", "#0000ff",
+                    "#ffa500", "#800080", "#00ffff", "#ff69b4", "#ffd700", "#87ceeb"
+                  ]}
+                />
+                <button
+                  onClick={() => setTextBoxes(textBoxes.filter((_, i) => i !== idx))}
+                  className="text-red-500 text-xs mt-1"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>          
 
           {/* Tabs for background, text, and style options */}
           <OptionsTabs
@@ -325,16 +502,6 @@ export default function App() {
             setKeepOriginalBg={setKeepOriginalBg}
             isRound={isRound}
             setIsRound={setIsRound}
-            emojiText={emojiText}
-            setEmojiText={setEmojiText}
-            fontColor={fontColor}
-            setFontColor={setFontColor}
-            fontSize={fontSize}
-            setFontSize={setFontSize}
-            isBold={isBold}
-            setIsBold={setIsBold}
-            isQuoteBubble={isQuoteBubble}
-            setIsQuoteBubble={setIsQuoteBubble}
             presetTextColors={[
               "#ffffff", "#000000", "#ff0000", "#00ff00", "#0000ff",
               "#ffa500", "#800080", "#00ffff", "#ff69b4", "#ffd700", "#87ceeb"
