@@ -57,7 +57,7 @@ export default function CropperSection({
   // --- Touch handler for dragging the quote bubble tail ---
   const handleTailTouchStart = (e) => {
     e.stopPropagation();
-    e.preventDefault();
+    //e.preventDefault();
     const touch = e.touches[0];
     const startX = touch.clientX;
     const startY = touch.clientY;
@@ -466,10 +466,28 @@ const handleResizeMouseMove = (e) => {
         const onMouseMove = moveEvent => {
           let newX = origX + (moveEvent.clientX - startX);
           let newY = origY + (moveEvent.clientY - startY);
-          // Clamp and snap logic...
-          // (existing code)
-          // ...
-          // Update state
+
+          // Clamp and snap logic
+          const distances = [
+            { edge: 'top', dist: Math.abs(newY) },
+            { edge: 'bottom', dist: Math.abs(newY - box.size.height) },
+            { edge: 'left', dist: Math.abs(newX) },
+            { edge: 'right', dist: Math.abs(newX - box.size.width) }
+          ];
+          const closest = distances.reduce((a, b) => (a.dist < b.dist ? a : b));
+          if (closest.edge === 'top') newY = 0;
+          if (closest.edge === 'bottom') newY = box.size.height;
+          if (closest.edge === 'left') newX = 0;
+          if (closest.edge === 'right') newX = box.size.width;
+
+          // Arrow tip logic
+          let tipOffset = 24;
+          let tipX = newX, tipY = newY;
+          if (closest.edge === 'top') tipY = newY - tipOffset;
+          if (closest.edge === 'bottom') tipY = newY + tipOffset;
+          if (closest.edge === 'left') tipX = newX - tipOffset;
+          if (closest.edge === 'right') tipX = newX + tipOffset;
+
           setTextBoxes(prev => {
             const updated = [...prev];
             updated[idx] = {
@@ -499,7 +517,8 @@ const handleResizeMouseMove = (e) => {
           const moveTouch = moveEvent.touches[0];
           let newX = origX + (moveTouch.clientX - startX);
           let newY = origY + (moveTouch.clientY - startY);
-          // Clamp and snap logic...
+
+          // Clamp and snap logic
           const distances = [
             { edge: 'top', dist: Math.abs(newY) },
             { edge: 'bottom', dist: Math.abs(newY - box.size.height) },
@@ -511,6 +530,7 @@ const handleResizeMouseMove = (e) => {
           if (closest.edge === 'bottom') newY = box.size.height;
           if (closest.edge === 'left') newX = 0;
           if (closest.edge === 'right') newX = box.size.width;
+
           // Arrow tip logic
           let tipOffset = 24;
           let tipX = newX, tipY = newY;
@@ -518,6 +538,7 @@ const handleResizeMouseMove = (e) => {
           if (closest.edge === 'bottom') tipY = newY + tipOffset;
           if (closest.edge === 'left') tipX = newX - tipOffset;
           if (closest.edge === 'right') tipX = newX + tipOffset;
+
           setTextBoxes(prev => {
             const updated = [...prev];
             updated[idx] = {
