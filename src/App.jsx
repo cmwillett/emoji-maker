@@ -61,6 +61,7 @@ export default function App() {
   const [arrowTip, setArrowTip] = useState({ x: defaultTextBoxSize.width / 2, y: defaultTextBoxSize.height + 24 });
   const [howToOpen, setHowToOpen] = useState(false);
   const [walkthroughOpen, setWalkthroughOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('Background');
 
   const [textBoxes, setTextBoxes] = useState([
     {
@@ -314,6 +315,7 @@ export default function App() {
     ]);    
     setTailBase({ x: 90, y: 60 }); // Reset tailBase to default (center bottom of default box)
     setArrowTip({ x: 90, y: 84 }); // Reset arrowTip to default (below the box)
+    setActiveTab('Background'); // <-- Add this line!
   }
 
   // --- Style for the crop container (round or square) ---
@@ -396,7 +398,7 @@ export default function App() {
               //setTextPosition={setTextPosition}
               //textBoxSize={textBoxSize}
               //setTextBoxSize={setTextBoxSize}
-              textBoxes={textBoxes}
+              textBoxes={activeTab === 'Text' ? textBoxes : []}
               setTextBoxes={setTextBoxes}
               tailBase={tailBase}
               setTailBase={setTailBase}
@@ -404,93 +406,7 @@ export default function App() {
               setArrowTip={setArrowTip} 
               handleResizeTextBox={handleResizeTextBox}
             />
-          </div>
-
-          <div className="w-full max-w-md mx-auto my-4">
-            <button
-              onClick={() =>
-                setTextBoxes([
-                  ...textBoxes,
-                  {
-                    id: Date.now(),
-                    text: '',
-                    position: { x: 0, y: 0 },
-                    size: { width: 180, height: 60 },
-                    isQuoteBubble: false,
-                    fontColor: '#ffffff',
-                    fontSize: 24,
-                    isBold: true,
-                            tailBase: { x: 90, y: 60 }, // <-- add this
-                  arrowTip: { x: 90, y: 84 }, // <-- and this
-                  }
-                ])
-              }
-              className="mb-2 px-3 py-1 bg-emerald-500 text-white rounded"
-            >
-              + Add Text Box
-            </button>
-            {textBoxes.map((box, idx) => (
-              <div key={box.id} className="mb-2 border p-2 rounded bg-gray-50">
-                <EmojiTextInput
-                  emojiText={box.text}
-                  setEmojiText={val => {
-                    const newBoxes = [...textBoxes];
-                    newBoxes[idx].text = val;
-                    setTextBoxes(newBoxes);
-                  }}
-                  fontColor={box.fontColor}
-                  setFontColor={val => {
-                    const newBoxes = [...textBoxes];
-                    newBoxes[idx].fontColor = val;
-                    setTextBoxes(newBoxes);
-                  }}
-                  fontSize={box.fontSize}
-                  setFontSize={val => {
-                    const newBoxes = [...textBoxes];
-                    newBoxes[idx].fontSize = val;
-                    setTextBoxes(newBoxes);
-                  }}
-                  isBold={box.isBold}
-                  setIsBold={val => {
-                    const newBoxes = [...textBoxes];
-                    newBoxes[idx].isBold = val;
-                    setTextBoxes(newBoxes);
-                  }}
-                  isQuoteBubble={box.isQuoteBubble}
-                  setIsQuoteBubble={val => {
-                    const newBoxes = [...textBoxes];
-                    const w = newBoxes[idx].size?.width ?? 180;
-                    const h = newBoxes[idx].size?.height ?? 60;
-                    if (val) {
-                      // Always reset tailBase and arrowTip to match current box size
-                      newBoxes[idx] = {
-                        ...newBoxes[idx],
-                        isQuoteBubble: true,
-                        tailBase: { x: w / 2, y: h },
-                        arrowTip: { x: w / 2, y: h + 24 }
-                      };
-                    } else {
-                      newBoxes[idx] = {
-                        ...newBoxes[idx],
-                        isQuoteBubble: false
-                      };
-                    }
-                    setTextBoxes(newBoxes);
-                  }}
-                  presetTextColors={[
-                    "#ffffff", "#000000", "#ff0000", "#00ff00", "#0000ff",
-                    "#ffa500", "#800080", "#00ffff", "#ff69b4", "#ffd700", "#87ceeb"
-                  ]}
-                />
-                <button
-                  onClick={() => setTextBoxes(textBoxes.filter((_, i) => i !== idx))}
-                  className="text-red-500 text-xs mt-1"
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-          </div>          
+          </div>         
 
           {/* Tabs for background, text, and style options */}
           <OptionsTabs
@@ -502,6 +418,10 @@ export default function App() {
             setKeepOriginalBg={setKeepOriginalBg}
             isRound={isRound}
             setIsRound={setIsRound}
+            textBoxes={textBoxes}
+            setTextBoxes={setTextBoxes}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
             presetTextColors={[
               "#ffffff", "#000000", "#ff0000", "#00ff00", "#0000ff",
               "#ffa500", "#800080", "#00ffff", "#ff69b4", "#ffd700", "#87ceeb"
