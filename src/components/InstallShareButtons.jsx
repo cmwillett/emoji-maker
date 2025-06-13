@@ -6,6 +6,7 @@ import { EmojiButton } from './EmojiButton';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import { panelBase } from '../lib/classNames';
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
 
 /**
  * InstallShareButtons provides install, share, how-to, and features buttons with modals.
@@ -77,7 +78,7 @@ export default function InstallShareButtons({ showInstall, handleInstallClick, h
         <Tooltip title="See what's new!" placement="right">
           <span>
             <EmojiButton
-              icon={<img src="/features.png" alt="Features" className="w-6 h-6" />}
+              icon={<NewReleasesIcon />}
               label="Latest Features"
               onClick={() => setFeaturesOpen(true)}
             />
