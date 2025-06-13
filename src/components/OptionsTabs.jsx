@@ -21,28 +21,31 @@ export default function OptionsTabs(props) {
         )}
         {props.activeTab === 'Text' && (
           <div>
-            <button
-              onClick={() =>
-                props.setTextBoxes([
-                  ...props.textBoxes,
-                  {
-                    id: Date.now(),
-                    text: '',
-                    position: { x: 0, y: 0 },
-                    size: { width: 180, height: 60 },
-                    isQuoteBubble: false,
-                    fontColor: '#ffffff',
-                    fontSize: 24,
-                    isBold: true,
-                    tailBase: { x: 90, y: 60 },
-                    arrowTip: { x: 90, y: 84 },
-                  }
-                ])
-              }
-              className="mb-2 px-3 py-1 bg-emerald-500 text-white rounded"
-            >
-              + Add Text Box
-            </button>
+            <div className="flex justify-center mb-4">
+              <button
+                onClick={() =>
+                  props.setTextBoxes([
+                    ...props.textBoxes,
+                    {
+                      id: Date.now(),
+                      text: '',
+                      position: { x: 0, y: 0 },
+                      size: { width: 180, height: 60 },
+                      isQuoteBubble: false,
+                      fontColor: '#ffffff',
+                      fontSize: 24,
+                      isBold: true,
+                      tailBase: { x: 90, y: 60 },
+                      arrowTip: { x: 90, y: 84 },
+                    }
+                  ])
+                }
+                  className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded drop-shadow"
+                  style={{ textShadow: '0 1px 2px rgba(0,0,0,0.25)' }}
+              >
+                + Add Another Text Box
+              </button>
+            </div>
             {props.textBoxes.map((box, idx) => (
               <div key={box.id} className="mb-2 border p-2 rounded bg-gray-50">
                 <EmojiTextInput
