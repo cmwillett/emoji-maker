@@ -4,6 +4,7 @@
  */
 const customBackgrounds = [
   { type: 'miscellaneous', img: '/backgrounds/bubbles.png', title: 'Bubbles' },
+  { type: 'party', img: '/backgrounds/beeronbar.jpg', title: 'Beer on Bar' },
   { type: 'miscellaneous', img: '/backgrounds/fire.jpg', title: 'Fire' },
   { type: 'weather', img: '/backgrounds/clouds.png', title: 'Clouds' },
   { type: 'landscape', img: '/backgrounds/forestTrail.jpg', title: 'Forest' },
