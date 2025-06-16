@@ -8,6 +8,10 @@ const customBackgrounds = [
   { type: 'miscellaneous', img: '/backgrounds/fire.jpg', title: 'Fire' },
   { type: 'weather', img: '/backgrounds/clouds.png', title: 'Clouds' },
   { type: 'landscape', img: '/backgrounds/forestTrail.jpg', title: 'Forest' },
+  { type: 'Landmark', img: '/backgrounds/giza-egyptian-pyramids.jpg', title: 'Pyramids' },
+  { type: 'Landmark', img: '/backgrounds/whitehouse.webp', title: 'White House' },
+  { type: 'Landmark', img: '/backgrounds/stonehenge.jpg', title: 'Stonehenge' },
+  { type: 'Landmark', img: '/backgrounds/Great-Sphinx-Giza-Egypt.webp', title: 'Sphinx' },
   { type: 'space', img: '/backgrounds/space.png', title: 'Space' },
   { type: 'landscape', img: '/backgrounds/mountains.png', title: 'Mountains' },
   { type: 'math', img: '/backgrounds/math.jpg', title: 'Math' },
@@ -28,6 +32,8 @@ const customBackgrounds = [
   { type: 'holiday', img: '/backgrounds/christmassnowandtree.jpg', title: 'Christmas Snow and Tree' },
   { type: 'weather', img: '/backgrounds/snow.jpg', title: 'Snow' },
   { type: 'weather', img: '/backgrounds/tornadoandlightning.jpg', title: 'Tornado and Lightning' },
+  { type: 'miscellaneous', img: '/backgrounds/bathroom.jpg', title: 'Bathfroom' },
+  { type: 'miscellaneous', img: '/backgrounds/supermario.jpg', title: 'Super Mario' },
   // Add more as needed
 ];
 
