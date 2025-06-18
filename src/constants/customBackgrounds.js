@@ -34,6 +34,7 @@ const customBackgrounds = [
   { type: 'weather', img: '/backgrounds/tornadoandlightning.jpg', title: 'Tornado and Lightning' },
   { type: 'miscellaneous', img: '/backgrounds/bathroom.jpg', title: 'Bathfroom' },
   { type: 'miscellaneous', img: '/backgrounds/supermario.jpg', title: 'Super Mario' },
+  { type: 'landscape', img: '/backgrounds/beachpier.jpg', title: 'Beach Pier' },
   // Add more as needed
 ];
 
