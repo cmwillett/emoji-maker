@@ -5,7 +5,7 @@
  */
 import { panelBase } from "../lib/classNames";
 
-export default function Header({ emojiCount, leftButton, rightButton }) {
+export default function Header({ emojiCount, leftButton, rightButton, onRefreshCount }) {
   return (
     <div className={`${panelBase} rounded-lg p-2 mb-4`}>
       {/* Button Row */}
