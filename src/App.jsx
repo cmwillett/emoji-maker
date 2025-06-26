@@ -20,6 +20,7 @@ import { drawTextAndDecorations } from './utils/imageProcessing';
 import { buttonBase } from './lib/classNames';
 import WalkthroughModal from './components/WalkthroughModal';
 import EmojiTextInput from './components/EmojiTextInput';
+import { fetchEmojiCount } from './utils/utils';
 
 // Main App component
 export default function App() {
@@ -62,6 +63,11 @@ export default function App() {
   const [howToOpen, setHowToOpen] = useState(false);
   const [walkthroughOpen, setWalkthroughOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('Background');
+  const [emojiCount, setEmojiCount] = useState(null);
+
+  const handleRefreshEmojiCount = () => {
+    fetchEmojiCount(setEmojiCount);
+  };
 
   const [textBoxes, setTextBoxes] = useState([
     {
@@ -80,7 +86,6 @@ export default function App() {
   ]);  
 
   // --- Emoji counter state and fetch on mount ---
-  const [emojiCount, setEmojiCount] = useState(null);
   useEffect(() => {
     fetchEmojiCount(setEmojiCount);
   }, []);
@@ -364,6 +369,7 @@ export default function App() {
               Walkthrough
             </button>
           }
+          onRefreshCount={handleRefreshEmojiCount}
         />
       }
       
