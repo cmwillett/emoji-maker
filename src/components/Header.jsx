@@ -31,18 +31,9 @@ export default function Header({ emojiCount, leftButton, rightButton }) {
           View some creations!
         </a>        
         {emojiCount !== null && (
-          <div className="flex items-center gap-2 mt-2">
             <p className="text-sm text-emerald-400 font-bold underline mb-0">
               {emojiCount.toLocaleString()} created so far!
             </p>
-            <button
-              onClick={onRefreshCount}
-              className="ml-2 px-2 py-1 bg-emerald-500 hover:bg-emerald-600 text-white text-xs rounded font-bold"
-              title="Refresh emoji count"
-            >
-              ⟳
-            </button>
-          </div>
         )}        
       </div>
     </div>
