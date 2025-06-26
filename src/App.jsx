@@ -20,7 +20,6 @@ import { drawTextAndDecorations } from './utils/imageProcessing';
 import { buttonBase } from './lib/classNames';
 import WalkthroughModal from './components/WalkthroughModal';
 import EmojiTextInput from './components/EmojiTextInput';
-import { fetchEmojiCount } from './utils/utils';
 
 // Main App component
 export default function App() {
