@@ -19,14 +19,14 @@ export default function Header({ emojiCount, leftButton, rightButton, onRefreshC
           The Craig's
         </h1>
         <img src="/logo.png" width="150" height="150" alt="App Logo" />
-        <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg underline mt-0">
+        <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg underline mt-0 mb-0">
           Emoji/Meme Maker
         </h1>
         <a
           href="https://photos.app.goo.gl/fDPai7Yu1UEf6uTM8"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xl text-emerald-400 mt-0 font-bold underline"
+          className="text-xl text-emerald-400 mt-0 font-bold underline mb-0"
         >
           View some creations!
         </a>        
