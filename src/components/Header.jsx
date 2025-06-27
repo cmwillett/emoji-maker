@@ -14,7 +14,7 @@ export default function Header({ emojiCount, leftButton, rightButton, onRefreshC
         <div>{rightButton}</div>
       </div>
       {/* Main Header Content */}
-      <div className="flex flex-col items-center space-y-1">
+      <div className="flex flex-col items-center">
         <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg underline mt-0 mb-0">
           The Craig's
         </h1>
