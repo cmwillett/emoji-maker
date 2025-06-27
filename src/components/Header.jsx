@@ -26,7 +26,7 @@ export default function Header({ emojiCount, leftButton, rightButton, onRefreshC
           href="https://photos.app.goo.gl/fDPai7Yu1UEf6uTM8"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xl text-emerald-400 mt-2 font-bold underline"
+          className="text-xl text-emerald-400 mt-0 font-bold underline"
         >
           View some creations!
         </a>        
