@@ -23,31 +23,31 @@ export default function Header({ emojiCount, leftButton, rightButton, onRefreshC
           Emoji/Meme Maker
         </h1>
         {/* Group link and count together */}
-        <div className="flex flex-col items-center leading-tight">
-          <a
-            href="https://photos.app.goo.gl/fDPai7Yu1UEf6uTM8"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xl text-emerald-400 mt-0 mb-0 font-bold underline leading-tight"
-          >
-            View some creations!
-          </a>
-          {emojiCount !== null && (
-            <div className="flex items-baseline gap-2 mt-0 -mt-1">
-              <p className="text-sm text-emerald-400 font-bold underline mb-0 leading-tight">
-                {emojiCount.toLocaleString()} created so far!
-              </p>
-              <button
-                onClick={onRefreshCount}
-                className="ml-2 px-1 py-0 bg-emerald-500 hover:bg-emerald-600 text-white text-xs rounded font-bold align-baseline"
-                style={{ height: '1.5em', width: '1.5em', minWidth: 0, minHeight: 0, padding: 0 }}
-                title="Refresh emoji count"
-              >
-                ⟳
-              </button>
-            </div>
-          )}
-        </div>
+<div className="flex flex-col items-center leading-tight">
+  <a
+    href="https://photos.app.goo.gl/fDPai7Yu1UEf6uTM8"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-xl text-emerald-400 mt-0 mb-0 font-bold underline leading-tight"
+  >
+    View some creations!
+  </a>
+  {emojiCount !== null && (
+    <div className="flex items-baseline gap-2 -mt-3">
+      <p className="text-sm text-emerald-400 font-bold underline mb-0 leading-tight">
+        {emojiCount.toLocaleString()} created so far!
+      </p>
+      <button
+        onClick={onRefreshCount}
+        className="ml-2 px-1 py-0 bg-emerald-500 hover:bg-emerald-600 text-white text-xs rounded font-bold align-baseline"
+        style={{ height: '1.5em', width: '1.5em', minWidth: 0, minHeight: 0, padding: 0 }}
+        title="Refresh emoji count"
+      >
+        ⟳
+      </button>
+    </div>
+  )}
+</div>
       </div>
     </div>
   );
