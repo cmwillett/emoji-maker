@@ -22,29 +22,29 @@ export default function Header({ emojiCount, leftButton, rightButton, onRefreshC
         <h1 className="text-3xl font-bold text-emerald-400 drop-shadow-lg underline mt-0 mb-0">
           Emoji/Meme Maker
         </h1>
-        <a
-          href="https://photos.app.goo.gl/fDPai7Yu1UEf6uTM8"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xl text-emerald-400 mt-0 font-bold underline mb-0"
-        >
-          View some creations!
-        </a>        
-        {emojiCount !== null && (
-          <div className="flex items-baseline gap-2">
-            <p className="text-sm text-emerald-400 font-bold underline mb-0">
-              {emojiCount.toLocaleString()} created so far!
-            </p>
-            <button
-              onClick={onRefreshCount}
-              className="ml-2 px-1 py-0 bg-emerald-500 hover:bg-emerald-600 text-white text-xs rounded font-bold align-baseline"
-              style={{ height: '1.5em', width: '1.5em', minWidth: 0, minHeight: 0, padding: 0 }}
-              title="Refresh emoji count"
-            >
-              ⟳
-            </button>
-          </div>
-        )}      
+<a
+  href="https://photos.app.goo.gl/fDPai7Yu1UEf6uTM8"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="text-sm leading-tight text-emerald-400 mt-0 mb-0 font-bold underline"
+>
+  View some creations!
+</a>      
+{emojiCount !== null && (
+  <div className="flex items-baseline gap-2">
+    <p className="text-sm leading-tight text-emerald-400 font-bold underline mb-0">
+      {emojiCount.toLocaleString()} created so far!
+    </p>
+    <button
+      onClick={onRefreshCount}
+      className="ml-2 px-1 py-0 bg-emerald-500 hover:bg-emerald-600 text-white text-xs rounded font-bold align-baseline"
+      style={{ height: '1.5em', width: '1.5em', minWidth: 0, minHeight: 0, padding: 0 }}
+      title="Refresh emoji count"
+    >
+      ⟳
+    </button>
+  </div>
+)}    
       </div>
     </div>
   );
