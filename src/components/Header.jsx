@@ -37,7 +37,8 @@ export default function Header({ emojiCount, leftButton, rightButton, onRefreshC
             </p>
             <button
               onClick={onRefreshCount}
-              className="ml-2 px-2 py-1 bg-emerald-500 hover:bg-emerald-600 text-white text-xs rounded font-bold"
+              className="ml-2 px-1 py-0 bg-emerald-500 hover:bg-emerald-600 text-white text-xs rounded font-bold"
+              style={{ height: '1.5em', width: '1.5em', minWidth: 0, minHeight: 0, padding: 0 }}
               title="Refresh emoji count"
             >
               ⟳
