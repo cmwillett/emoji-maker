@@ -33,7 +33,7 @@ export default function Header({ emojiCount, leftButton, rightButton, onRefreshC
             View some creations!
           </a>
           {emojiCount !== null && (
-            <div className="flex items-baseline gap-2 mt-0">
+            <div className="flex items-baseline gap-2 mt-0 -mt-1">
               <p className="text-sm text-emerald-400 font-bold underline mb-0 leading-tight">
                 {emojiCount.toLocaleString()} created so far!
               </p>
