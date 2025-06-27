@@ -31,20 +31,20 @@ export default function Header({ emojiCount, leftButton, rightButton, onRefreshC
           View some creations!
         </a>        
         {emojiCount !== null && (
-          <div className="flex items-center gap-2 mt-2">
+          <div className="flex items-baseline gap-2 mt-2">
             <p className="text-sm text-emerald-400 font-bold underline mb-0">
               {emojiCount.toLocaleString()} created so far!
             </p>
             <button
               onClick={onRefreshCount}
-              className="ml-2 px-1 py-0 bg-emerald-500 hover:bg-emerald-600 text-white text-xs rounded font-bold"
+              className="ml-2 px-1 py-0 bg-emerald-500 hover:bg-emerald-600 text-white text-xs rounded font-bold align-baseline"
               style={{ height: '1.5em', width: '1.5em', minWidth: 0, minHeight: 0, padding: 0 }}
               title="Refresh emoji count"
             >
               ⟳
             </button>
           </div>
-        )}        
+        )}      
       </div>
     </div>
   );
